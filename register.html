@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>247Vitrine - Registrieren</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+              950: '#082f49',
+            },
+          },
+        },
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+</head>
+<body class="bg-gray-50">
+  <!-- Navbar -->
+  <nav class="bg-primary-700 text-white shadow-md">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="preview.html" class="text-xl font-bold">247Vitrine</a>
+      
+      <div class="hidden md:flex space-x-6">
+        <a href="preview.html" class="hover:text-primary-200 transition-colors">Home</a>
+        <a href="preview.html#features" class="hover:text-primary-200 transition-colors">Features</a>
+        <a href="preview.html#pricing" class="hover:text-primary-200 transition-colors">Preise</a>
+        <a href="preview.html#contact" class="hover:text-primary-200 transition-colors">Kontakt</a>
+      </div>
+      
+      <div class="flex space-x-4">
+        <a href="login.html" class="px-4 py-2 rounded hover:bg-primary-600 transition-colors">Login</a>
+        <a href="register.html" class="px-4 py-2 bg-white text-primary-700 rounded hover:bg-gray-100 transition-colors">Registrieren</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Registration Form -->
+  <div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        Registrieren
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Oder
+        <a href="login.html" class="font-medium text-primary-600 hover:text-primary-500">
+          melde dich mit deinem bestehenden Konto an
+        </a>
+      </p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <form id="registerForm" class="space-y-6">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">
+              Name
+            </label>
+            <div class="mt-1">
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              />
+              <p id="nameError" class="mt-1 text-sm text-red-600 hidden"></p>
+            </div>
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">
+              E-Mail-Adresse
+            </label>
+            <div class="mt-1">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              />
+              <p id="emailError" class="mt-1 text-sm text-red-600 hidden"></p>
+            </div>
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">
+              Passwort
+            </label>
+            <div class="mt-1">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              />
+              <p id="passwordError" class="mt-1 text-sm text-red-600 hidden"></p>
+              <p class="mt-1 text-xs text-gray-500">Mindestens 8 Zeichen, mit mindestens einem Buchstaben und einer Zahl</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
+              Passwort bestätigen
+            </label>
+            <div class="mt-1">
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                autocomplete="new-password"
+                required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              />
+              <p id="confirmPasswordError" class="mt-1 text-sm text-red-600 hidden"></p>
+            </div>
+          </div>
+
+          <div>
+            <label for="company" class="block text-sm font-medium text-gray-700">
+              Firmenname
+            </label>
+            <div class="mt-1">
+              <input
+                id="company"
+                name="company"
+                type="text"
+                autocomplete="organization"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="plan" class="block text-sm font-medium text-gray-700">
+              Abonnement-Plan
+            </label>
+            <div class="mt-1">
+              <select
+                id="plan"
+                name="plan"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              >
+                <option value="starter">Starter (9,99€/Monat)</option>
+                <option value="professional" selected>Professional (19,99€/Monat)</option>
+                <option value="business">Business (29,99€/Monat)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex items-center">
+            <input
+              id="terms"
+              name="terms"
+              type="checkbox"
+              required
+              class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+            />
+            <label for="terms" class="ml-2 block text-sm text-gray-900">
+              Ich akzeptiere die
+              <a href="#" class="font-medium text-primary-600 hover:text-primary-500">
+                AGB
+              </a>
+              und
+              <a href="#" class="font-medium text-primary-600 hover:text-primary-500">
+                Datenschutzerklärung
+              </a>
+            </label>
+            <p id="termsError" class="mt-1 text-sm text-red-600 hidden"></p>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+            >
+              Registrieren
+            </button>
+          </div>
+          
+          <!-- Registration Status Message -->
+          <div id="registerStatus" class="mt-4 p-3 rounded-md hidden">
+            <!-- Will be filled by JavaScript -->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4">247Vitrine</h3>
+          <p class="text-gray-400">
+            Die Self-Service-Plattform für Handwerker, um mit wenigen Klicks ihre eigene Site-Vitrine zu erstellen.
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Links</h3>
+          <ul class="space-y-2">
+            <li><a href="preview.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+            <li><a href="preview.html#features" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
+            <li><a href="preview.html#pricing" class="text-gray-400 hover:text-white transition-colors">Preise</a></li>
+            <li><a href="preview.html#contact" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Rechtliches</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">AGB</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Datenschutz</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Impressum</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Kontakt</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li>Email: info@247vitrine.ma</li>
+            <li>Telefon: +49 123 456789</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+        <p>&copy; 2023 247Vitrine. Alle Rechte vorbehalten.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Get form elements
+    const registerForm = document.getElementById('registerForm');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const termsCheckbox = document.getElementById('terms');
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+    const termsError = document.getElementById('termsError');
+    const registerStatus = document.getElementById('registerStatus');
+
+    // Validate email format
+    function isValidEmail(email) {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailRegex.test(email);
+    }
+
+    // Validate password strength
+    function isValidPassword(password) {
+      // At least 8 characters, at least one letter and one number
+      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
+      return passwordRegex.test(password);
+    }
+
+    // Form submission handler
+    registerForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      // Reset error messages
+      nameError.classList.add('hidden');
+      emailError.classList.add('hidden');
+      passwordError.classList.add('hidden');
+      confirmPasswordError.classList.add('hidden');
+      termsError.classList.add('hidden');
+      registerStatus.classList.add('hidden');
+      
+      // Get form values
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      const confirmPassword = confirmPasswordInput.value.trim();
+      const termsAccepted = termsCheckbox.checked;
+      
+      // Validate name
+      if (!name) {
+        nameError.textContent = 'Bitte gib deinen Namen ein.';
+        nameError.classList.remove('hidden');
+        return;
+      }
+      
+      // Validate email
+      if (!email) {
+        emailError.textContent = 'Bitte gib deine E-Mail-Adresse ein.';
+        emailError.classList.remove('hidden');
+        return;
+      }
+      
+      if (!isValidEmail(email)) {
+        emailError.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.';
+        emailError.classList.remove('hidden');
+        return;
+      }
+      
+      // Validate password
+      if (!password) {
+        passwordError.textContent = 'Bitte gib ein Passwort ein.';
+        passwordError.classList.remove('hidden');
+        return;
+      }
+      
+      if (!isValidPassword(password)) {
+        passwordError.textContent = 'Das Passwort muss mindestens 8 Zeichen lang sein und mindestens einen Buchstaben und eine Zahl enthalten.';
+        passwordError.classList.remove('hidden');
+        return;
+      }
+      
+      // Validate password confirmation
+      if (password !== confirmPassword) {
+        confirmPasswordError.textContent = 'Die Passwörter stimmen nicht überein.';
+        confirmPasswordError.classList.remove('hidden');
+        return;
+      }
+      
+      // Validate terms acceptance
+      if (!termsAccepted) {
+        termsError.textContent = 'Du musst die AGB und Datenschutzerklärung akzeptieren.';
+        termsError.classList.remove('hidden');
+        return;
+      }
+      
+      // Simulate successful registration
+      registerStatus.textContent = 'Registrierung erfolgreich! Du wirst zum Dashboard weitergeleitet...';
+      registerStatus.classList.remove('hidden', 'bg-red-100', 'text-red-800');
+      registerStatus.classList.add('bg-green-100', 'text-green-800');
+      
+      // Simulate redirect after successful registration
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "247vitrine",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "services/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "yarn workspaces run dev",
+    "build": "yarn workspaces run build",
+    "lint": "yarn workspaces run lint",
+    "test": "yarn workspaces run test"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4",
+    "eslint": "^8.40.0",
+    "prettier": "^2.8.8"
+  }
+}

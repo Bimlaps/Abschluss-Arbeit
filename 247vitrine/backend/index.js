@@ -1,0 +1,1370 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const path = require('path');
+const authController = require('./controllers/authController');
+const { authenticate, authorize } = require('./middleware/auth');
+
+// Modelle importieren
+const Layout = require('./models/Layout');
+const Design = require('./models/Design');
+const ColorScheme = require('./models/ColorScheme');
+const Website = require('./models/Website');
+const Template = require('./models/Template');
+const User = require('./models/User');
+
+// Umgebungsvariablen laden
+dotenv.config();
+
+// Express-App erstellen
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Middleware
+app.use(cors({
+  origin: '*', // Erlaubt Anfragen von allen Ursprüngen
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// MongoDB-Verbindung
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://247vitrine-db:l9dyz9HhhejrP23ztH7LsVetUjNJuT6duzLoVwqhhRZMZWHA85vhcQWUYtOFt9iAj0tZY5IMfLxRACDbDfZgcA==@247vitrine-db.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@247vitrine-db@', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.error('MongoDB connection error:', err));
+
+// Auth-Routen
+app.post('/api/auth/register', authController.register);
+app.post('/api/auth/login', authController.login);
+app.get('/api/auth/me', authenticate, authController.getMe);
+
+// Layout-Routen
+app.get('/api/layouts', async (req, res) => {
+  try {
+    const layouts = await Layout.find();
+    res.json(layouts);
+  } catch (error) {
+    console.error('Error fetching layouts:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Design-Routen
+app.get('/api/designs', async (req, res) => {
+  try {
+    const designs = await Design.find().populate('layout');
+    res.json(designs);
+  } catch (error) {
+    console.error('Error fetching designs:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/designs/by-layout/:layoutId', async (req, res) => {
+  try {
+    const designs = await Design.find({ layout: req.params.layoutId }).populate('layout');
+    res.json(designs);
+  } catch (error) {
+    console.error('Error fetching designs by layout:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Designs nach Layout-Kategorie abrufen
+app.get('/api/designs/by-category/:category', async (req, res) => {
+  try {
+    // Finde zuerst alle Layouts mit der angegebenen Kategorie
+    const layouts = await Layout.find({ category: req.params.category });
+
+    // Sammle alle Layout-IDs
+    const layoutIds = layouts.map(layout => layout._id);
+
+    // Finde alle Designs, die zu diesen Layouts gehören
+    const designs = await Design.find({ layout: { $in: layoutIds } }).populate('layout');
+
+    res.json(designs);
+  } catch (error) {
+    console.error('Error fetching designs by layout category:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Farbschema-Routen
+app.get('/api/color-schemes', async (req, res) => {
+  try {
+    const colorSchemes = await ColorScheme.find();
+    res.json(colorSchemes);
+  } catch (error) {
+    console.error('Error fetching color schemes:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Template-Routen
+app.get('/api/templates', async (req, res) => {
+  try {
+    const user = req.user;
+    let query = {};
+
+    // Wenn der Benutzer ein Kunde ist, nur öffentliche Templates anzeigen
+    if (user && user.role === 'customer') {
+      query.isPublic = true;
+    }
+
+    const templates = await Template.find(query);
+    res.json(templates);
+  } catch (error) {
+    console.error('Error fetching templates:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/templates/:id', async (req, res) => {
+  try {
+    const template = await Template.findById(req.params.id);
+    if (!template) {
+      return res.status(404).json({ message: 'Template not found' });
+    }
+    res.json(template);
+  } catch (error) {
+    console.error('Error fetching template:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.post('/api/templates', authenticate, authorize(['admin']), async (req, res) => {
+  try {
+    const template = new Template(req.body);
+    await template.save();
+    res.status(201).json(template);
+  } catch (error) {
+    console.error('Error creating template:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.put('/api/templates/:id', authenticate, authorize(['admin']), async (req, res) => {
+  try {
+    const template = await Template.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!template) {
+      return res.status(404).json({ message: 'Template not found' });
+    }
+    res.json(template);
+  } catch (error) {
+    console.error('Error updating template:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.delete('/api/templates/:id', authenticate, authorize(['admin']), async (req, res) => {
+  try {
+    const template = await Template.findByIdAndDelete(req.params.id);
+    if (!template) {
+      return res.status(404).json({ message: 'Template not found' });
+    }
+    res.json({ message: 'Template deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting template:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// QR-Code-Generator importieren
+const { generateQRCode } = require('./utils/qrCodeGenerator');
+
+// Upload-Controller importieren
+const { upload, processImage } = require('./controllers/uploadController');
+
+// Sitemap-Generator importieren
+const { generateSitemap } = require('./utils/sitemapGenerator');
+
+// E-Mail-Service importieren
+const { sendContactEmail } = require('./utils/emailService');
+
+// Kontaktformular-Template importieren
+const { generateContactForm } = require('./templates/contactForm');
+
+/**
+ * Generiert HTML für die Live-Vorschau einer Website
+ * @param {Object} content - Website-Inhalte
+ * @param {Object} layout - Ausgewähltes Layout
+ * @param {Object} design - Ausgewähltes Design
+ * @param {Object} colorScheme - Ausgewähltes Farbschema
+ * @returns {string} - Generiertes HTML
+ */
+function generatePreviewHTML(content, layout, design, colorScheme) {
+  // Fallback-Werte, falls keine Komponenten ausgewählt wurden
+  const layoutStructure = layout ? JSON.parse(layout.structure) : {
+    header: true,
+    hero: true,
+    about: true,
+    services: true,
+    contact: true,
+    footer: true
+  };
+
+  const designCSS = design ? design.css : '';
+  const designJS = design ? design.js : '';
+
+  const colors = colorScheme ? {
+    primary: colorScheme.primary,
+    secondary: colorScheme.secondary,
+    accent: colorScheme.accent,
+    text: colorScheme.text,
+    background: colorScheme.background
+  } : {
+    primary: '#0284c7',
+    secondary: '#0ea5e9',
+    accent: '#38bdf8',
+    text: '#333333',
+    background: '#ffffff'
+  };
+
+  // Generiere das HTML
+  return `
+    <!DOCTYPE html>
+    <html lang="de">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${content.title || 'Website-Vorschau'}</title>
+      <style>
+        :root {
+          --primary-color: ${colors.primary};
+          --secondary-color: ${colors.secondary};
+          --accent-color: ${colors.accent};
+          --text-color: ${colors.text};
+          --background-color: ${colors.background};
+        }
+
+        body {
+          font-family: 'Arial', sans-serif;
+          line-height: 1.6;
+          color: var(--text-color);
+          background-color: var(--background-color);
+          margin: 0;
+          padding: 0;
+        }
+
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+        }
+
+        header {
+          background-color: var(--primary-color);
+          color: white;
+          padding: 20px 0;
+        }
+
+        .logo {
+          font-size: 24px;
+          font-weight: bold;
+        }
+
+        .hero {
+          background-color: var(--secondary-color);
+          color: white;
+          padding: 60px 0;
+          text-align: center;
+        }
+
+        .hero h1 {
+          font-size: 36px;
+          margin-bottom: 20px;
+        }
+
+        .hero p {
+          font-size: 18px;
+          max-width: 800px;
+          margin: 0 auto;
+        }
+
+        section {
+          padding: 60px 0;
+        }
+
+        h2 {
+          color: var(--primary-color);
+          margin-bottom: 30px;
+        }
+
+        .about-content {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 30px;
+        }
+
+        .about-text {
+          flex: 1;
+          min-width: 300px;
+        }
+
+        .about-image {
+          flex: 1;
+          min-width: 300px;
+        }
+
+        .about-image img {
+          max-width: 100%;
+          border-radius: 8px;
+        }
+
+        .services-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 30px;
+        }
+
+        .service-card {
+          background-color: white;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          padding: 20px;
+        }
+
+        .service-card h3 {
+          color: var(--primary-color);
+          margin-top: 0;
+        }
+
+        .contact {
+          background-color: var(--secondary-color);
+          color: white;
+          padding: 60px 0;
+        }
+
+        .contact-info {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 30px;
+          margin-top: 30px;
+        }
+
+        .contact-details {
+          flex: 1;
+          min-width: 300px;
+        }
+
+        .contact-form-container {
+          flex: 2;
+          min-width: 300px;
+        }
+
+        .contact-form {
+          background-color: white;
+          border-radius: 8px;
+          padding: 30px;
+          color: var(--text-color);
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .contact-form h3 {
+          color: var(--primary-color);
+          margin-top: 0;
+          margin-bottom: 20px;
+        }
+
+        .contact-form .form-group {
+          margin-bottom: 20px;
+        }
+
+        .contact-form label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-family: inherit;
+          font-size: 16px;
+        }
+
+        .contact-form textarea {
+          height: 150px;
+          resize: vertical;
+        }
+
+        .contact-form .submit-button {
+          background-color: var(--primary-color);
+          color: white;
+          border: none;
+          border-radius: 4px;
+          padding: 12px 20px;
+          font-size: 16px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+
+        .contact-form .submit-button:hover {
+          background-color: var(--secondary-color);
+        }
+
+        .contact-form .submit-button:disabled {
+          background-color: #ccc;
+          cursor: not-allowed;
+        }
+
+        .contact-form .success-message {
+          background-color: #d4edda;
+          color: #155724;
+          padding: 15px;
+          border-radius: 4px;
+          margin-bottom: 20px;
+        }
+
+        .contact-form .error-message {
+          background-color: #f8d7da;
+          color: #721c24;
+          padding: 15px;
+          border-radius: 4px;
+          margin-top: 20px;
+        }
+
+        footer {
+          background-color: #333;
+          color: white;
+          text-align: center;
+          padding: 20px 0;
+        }
+
+        /* Galerie Styles */
+        .gallery-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 20px;
+          margin-top: 30px;
+        }
+
+        .gallery-item {
+          position: relative;
+          overflow: hidden;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .gallery-item img {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+          transform: scale(1.05);
+        }
+
+        .gallery-caption {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background-color: rgba(0,0,0,0.7);
+          color: white;
+          padding: 10px;
+          transform: translateY(100%);
+          transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-caption {
+          transform: translateY(0);
+        }
+
+        /* Visitenkarte Styles */
+        .business-card {
+          background-color: var(--secondary-color);
+          color: white;
+          padding: 40px 0;
+        }
+
+        .card-container {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          background-color: white;
+          color: var(--text-color);
+          border-radius: 10px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+          padding: 30px;
+          margin-top: 30px;
+        }
+
+        .card-info {
+          flex: 1;
+          min-width: 250px;
+          padding-right: 20px;
+        }
+
+        .card-qr {
+          text-align: center;
+          padding: 20px;
+        }
+
+        .card-qr img {
+          max-width: 150px;
+          margin-bottom: 10px;
+        }
+
+        /* Social Media Links */
+        .social-links {
+          margin-top: 20px;
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+        }
+
+        .social-icon {
+          display: inline-block;
+          color: white;
+          text-decoration: none;
+          padding: 8px 15px;
+          border-radius: 4px;
+          background-color: var(--accent-color);
+          transition: background-color 0.3s ease;
+        }
+
+        .social-icon:hover {
+          background-color: var(--primary-color);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+          .about-content {
+            flex-direction: column;
+          }
+
+          .services-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        ${designCSS}
+      </style>
+    </head>
+    <body>
+      ${layoutStructure.header ? `
+        <header>
+          <div class="container">
+            <div class="logo">
+              ${content.title || 'Meine Website'}
+            </div>
+          </div>
+        </header>
+      ` : ''}
+
+      ${layoutStructure.hero ? `
+        <section class="hero">
+          <div class="container">
+            <h1>${content.hero?.title || 'Willkommen auf meiner Website'}</h1>
+            <p>${content.hero?.subtitle || 'Hier finden Sie alle Informationen zu meinen Dienstleistungen.'}</p>
+          </div>
+        </section>
+      ` : ''}
+
+      ${layoutStructure.about ? `
+        <section class="about">
+          <div class="container">
+            <h2>${content.about?.title || 'Über uns'}</h2>
+            <div class="about-content">
+              <div class="about-text">
+                <p>${content.about?.text || 'Hier steht ein Text über das Unternehmen und seine Geschichte.'}</p>
+              </div>
+              ${content.about?.image ? `
+                <div class="about-image">
+                  <img src="${content.about.image}" alt="Über uns">
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </section>
+      ` : ''}
+
+      ${layoutStructure.services ? `
+        <section class="services">
+          <div class="container">
+            <h2>Unsere Leistungen</h2>
+            <div class="services-grid">
+              ${content.services && content.services.length > 0 ?
+                content.services.map(service => `
+                  <div class="service-card">
+                    <h3>${service.title}</h3>
+                    <p>${service.description}</p>
+                  </div>
+                `).join('') :
+                `
+                  <div class="service-card">
+                    <h3>Leistung 1</h3>
+                    <p>Beschreibung der ersten Leistung.</p>
+                  </div>
+                  <div class="service-card">
+                    <h3>Leistung 2</h3>
+                    <p>Beschreibung der zweiten Leistung.</p>
+                  </div>
+                  <div class="service-card">
+                    <h3>Leistung 3</h3>
+                    <p>Beschreibung der dritten Leistung.</p>
+                  </div>
+                `
+              }
+            </div>
+          </div>
+        </section>
+      ` : ''}
+
+      ${layoutStructure.gallery && content.gallery && content.gallery.length > 0 ? `
+        <section class="gallery">
+          <div class="container">
+            <h2>Galerie</h2>
+            <div class="gallery-grid">
+              ${content.gallery.map(item => `
+                <div class="gallery-item">
+                  <img src="${item.imageUrl}" alt="${item.title}">
+                  <div class="gallery-caption">
+                    <h3>${item.title}</h3>
+                    <p>${item.description}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </section>
+      ` : ''}
+
+      ${layoutStructure.contact ? `
+        <section class="contact">
+          <div class="container">
+            <h2>Kontakt</h2>
+            <div class="contact-info">
+              <div class="contact-details">
+                <p><strong>Email:</strong> ${content.contact?.email || 'info@example.com'}</p>
+                <p><strong>Telefon:</strong> ${content.contact?.phone || '+49 123 456789'}</p>
+                <p><strong>Adresse:</strong> ${content.contact?.address || 'Musterstraße 123, 12345 Musterstadt'}</p>
+              </div>
+              <div class="contact-form-container">
+                ${generateContactForm(content.contact?.email || 'info@example.com')}
+              </div>
+            </div>
+          </div>
+        </section>
+      ` : ''}
+
+      ${content.businessCard && content.businessCard.companyName ? `
+        <section class="business-card">
+          <div class="container">
+            <h2>Digitale Visitenkarte</h2>
+            <div class="card-container">
+              <div class="card-info">
+                <h3>${content.businessCard.companyName}</h3>
+                <p>${content.businessCard.contactPerson}</p>
+                <p>${content.businessCard.position}</p>
+                <p>${content.businessCard.address}</p>
+                <p>Tel: ${content.businessCard.phone}</p>
+                <p>Email: ${content.businessCard.email}</p>
+                <p>Web: ${content.businessCard.website || 'www.example.com'}</p>
+              </div>
+              ${content.businessCard.qrCodeUrl ? `
+                <div class="card-qr">
+                  <img src="${content.businessCard.qrCodeUrl}" alt="QR-Code">
+                  <p>Scannen Sie den QR-Code für meine Kontaktdaten</p>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </section>
+      ` : ''}
+
+      ${layoutStructure.footer ? `
+        <footer>
+          <div class="container">
+            <p>&copy; ${new Date().getFullYear()} ${content.title || 'Meine Website'}. Alle Rechte vorbehalten.</p>
+
+            ${content.socialMedia ? `
+            <div class="social-links">
+              ${content.socialMedia.facebook ? `<a href="${content.socialMedia.facebook}" target="_blank" class="social-icon">Facebook</a>` : ''}
+              ${content.socialMedia.instagram ? `<a href="${content.socialMedia.instagram}" target="_blank" class="social-icon">Instagram</a>` : ''}
+              ${content.socialMedia.linkedin ? `<a href="${content.socialMedia.linkedin}" target="_blank" class="social-icon">LinkedIn</a>` : ''}
+              ${content.socialMedia.xing ? `<a href="${content.socialMedia.xing}" target="_blank" class="social-icon">Xing</a>` : ''}
+              ${content.socialMedia.youtube ? `<a href="${content.socialMedia.youtube}" target="_blank" class="social-icon">YouTube</a>` : ''}
+              ${content.socialMedia.twitter ? `<a href="${content.socialMedia.twitter}" target="_blank" class="social-icon">Twitter</a>` : ''}
+            </div>
+            ` : ''}
+          </div>
+        </footer>
+      ` : ''}
+
+      <script>
+        ${designJS}
+      </script>
+    </body>
+    </html>
+  `;
+}
+
+// Bild-Upload-Route
+app.post('/api/upload-image', authenticate, upload.single('image'), processImage);
+
+// Bildauflösungs-Route
+app.get('/api/image-resolutions/:layoutType/:imageType', (req, res) => {
+  const { layoutType, imageType } = req.params;
+  const imageResolutions = require('./config/imageResolutions');
+
+  if (imageResolutions[layoutType] && imageResolutions[layoutType][imageType]) {
+    res.json(imageResolutions[layoutType][imageType]);
+  } else {
+    res.status(404).json({ message: 'Bildauflösung nicht gefunden' });
+  }
+});
+
+// Live-Vorschau-Route
+app.post('/api/preview', async (req, res) => {
+  try {
+    const { content, layout: layoutId, design: designId, colorScheme: colorSchemeId } = req.body;
+
+    // Lade die ausgewählten Komponenten
+    let layout, design, colorScheme;
+
+    if (layoutId) {
+      layout = await Layout.findById(layoutId);
+    }
+
+    if (designId) {
+      design = await Design.findById(designId);
+    }
+
+    if (colorSchemeId) {
+      colorScheme = await ColorScheme.findById(colorSchemeId);
+    }
+
+    // Generiere das HTML für die Vorschau
+    const html = generatePreviewHTML(content, layout, design, colorScheme);
+
+    res.json({ success: true, html });
+  } catch (error) {
+    console.error('Error generating preview:', error);
+    res.status(500).json({ success: false, message: 'Fehler bei der Generierung der Vorschau' });
+  }
+});
+
+// Website-Routen
+app.get('/api/websites', authenticate, async (req, res) => {
+  try {
+    let websites;
+
+    // Wenn der Benutzer ein Admin ist, alle Websites anzeigen
+    // Wenn der Benutzer ein Kunde ist, nur seine eigenen Websites anzeigen
+    if (req.user.role === 'admin') {
+      websites = await Website.find()
+        .populate('layout')
+        .populate('design')
+        .populate('colorScheme')
+        .populate('owner', 'firstName lastName email');
+    } else {
+      websites = await Website.find({ owner: req.user.id })
+        .populate('layout')
+        .populate('design')
+        .populate('colorScheme');
+    }
+
+    res.json(websites);
+  } catch (error) {
+    console.error('Error fetching websites:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/websites/:id', authenticate, async (req, res) => {
+  try {
+    const website = await Website.findById(req.params.id)
+      .populate('layout')
+      .populate('design')
+      .populate('colorScheme');
+
+    if (!website) {
+      return res.status(404).json({ message: 'Website not found' });
+    }
+
+    // Prüfen, ob der Benutzer Zugriff auf die Website hat
+    if (req.user.role !== 'admin' && website.owner.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    res.json(website);
+  } catch (error) {
+    console.error('Error fetching website:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.post('/api/websites', authenticate, async (req, res) => {
+  try {
+    const website = new Website({
+      ...req.body,
+      owner: req.user.id // Besitzer setzen
+    });
+
+    // Wenn eine digitale Visitenkarte vorhanden ist, generiere einen QR-Code
+    if (website.content.businessCard && website.content.businessCard.companyName) {
+      try {
+        const qrCodeUrl = await generateQRCode(
+          website._id,
+          website.subdomain,
+          website.content.businessCard
+        );
+        website.content.businessCard.qrCodeUrl = qrCodeUrl;
+      } catch (qrError) {
+        console.error('Error generating QR code:', qrError);
+        // Fahre fort, auch wenn der QR-Code nicht generiert werden konnte
+      }
+    }
+
+    await website.save();
+
+    // Website zum Benutzer hinzufügen
+    await User.findByIdAndUpdate(
+      req.user.id,
+      { $push: { websites: website._id } }
+    );
+
+    // Aktualisiere die Sitemap
+    updateSitemap();
+
+    res.status(201).json(website);
+  } catch (error) {
+    console.error('Error creating website:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.put('/api/websites/:id', authenticate, async (req, res) => {
+  try {
+    const website = await Website.findById(req.params.id);
+
+    if (!website) {
+      return res.status(404).json({ message: 'Website not found' });
+    }
+
+    // Prüfen, ob der Benutzer Zugriff auf die Website hat
+    if (req.user.role !== 'admin' && website.owner.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    // Wenn eine digitale Visitenkarte vorhanden ist, generiere einen QR-Code
+    if (req.body.content && req.body.content.businessCard && req.body.content.businessCard.companyName) {
+      try {
+        const qrCodeUrl = await generateQRCode(
+          req.params.id,
+          req.body.subdomain,
+          req.body.content.businessCard
+        );
+        req.body.content.businessCard.qrCodeUrl = qrCodeUrl;
+      } catch (qrError) {
+        console.error('Error generating QR code:', qrError);
+        // Fahre fort, auch wenn der QR-Code nicht generiert werden konnte
+      }
+    }
+
+    const updatedWebsite = await Website.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    // Aktualisiere die Sitemap
+    updateSitemap();
+
+    res.json(updatedWebsite);
+  } catch (error) {
+    console.error('Error updating website:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.delete('/api/websites/:id', authenticate, async (req, res) => {
+  try {
+    const website = await Website.findById(req.params.id);
+
+    if (!website) {
+      return res.status(404).json({ message: 'Website not found' });
+    }
+
+    // Prüfen, ob der Benutzer Zugriff auf die Website hat
+    if (req.user.role !== 'admin' && website.owner.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    await Website.findByIdAndDelete(req.params.id);
+
+    // Aktualisiere die Sitemap
+    updateSitemap();
+
+    // Website aus der Liste des Benutzers entfernen
+    await User.findByIdAndUpdate(
+      website.owner,
+      { $pull: { websites: website._id } }
+    );
+
+    res.json({ message: 'Website deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting website:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Website-Vorschau-Route
+app.get('/preview/:websiteId', async (req, res) => {
+  try {
+    const website = await Website.findById(req.params.websiteId)
+      .populate('layout')
+      .populate('design')
+      .populate('colorScheme');
+
+    if (!website) {
+      return res.status(404).send('Website nicht gefunden');
+    }
+
+    // Generiere HTML basierend auf Website-Daten
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${website.content.title}</title>
+        <style>
+          :root {
+            --primary-color: ${website.colorScheme.primary};
+            --secondary-color: ${website.colorScheme.secondary};
+            --accent-color: ${website.colorScheme.accent};
+            --text-color: ${website.colorScheme.text};
+            --background-color: ${website.colorScheme.background};
+          }
+          ${website.design.css}
+
+          /* Zusätzliche Styles für die Vorschau */
+          body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: var(--background-color);
+          }
+
+          .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+          }
+
+          header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+          }
+
+          section {
+            padding: 60px 0;
+          }
+
+          .hero {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+          }
+
+          .hero img {
+            max-width: 100%;
+            margin-top: 20px;
+          }
+
+          .about {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+          }
+
+          .about-content {
+            flex: 1;
+            min-width: 300px;
+            padding-right: 40px;
+          }
+
+          .about img {
+            max-width: 100%;
+            max-height: 400px;
+          }
+
+          .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+          }
+
+          .service-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-align: center;
+          }
+
+          .service-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+          }
+
+          .contact {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+          }
+
+          footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+          }
+
+          /* Styles für Galerie */
+          .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+          }
+
+          .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+          }
+
+          .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+          }
+
+          .gallery-item:hover img {
+            transform: scale(1.05);
+          }
+
+          .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+          }
+
+          .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+          }
+
+          /* Styles für digitale Visitenkarte */
+          .business-card {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 40px 0;
+          }
+
+          .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background-color: white;
+            color: var(--text-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: 30px;
+          }
+
+          .card-info {
+            flex: 1;
+            min-width: 250px;
+            padding-right: 20px;
+          }
+
+          .card-qr {
+            text-align: center;
+            padding: 20px;
+          }
+
+          .card-qr img {
+            max-width: 150px;
+            margin-bottom: 10px;
+          }
+
+          /* Styles für Social Media Links */
+          .social-links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+          }
+
+          .social-icon {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            background-color: var(--accent-color);
+            transition: background-color 0.3s ease;
+          }
+
+          .social-icon:hover {
+            background-color: var(--primary-color);
+          }
+        </style>
+      </head>
+      <body>
+        <header>
+          <div class="container">
+            <h1>${website.content.title}</h1>
+            <p>${website.content.description}</p>
+          </div>
+        </header>
+
+        <section class="hero">
+          <div class="container">
+            <h2>${website.content.hero.title}</h2>
+            <p>${website.content.hero.subtitle}</p>
+            ${website.content.hero.image ? `<img src="${website.content.hero.image}" alt="Hero Image">` : ''}
+          </div>
+        </section>
+
+        <section class="about">
+          <div class="container">
+            <div class="about-content">
+              <h2>${website.content.about.title}</h2>
+              <p>${website.content.about.text}</p>
+            </div>
+            ${website.content.about.image ? `<img src="${website.content.about.image}" alt="About Image">` : ''}
+          </div>
+        </section>
+
+        <section class="services">
+          <div class="container">
+            <h2>Unsere Leistungen</h2>
+            <div class="services-grid">
+              ${website.content.services.map(service => `
+                <div class="service-card">
+                  <div class="service-icon">${service.icon}</div>
+                  <h3>${service.title}</h3>
+                  <p>${service.description}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </section>
+
+        <section class="contact">
+          <div class="container">
+            <h2>Kontakt</h2>
+            <p>Email: ${website.content.contact.email}</p>
+            <p>Telefon: ${website.content.contact.phone}</p>
+            <p>Adresse: ${website.content.contact.address}</p>
+          </div>
+        </section>
+
+        ${website.content.gallery && website.content.gallery.length > 0 ? `
+        <section class="gallery">
+          <div class="container">
+            <h2>Galerie</h2>
+            <div class="gallery-grid">
+              ${website.content.gallery.map(item => `
+                <div class="gallery-item">
+                  <img src="${item.imageUrl}" alt="${item.title}">
+                  <div class="gallery-caption">
+                    <h3>${item.title}</h3>
+                    <p>${item.description}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </section>
+        ` : ''}
+
+        ${website.content.businessCard && website.content.businessCard.companyName ? `
+        <section class="business-card">
+          <div class="container">
+            <h2>Digitale Visitenkarte</h2>
+            <div class="card-container">
+              <div class="card-info">
+                <h3>${website.content.businessCard.companyName}</h3>
+                <p>${website.content.businessCard.contactPerson}</p>
+                <p>${website.content.businessCard.position}</p>
+                <p>${website.content.businessCard.address}</p>
+                <p>Tel: ${website.content.businessCard.phone}</p>
+                <p>Email: ${website.content.businessCard.email}</p>
+                <p>Web: ${website.content.businessCard.website || website.subdomain + '.247vitrine.com'}</p>
+              </div>
+              ${website.content.businessCard.qrCodeUrl ? `
+                <div class="card-qr">
+                  <img src="${website.content.businessCard.qrCodeUrl}" alt="QR-Code">
+                  <p>Scannen Sie den QR-Code für meine Kontaktdaten</p>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </section>
+        ` : ''}
+
+        <footer>
+          <div class="container">
+            <p>&copy; ${new Date().getFullYear()} ${website.content.title}. Alle Rechte vorbehalten.</p>
+
+            ${website.content.socialMedia ? `
+            <div class="social-links">
+              ${website.content.socialMedia.facebook ? `<a href="${website.content.socialMedia.facebook}" target="_blank" class="social-icon">Facebook</a>` : ''}
+              ${website.content.socialMedia.instagram ? `<a href="${website.content.socialMedia.instagram}" target="_blank" class="social-icon">Instagram</a>` : ''}
+              ${website.content.socialMedia.linkedin ? `<a href="${website.content.socialMedia.linkedin}" target="_blank" class="social-icon">LinkedIn</a>` : ''}
+              ${website.content.socialMedia.xing ? `<a href="${website.content.socialMedia.xing}" target="_blank" class="social-icon">Xing</a>` : ''}
+              ${website.content.socialMedia.youtube ? `<a href="${website.content.socialMedia.youtube}" target="_blank" class="social-icon">YouTube</a>` : ''}
+              ${website.content.socialMedia.twitter ? `<a href="${website.content.socialMedia.twitter}" target="_blank" class="social-icon">Twitter</a>` : ''}
+            </div>
+            ` : ''}
+          </div>
+        </footer>
+
+        <script>
+          ${website.design.js}
+        </script>
+      </body>
+      </html>
+    `;
+
+    res.send(html);
+  } catch (error) {
+    console.error('Error generating preview:', error);
+    res.status(500).send('Fehler beim Generieren der Vorschau');
+  }
+});
+
+// Kontaktformular-Route
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, email, phone, message, recipient } = req.body;
+
+    // Validiere die Eingaben
+    if (!name || !email || !message || !recipient) {
+      return res.status(400).json({
+        success: false,
+        message: 'Bitte fülle alle Pflichtfelder aus.'
+      });
+    }
+
+    // Sende die E-Mail
+    const result = await sendContactEmail({
+      name,
+      email,
+      phone,
+      message,
+      recipient
+    });
+
+    if (result.success) {
+      res.json({ success: true, messageId: result.messageId });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Fehler beim Senden der E-Mail.',
+        error: result.error
+      });
+    }
+  } catch (error) {
+    console.error('Error processing contact form:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server-Fehler beim Verarbeiten des Kontaktformulars.'
+    });
+  }
+});
+
+// Sitemap-Route
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    // Prüfe, ob die Sitemap existiert
+    const sitemapPath = path.join(__dirname, 'public/sitemap.xml.gz');
+
+    if (fs.existsSync(sitemapPath)) {
+      // Wenn die Sitemap existiert, sende sie
+      res.setHeader('Content-Type', 'application/xml');
+      res.setHeader('Content-Encoding', 'gzip');
+
+      const sitemapFile = fs.createReadStream(sitemapPath);
+      sitemapFile.pipe(res);
+    } else {
+      // Wenn die Sitemap nicht existiert, generiere sie
+      const websites = await Website.find({});
+
+      // Bestimme die Basis-URL
+      const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+
+      const success = await generateSitemap(websites, baseUrl);
+
+      if (success && fs.existsSync(sitemapPath)) {
+        res.setHeader('Content-Type', 'application/xml');
+        res.setHeader('Content-Encoding', 'gzip');
+
+        const sitemapFile = fs.createReadStream(sitemapPath);
+        sitemapFile.pipe(res);
+      } else {
+        res.status(500).send('Fehler bei der Generierung der Sitemap');
+      }
+    }
+  } catch (error) {
+    console.error('Fehler bei der Sitemap-Route:', error);
+    res.status(500).send('Fehler bei der Verarbeitung der Sitemap');
+  }
+});
+
+// Automatische Sitemap-Generierung bei Änderungen
+async function updateSitemap() {
+  try {
+    const websites = await Website.find({});
+    const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+    await generateSitemap(websites, baseUrl);
+  } catch (error) {
+    console.error('Fehler bei der automatischen Sitemap-Generierung:', error);
+  }
+}
+
+// Server starten
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Server ist erreichbar unter:`);
+  console.log(`- Lokal: http://localhost:${PORT}`);
+  console.log(`- Im Netzwerk: http://<deine-lokale-IP>:${PORT}`);
+
+  // Generiere die Sitemap beim Start
+  updateSitemap();
+});

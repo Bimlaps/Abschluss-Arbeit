@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: 247vitrine-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=247vitrine
+    networks:
+      - 247vitrine-network
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./infrastructure/docker/auth-service.Dockerfile
+    container_name: 247vitrine-auth-service
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+    environment:
+      - PORT=3001
+      - MONGODB_URI=mongodb://mongodb:27017/247vitrine
+      - JWT_SECRET=dev-secret-key-change-in-production
+      - CORS_ORIGIN=http://localhost:3000
+    volumes:
+      - ./services/auth-service:/app/services/auth-service
+      - ./packages:/app/packages
+      - node_modules_auth:/app/services/auth-service/node_modules
+    networks:
+      - 247vitrine-network
+
+  builder-service:
+    build:
+      context: .
+      dockerfile: ./infrastructure/docker/builder-service.Dockerfile
+    container_name: 247vitrine-builder-service
+    ports:
+      - "3002:3002"
+    depends_on:
+      - mongodb
+      - auth-service
+    environment:
+      - PORT=3002
+      - MONGODB_URI=mongodb://mongodb:27017/247vitrine
+      - JWT_SECRET=dev-secret-key-change-in-production
+      - CORS_ORIGIN=http://localhost:3000
+    volumes:
+      - ./services/builder-service:/app/services/builder-service
+      - ./packages:/app/packages
+      - node_modules_builder:/app/services/builder-service/node_modules
+    networks:
+      - 247vitrine-network
+
+  customer-portal:
+    build:
+      context: .
+      dockerfile: ./infrastructure/docker/customer-portal.Dockerfile
+    container_name: 247vitrine-customer-portal
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth-service
+      - builder-service
+    environment:
+      - VITE_API_URL=http://localhost:3001/api
+      - VITE_BUILDER_API_URL=http://localhost:3002/api
+    volumes:
+      - ./apps/customer-portal:/app/apps/customer-portal
+      - ./packages:/app/packages
+      - node_modules_customer:/app/apps/customer-portal/node_modules
+    networks:
+      - 247vitrine-network
+
+networks:
+  247vitrine-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  node_modules_auth:
+  node_modules_builder:
+  node_modules_customer:

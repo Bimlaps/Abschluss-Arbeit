@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>247Vitrine - Vorschau</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+              950: '#082f49',
+            },
+          },
+        },
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+</head>
+<body class="bg-gray-50">
+  <!-- Navbar -->
+  <nav class="bg-primary-700 text-white shadow-md">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="#" class="text-xl font-bold">247Vitrine</a>
+      
+      <div class="hidden md:flex space-x-6">
+        <a href="#" class="hover:text-primary-200 transition-colors">Home</a>
+        <a href="#" class="hover:text-primary-200 transition-colors">Features</a>
+        <a href="#" class="hover:text-primary-200 transition-colors">Preise</a>
+        <a href="#" class="hover:text-primary-200 transition-colors">Kontakt</a>
+      </div>
+      
+      <div class="flex space-x-4">
+        <a href="#" class="px-4 py-2 rounded hover:bg-primary-600 transition-colors">Login</a>
+        <a href="#" class="px-4 py-2 bg-white text-primary-700 rounded hover:bg-gray-100 transition-colors">Registrieren</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="bg-primary-700 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6">Deine professionelle Handwerker-Website in Minuten</h1>
+      <p class="text-xl mb-8 max-w-3xl mx-auto">
+        Mit 247Vitrine erstellst du mit wenigen Klicks deine eigene Website, wirst sichtbar und baust deine digitale Präsenz auf.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="#" class="px-8 py-3 bg-white text-primary-700 rounded-md font-semibold hover:bg-gray-100 transition-colors">
+          Jetzt starten
+        </a>
+        <a href="#" class="px-8 py-3 border border-white rounded-md font-semibold hover:bg-primary-600 transition-colors">
+          Mehr erfahren
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-16">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-12">Alles was du brauchst</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <div class="text-primary-600 text-4xl mb-4">
+            <i class="fas fa-paint-brush"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">No-Code Website-Builder</h3>
+          <p class="text-gray-600">
+            Erstelle deine Website mit unserem einfachen Formular-basierten Builder - keine Programmierkenntnisse erforderlich.
+          </p>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <div class="text-primary-600 text-4xl mb-4">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Responsive Design</h3>
+          <p class="text-gray-600">
+            Deine Website sieht auf allen Geräten perfekt aus - vom Smartphone bis zum Desktop.
+          </p>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <div class="text-primary-600 text-4xl mb-4">
+            <i class="fas fa-images"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Bildergalerie für Projekte</h3>
+          <p class="text-gray-600">
+            Präsentiere deine besten Arbeiten in einer professionellen Bildergalerie.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="bg-gray-100 py-16">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-6">Bereit, deine digitale Präsenz aufzubauen?</h2>
+      <p class="text-xl mb-8 max-w-3xl mx-auto">
+        Starte noch heute und erstelle deine professionelle Handwerker-Website in wenigen Minuten.
+      </p>
+      <a href="#" class="px-8 py-3 bg-primary-600 text-white rounded-md font-semibold hover:bg-primary-700 transition-colors">
+        Kostenlos testen
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4">247Vitrine</h3>
+          <p class="text-gray-400">
+            Die Self-Service-Plattform für Handwerker, um mit wenigen Klicks ihre eigene Site-Vitrine zu erstellen.
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Links</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Preise</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Rechtliches</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">AGB</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Datenschutz</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Impressum</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Kontakt</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li>Email: info@247vitrine.ma</li>
+            <li>Telefon: +49 123 456789</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+        <p>&copy; 2023 247Vitrine. Alle Rechte vorbehalten.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
