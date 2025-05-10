@@ -1,50 +1,53 @@
-# 247Vitrine – SaaS-Plattform für Handwerker-Webseiten
+# 247Vitrine
 
-*Eine Self-Service-Plattform für Handwerker, um mit wenigen Klicks ihre eigene Site-Vitrine zu erstellen, sichtbar zu werden und digitale Präsenz aufzubauen.*
+Eine SaaS-Plattform für Handwerker mit React/Tailwind Frontend, Node.js/Express Backend und MongoDB.
 
-## Features
+## Über das Projekt
 
-- *No-Code Website-Builder* auf Formularbasis
-- *Live-Vorschau* von Layout, Farbschema, Template
-- *Subdomain* automatisch erstellt (nutzer.247vitrine.ma)
-- *Eigene Domain* optional integrierbar
-- *Digitale Visitenkarte + QR-Code* für Social Media
-- *Admin Dashboard* für Nutzerverwaltung, Site-Status und Analyse
-- *Bildergalerie für Projekte* – Hochladen und Präsentieren von Bildern
-- *Einfache Formular-basierte Bearbeitung* der Webseite durch den Kunden
-- *Verschiedene Design-Templates & Farbschemata* zur Auswahl
-- *Monatliches Abo + einmalige Setupgebühr* (ohne Provision)
+247Vitrine ist eine Self-Service-Plattform für Handwerker, um mit wenigen Klicks ihre eigene Website zu erstellen, sichtbar zu werden und digitale Präsenz aufzubauen. Der Name '247Vitrine' wurde gewählt, weil '247' für 'jederzeit' steht und 'Vitrine' das Fenster symbolisiert, durch das Besucher das Unternehmen betrachten können.
+
+Das Projekt ist primär für den marokkanischen Markt bestimmt, um dort die notwendige digitale Infrastruktur bereitzustellen.
 
 ## Projektstruktur
 
-Die Projektstruktur wurde bereinigt und vereinfacht:
-
 ```
-247vitrine/
-├── backend/
-│   ├── config/         # Konfigurationsdateien
-│   ├── controllers/    # Controller für die API-Endpunkte
-│   ├── middleware/     # Middleware-Funktionen
-│   ├── models/         # Mongoose-Modelle
-│   ├── public/         # Statische Dateien
-│   ├── routes/         # API-Routen
-│   ├── utils/          # Hilfsfunktionen
-│   ├── .env            # Umgebungsvariablen
-│   ├── index.js        # Hauptanwendungsdatei
-│   └── package.json    # Backend-Abhängigkeiten
-├── frontend/
-│   ├── admin-dashboard/ # Admin-Dashboard
-│   ├── public/          # Statische Dateien
-│   ├── src/             # Quellcode
-│   ├── dashboard.html   # Dashboard-Seite
-│   ├── login.html       # Login-Seite
-│   ├── preview.html     # Vorschau-Seite
-│   ├── register.html    # Registrierungsseite
-│   └── website-builder.html # Website-Builder-Seite
-└── docs/               # Dokumentation
+/
+├── backend/                # Backend-Code
+│   ├── config/             # Konfigurationsdateien
+│   ├── controllers/        # Controller für die API-Endpunkte
+│   ├── middleware/         # Middleware-Funktionen
+│   ├── models/             # Mongoose-Modelle
+│   ├── public/             # Statische Dateien
+│   ├── routes/             # API-Routen
+│   ├── utils/              # Hilfsfunktionen
+│   ├── .env                # Umgebungsvariablen
+│   ├── index.js            # Hauptanwendungsdatei
+│   └── package.json        # Backend-Abhängigkeiten
+├── frontend/               # Frontend-Code
+│   ├── admin/              # Admin-Dashboard
+│   ├── customer/           # Kundenportal
+│   ├── public/             # Statische Dateien
+│   ├── assets/             # Bilder, Fonts, etc.
+│   └── package.json        # Frontend-Abhängigkeiten
+├── docs/                   # Dokumentation
+├── .gitignore              # Git-Ignore-Datei
+└── README.md               # Projektdokumentation
 ```
 
-## Entwicklung
+## Features
+
+- **No-Code Website-Builder** auf Formularbasis
+- **Live-Vorschau** von Layout, Farbschema, Template
+- **Subdomain** automatisch erstellt (nutzer.247vitrine.ma)
+- **Eigene Domain** optional integrierbar
+- **Digitale Visitenkarte + QR-Code** für Social Media
+- **Admin Dashboard** für Nutzerverwaltung, Site-Status und Analyse
+- **Bildergalerie für Projekte** – Hochladen und Präsentieren von Bildern
+- **Einfache Formular-basierte Bearbeitung** der Webseite durch den Kunden
+- **Verschiedene Design-Templates & Farbschemata** zur Auswahl
+- **Monatliches Abo + einmalige Setupgebühr** (ohne Provision)
+
+## Installation
 
 ### Voraussetzungen
 
@@ -52,44 +55,35 @@ Die Projektstruktur wurde bereinigt und vereinfacht:
 - npm
 - MongoDB
 
-### Installation
-
-#### Backend
+### Backend
 
 ```bash
-cd 247vitrine/backend
+cd backend
 npm install
 ```
 
-#### Frontend
+### Frontend
 
 ```bash
-cd 247vitrine/frontend
+cd frontend
 npm install
 ```
 
-### Starten der Anwendung
+## Starten der Anwendung
 
-#### Backend
+### Backend
 
 ```bash
-cd 247vitrine/backend
+cd backend
 npm start
 ```
 
-#### Frontend
+### Frontend
 
 ```bash
-cd 247vitrine/frontend
+cd frontend
 npm start
 ```
-
-## Funktionen
-
-- **Benutzerauthentifizierung**: Registrierung, Login und Benutzerverwaltung
-- **Website-Builder**: Erstellung und Bearbeitung von Websites
-- **QR-Code-Generierung**: Generierung von QR-Codes für digitale Visitenkarten
-- **Blog-System**: Erstellung und Verwaltung von Blog-Beiträgen
 
 ## QR-Code-Funktionalität
 

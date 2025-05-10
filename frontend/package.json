@@ -1,0 +1,17 @@
+{
+  "name": "247vitrine-frontend",
+  "version": "1.0.0",
+  "description": "Frontend für die 247Vitrine-Plattform",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server -p 8080 -c-1 ./customer",
+    "start:admin": "http-server -p 8081 -c-1 ./admin",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^14.1.1",
+    "tailwindcss": "^3.3.3"
+  }
+}
