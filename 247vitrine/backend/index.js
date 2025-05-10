@@ -3,8 +3,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 const authController = require('./controllers/authController');
 const { authenticate, authorize } = require('./middleware/auth');
+const { sendEmail } = require('./utils/emailService');
 
 // Modelle importieren
 const Layout = require('./models/Layout');
@@ -25,18 +27,31 @@ const PORT = process.env.PORT || 3001;
 app.use(cors({
   origin: '*', // Erlaubt Anfragen von allen Ursprüngen
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
 }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB-Verbindung
+console.log('Connecting to MongoDB with URI:', process.env.MONGODB_URI ? 'URI from .env file' : 'Fallback URI');
+
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://247vitrine-db:l9dyz9HhhejrP23ztH7LsVetUjNJuT6duzLoVwqhhRZMZWHA85vhcQWUYtOFt9iAj0tZY5IMfLxRACDbDfZgcA==@247vitrine-db.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@247vitrine-db@', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+.then(() => console.log('MongoDB connected successfully'))
+.catch(err => {
+  console.error('MongoDB connection error:', err);
+
+  // Versuche, mit lokaler MongoDB zu verbinden, wenn die Azure-Verbindung fehlschlägt
+  console.log('Attempting to connect to local MongoDB...');
+  return mongoose.connect('mongodb://localhost:27017/247vitrine', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('Connected to local MongoDB successfully'))
+  .catch(localErr => console.error('Local MongoDB connection error:', localErr));
+});
 
 // Auth-Routen
 app.post('/api/auth/register', authController.register);
@@ -363,36 +378,56 @@ function generatePreviewHTML(content, layout, design, colorScheme) {
 
         .contact-form {
           background-color: white;
-          border-radius: 8px;
+          border-radius: 12px;
           padding: 30px;
           color: var(--text-color);
-          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+          box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+          max-width: 600px;
+          margin: 0 auto;
         }
 
         .contact-form h3 {
           color: var(--primary-color);
           margin-top: 0;
           margin-bottom: 20px;
+          font-size: 22px;
+          text-align: center;
+          border-bottom: 2px solid var(--primary-color);
+          padding-bottom: 10px;
         }
 
         .contact-form .form-group {
-          margin-bottom: 20px;
+          margin-bottom: 25px;
         }
 
         .contact-form label {
           display: block;
-          margin-bottom: 5px;
+          margin-bottom: 8px;
           font-weight: bold;
+          color: var(--primary-color);
+          font-size: 14px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
         .contact-form input,
         .contact-form textarea {
           width: 100%;
-          padding: 10px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
+          padding: 12px 15px;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
           font-family: inherit;
           font-size: 16px;
+          transition: border-color 0.3s, box-shadow 0.3s;
+          background-color: #f9f9f9;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+          border-color: var(--primary-color);
+          box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+          outline: none;
+          background-color: white;
         }
 
         .contact-form textarea {
@@ -404,20 +439,35 @@ function generatePreviewHTML(content, layout, design, colorScheme) {
           background-color: var(--primary-color);
           color: white;
           border: none;
-          border-radius: 4px;
-          padding: 12px 20px;
+          border-radius: 8px;
+          padding: 14px 24px;
           font-size: 16px;
+          font-weight: bold;
           cursor: pointer;
-          transition: background-color 0.3s;
+          transition: all 0.3s;
+          display: block;
+          width: 100%;
+          max-width: 250px;
+          margin: 0 auto;
+          text-transform: uppercase;
+          letter-spacing: 1px;
         }
 
         .contact-form .submit-button:hover {
           background-color: var(--secondary-color);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .contact-form .submit-button:active {
+          transform: translateY(0);
         }
 
         .contact-form .submit-button:disabled {
           background-color: #ccc;
           cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
         }
 
         .contact-form .success-message {
@@ -731,6 +781,49 @@ app.get('/api/image-resolutions/:layoutType/:imageType', (req, res) => {
   }
 });
 
+// Kontaktformular-Route
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, email, phone, message, recipient } = req.body;
+
+    // Validiere die Eingaben
+    if (!name || !email || !message || !recipient) {
+      return res.status(400).json({
+        success: false,
+        message: 'Unvollständige Daten. Name, E-Mail, Nachricht und Empfänger sind erforderlich.'
+      });
+    }
+
+    // Validiere E-Mail-Format
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Ungültige E-Mail-Adresse.'
+      });
+    }
+
+    // Sende die E-Mail
+    const result = await sendContactEmail({ name, email, phone, message, recipient });
+
+    if (result.success) {
+      res.json({ success: true, message: 'Nachricht erfolgreich gesendet.' });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Fehler beim Senden der Nachricht.',
+        error: result.error
+      });
+    }
+  } catch (error) {
+    console.error('Error processing contact form:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Serverfehler beim Verarbeiten des Kontaktformulars.'
+    });
+  }
+});
+
 // Live-Vorschau-Route
 app.post('/api/preview', async (req, res) => {
   try {
@@ -813,20 +906,59 @@ app.get('/api/websites/:id', authenticate, async (req, res) => {
 
 app.post('/api/websites', authenticate, async (req, res) => {
   try {
+    // Prüfen, ob die neue Website eine Demo-Website ist
+    const isDemo = req.body.isDemo || false;
+    const isPublished = req.body.published || false;
+
+    // Wenn es eine veröffentlichte Website sein soll (nicht Demo)
+    if (isPublished && !isDemo) {
+      // Prüfen, ob bereits eine veröffentlichte Website existiert
+      const publishedWebsites = await Website.find({
+        owner: req.user.id,
+        published: true,
+        isDemo: { $ne: true }
+      });
+
+      if (publishedWebsites.length >= 1) {
+        return res.status(403).json({
+          message: 'Sie können nur eine veröffentlichte Website haben. Bitte bearbeiten oder löschen Sie Ihre bestehende Website.'
+        });
+      }
+    }
+
+    // Wenn es eine Demo-Website sein soll
+    if (isDemo) {
+      // Prüfen, ob bereits eine Demo-Website existiert
+      const demoWebsites = await Website.find({
+        owner: req.user.id,
+        isDemo: true
+      });
+
+      if (demoWebsites.length >= 1) {
+        return res.status(403).json({
+          message: 'Sie können nur eine Demo-Website haben. Bitte bearbeiten oder löschen Sie Ihre bestehende Demo-Website.'
+        });
+      }
+    }
+
     const website = new Website({
       ...req.body,
-      owner: req.user.id // Besitzer setzen
+      owner: req.user.id, // Besitzer setzen
+      isDemo: isDemo
     });
 
     // Wenn eine digitale Visitenkarte vorhanden ist, generiere einen QR-Code
+    // (Bei der Erstellung gibt es noch keinen existierenden QR-Code)
     if (website.content.businessCard && website.content.businessCard.companyName) {
       try {
+        console.log('Generiere QR-Code für neue Website:', website._id);
         const qrCodeUrl = await generateQRCode(
           website._id,
           website.subdomain,
           website.content.businessCard
         );
         website.content.businessCard.qrCodeUrl = qrCodeUrl;
+        console.log('QR-Code generiert:', qrCodeUrl);
       } catch (qrError) {
         console.error('Error generating QR code:', qrError);
         // Fahre fort, auch wenn der QR-Code nicht generiert werden konnte
@@ -864,18 +996,68 @@ app.put('/api/websites/:id', authenticate, async (req, res) => {
       return res.status(403).json({ message: 'Forbidden' });
     }
 
-    // Wenn eine digitale Visitenkarte vorhanden ist, generiere einen QR-Code
+    // Prüfen, ob der Status (Demo/Veröffentlicht) geändert wurde
+    const isChangingToDemo = !website.isDemo && req.body.isDemo;
+    const isChangingFromDemo = website.isDemo && !req.body.isDemo;
+    const isChangingToPublished = !website.published && req.body.published;
+
+    // Wenn der Veröffentlichungsstatus geändert wird oder die Website bereits veröffentlicht ist
+    if (isChangingToPublished || req.body.published) {
+      const existingWebsites = await Website.find({
+        owner: req.user.id,
+        _id: { $ne: req.params.id }, // Alle Websites außer der aktuellen
+        published: true,
+        isDemo: { $ne: true } // Keine Demo-Websites
+      });
+
+      // Wenn bereits eine veröffentlichte Website existiert
+      if (existingWebsites.length >= 1) {
+        return res.status(403).json({
+          message: 'Sie können nur eine veröffentlichte Website haben. Bitte bearbeiten oder löschen Sie Ihre bestehende Website.'
+        });
+      }
+    }
+
+    // Wenn der Demo-Status geändert wird
+    if (isChangingToDemo) {
+      const existingDemoWebsites = await Website.find({
+        owner: req.user.id,
+        _id: { $ne: req.params.id }, // Alle Websites außer der aktuellen
+        isDemo: true
+      });
+
+      // Wenn bereits eine Demo-Website existiert
+      if (existingDemoWebsites.length >= 1) {
+        return res.status(403).json({
+          message: 'Sie können nur eine Demo-Website haben. Bitte bearbeiten oder löschen Sie Ihre bestehende Demo-Website.'
+        });
+      }
+    }
+
+    // Wenn eine digitale Visitenkarte vorhanden ist
     if (req.body.content && req.body.content.businessCard && req.body.content.businessCard.companyName) {
-      try {
-        const qrCodeUrl = await generateQRCode(
-          req.params.id,
-          req.body.subdomain,
-          req.body.content.businessCard
-        );
-        req.body.content.businessCard.qrCodeUrl = qrCodeUrl;
-      } catch (qrError) {
-        console.error('Error generating QR code:', qrError);
-        // Fahre fort, auch wenn der QR-Code nicht generiert werden konnte
+      // Prüfe, ob bereits ein QR-Code existiert
+      const existingQrCode = website.content?.businessCard?.qrCodeUrl;
+
+      if (existingQrCode) {
+        // Behalte den existierenden QR-Code bei
+        console.log('Bestehender QR-Code wird beibehalten:', existingQrCode);
+        req.body.content.businessCard.qrCodeUrl = existingQrCode;
+      } else {
+        // Nur wenn noch kein QR-Code existiert, generiere einen neuen
+        try {
+          console.log('Generiere neuen QR-Code für Website:', req.params.id);
+          const qrCodeUrl = await generateQRCode(
+            req.params.id,
+            req.body.subdomain,
+            req.body.content.businessCard
+          );
+          req.body.content.businessCard.qrCodeUrl = qrCodeUrl;
+          console.log('Neuer QR-Code generiert:', qrCodeUrl);
+        } catch (qrError) {
+          console.error('Error generating QR code:', qrError);
+          // Fahre fort, auch wenn der QR-Code nicht generiert werden konnte
+        }
       }
     }
 
@@ -923,6 +1105,151 @@ app.delete('/api/websites/:id', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Error deleting website:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Endpunkt zum expliziten Neuerstellen des QR-Codes
+app.post('/api/websites/:id/regenerate-qrcode', authenticate, async (req, res) => {
+  try {
+    const website = await Website.findById(req.params.id);
+
+    if (!website) {
+      return res.status(404).json({ message: 'Website nicht gefunden' });
+    }
+
+    // Prüfen, ob der Benutzer Zugriff auf die Website hat
+    if (req.user.role !== 'admin' && website.owner.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Zugriff verweigert' });
+    }
+
+    // Prüfen, ob eine Visitenkarte existiert
+    if (!website.content.businessCard || !website.content.businessCard.companyName) {
+      return res.status(400).json({
+        success: false,
+        message: 'Keine Visitenkarte gefunden. Bitte erstellen Sie zuerst eine Visitenkarte.'
+      });
+    }
+
+    // Speichere den alten QR-Code für die Dokumentation
+    const oldQrCodeUrl = website.content.businessCard.qrCodeUrl;
+    let documentationPath = '';
+
+    // Wenn der alte QR-Code existiert und Dokumentation angefordert wurde
+    if (oldQrCodeUrl && req.body.documentOldQrCode) {
+      try {
+        // Erstelle einen Dateinamen für die Dokumentation
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const fileName = `qrcode-${website._id}-${timestamp}.pdf`;
+        documentationPath = path.join(__dirname, 'public', 'qrcodes', fileName);
+
+        // Stelle sicher, dass das Verzeichnis existiert
+        await fs.promises.mkdir(path.join(__dirname, 'public', 'qrcodes'), { recursive: true });
+
+        // Erstelle ein einfaches PDF mit dem alten QR-Code
+        // Hier würde normalerweise eine PDF-Generierung stattfinden
+        // Für dieses Beispiel speichern wir einfach die URL in einer Textdatei
+        await fs.promises.writeFile(
+          documentationPath,
+          `Alter QR-Code für Website ${website._id}\nGespeichert am: ${new Date().toLocaleString()}\nURL: ${oldQrCodeUrl}`
+        );
+
+        console.log('Alter QR-Code dokumentiert:', documentationPath);
+
+        // Sende eine E-Mail mit dem alten QR-Code
+        const user = await User.findById(website.owner);
+        if (user && user.email) {
+          try {
+            await sendEmail({
+              to: user.email,
+              subject: 'Ihr QR-Code wurde neu generiert',
+              text: `Sehr geehrte(r) ${user.firstName} ${user.lastName},\n\nSie haben soeben einen neuen QR-Code für Ihre Website "${website.title}" generiert.\n\nZur Ihrer Dokumentation haben wir eine Kopie Ihres alten QR-Codes gespeichert.\n\nMit freundlichen Grüßen,\nIhr 247Vitrine-Team`,
+              html: `
+                <h2>QR-Code neu generiert</h2>
+                <p>Sehr geehrte(r) ${user.firstName} ${user.lastName},</p>
+                <p>Sie haben soeben einen neuen QR-Code für Ihre Website "${website.title}" generiert.</p>
+                <p>Zur Ihrer Dokumentation haben wir eine Kopie Ihres alten QR-Codes gespeichert.</p>
+                <div style="margin: 20px 0;">
+                  <p><strong>Alter QR-Code:</strong></p>
+                  <img src="${oldQrCodeUrl}" alt="Alter QR-Code" style="max-width: 200px; border: 1px solid #ccc; padding: 10px;">
+                </div>
+                <p>Mit freundlichen Grüßen,<br>Ihr 247Vitrine-Team</p>
+              `
+            });
+            console.log('Dokumentations-E-Mail gesendet an:', user.email);
+          } catch (emailError) {
+            console.error('Fehler beim Senden der Dokumentations-E-Mail:', emailError);
+            // Wir fahren trotzdem fort, auch wenn die E-Mail nicht gesendet werden konnte
+          }
+        }
+      } catch (docError) {
+        console.error('Fehler bei der Dokumentation des alten QR-Codes:', docError);
+        // Wir fahren trotzdem fort, auch wenn die Dokumentation fehlgeschlagen ist
+      }
+    }
+
+    // Generiere einen neuen QR-Code
+    try {
+      console.log('Generiere neuen QR-Code auf Anfrage für Website:', website._id);
+      const qrCodeUrl = await generateQRCode(
+        website._id,
+        website.subdomain,
+        website.content.businessCard
+      );
+
+      // Aktualisiere den QR-Code in der Datenbank
+      website.content.businessCard.qrCodeUrl = qrCodeUrl;
+      await website.save();
+
+      console.log('Neuer QR-Code generiert:', qrCodeUrl);
+
+      // Sende eine E-Mail mit dem neuen QR-Code
+      const user = await User.findById(website.owner);
+      if (user && user.email && oldQrCodeUrl) {
+        try {
+          await sendEmail({
+            to: user.email,
+            subject: 'Ihr neuer QR-Code ist verfügbar',
+            text: `Sehr geehrte(r) ${user.firstName} ${user.lastName},\n\nIhr neuer QR-Code für die Website "${website.title}" wurde erfolgreich generiert.\n\nMit freundlichen Grüßen,\nIhr 247Vitrine-Team`,
+            html: `
+              <h2>Ihr neuer QR-Code ist verfügbar</h2>
+              <p>Sehr geehrte(r) ${user.firstName} ${user.lastName},</p>
+              <p>Ihr neuer QR-Code für die Website "${website.title}" wurde erfolgreich generiert.</p>
+              <div style="margin: 20px 0;">
+                <p><strong>Neuer QR-Code:</strong></p>
+                <img src="${qrCodeUrl}" alt="Neuer QR-Code" style="max-width: 200px; border: 1px solid #ccc; padding: 10px;">
+              </div>
+              <p>Bitte aktualisieren Sie alle Ihre Marketingmaterialien mit diesem neuen QR-Code.</p>
+              <p>Mit freundlichen Grüßen,<br>Ihr 247Vitrine-Team</p>
+            `
+          });
+          console.log('E-Mail mit neuem QR-Code gesendet an:', user.email);
+        } catch (emailError) {
+          console.error('Fehler beim Senden der E-Mail mit neuem QR-Code:', emailError);
+          // Wir fahren trotzdem fort, auch wenn die E-Mail nicht gesendet werden konnte
+        }
+      }
+
+      res.json({
+        success: true,
+        message: 'QR-Code wurde erfolgreich neu generiert.',
+        qrCodeUrl,
+        documentationPath: documentationPath ? `/qrcodes/${path.basename(documentationPath)}` : null
+      });
+    } catch (qrError) {
+      console.error('Error generating QR code:', qrError);
+      res.status(500).json({
+        success: false,
+        message: 'Fehler bei der Generierung des QR-Codes.',
+        error: qrError.message
+      });
+    }
+  } catch (error) {
+    console.error('Error regenerating QR code:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Serverfehler bei der Verarbeitung der Anfrage.',
+      error: error.message
+    });
   }
 });
 

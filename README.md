@@ -17,55 +17,88 @@
 
 ## Projektstruktur
 
+Die Projektstruktur wurde bereinigt und vereinfacht:
+
 ```
-/247vitrine
-├── packages/                  # Gemeinsam genutzte Pakete
-│   ├── config/                # Gemeinsame Konfigurationen
-│   ├── ui-components/         # Wiederverwendbare UI-Komponenten
-│   ├── utils/                 # Gemeinsame Hilfsfunktionen
-│   └── types/                 # TypeScript-Typdefinitionen
-│
-├── services/                  # Microservices
-│   ├── auth-service/          # Authentifizierung & Nutzerverwaltung
-│   ├── builder-service/       # Website-Builder-Logik
-│   ├── template-service/      # Template-Verwaltung
-│   ├── domain-service/        # Domain-Verwaltung
-│   ├── gallery-service/       # Bildergalerie-Funktionalität
-│   ├── analytics-service/     # Nutzungsanalyse (später)
-│   ├── payment-service/       # Zahlungsabwicklung
-│   └── generator-service/     # Statische Site-Generierung
-│
-├── apps/
-│   ├── customer-portal/       # Kundenportal (React)
-│   ├── admin-dashboard/       # Admin-Dashboard (React)
-│   ├── website-preview/       # Live-Vorschau-Komponente
-│   └── api-gateway/           # API-Gateway für alle Services
-│
-├── infrastructure/            # Infrastruktur-Code
-│   ├── terraform/             # IaC für Cloud-Ressourcen
-│   ├── docker/                # Docker-Konfigurationen
-│   └── ci-cd/                 # CI/CD-Pipelines
-│
-└── docs/                      # Projektdokumentation
+247vitrine/
+├── backend/
+│   ├── config/         # Konfigurationsdateien
+│   ├── controllers/    # Controller für die API-Endpunkte
+│   ├── middleware/     # Middleware-Funktionen
+│   ├── models/         # Mongoose-Modelle
+│   ├── public/         # Statische Dateien
+│   ├── routes/         # API-Routen
+│   ├── utils/          # Hilfsfunktionen
+│   ├── .env            # Umgebungsvariablen
+│   ├── index.js        # Hauptanwendungsdatei
+│   └── package.json    # Backend-Abhängigkeiten
+├── frontend/
+│   ├── admin-dashboard/ # Admin-Dashboard
+│   ├── public/          # Statische Dateien
+│   ├── src/             # Quellcode
+│   ├── dashboard.html   # Dashboard-Seite
+│   ├── login.html       # Login-Seite
+│   ├── preview.html     # Vorschau-Seite
+│   ├── register.html    # Registrierungsseite
+│   └── website-builder.html # Website-Builder-Seite
+└── docs/               # Dokumentation
 ```
 
 ## Entwicklung
 
 ### Voraussetzungen
 
-- Node.js (v16+)
-- Yarn
+- Node.js (v20+)
+- npm
 - MongoDB
 
 ### Installation
 
-```bash
-# Abhängigkeiten installieren
-yarn install
+#### Backend
 
-# Entwicklungsserver starten
-yarn dev
+```bash
+cd 247vitrine/backend
+npm install
 ```
+
+#### Frontend
+
+```bash
+cd 247vitrine/frontend
+npm install
+```
+
+### Starten der Anwendung
+
+#### Backend
+
+```bash
+cd 247vitrine/backend
+npm start
+```
+
+#### Frontend
+
+```bash
+cd 247vitrine/frontend
+npm start
+```
+
+## Funktionen
+
+- **Benutzerauthentifizierung**: Registrierung, Login und Benutzerverwaltung
+- **Website-Builder**: Erstellung und Bearbeitung von Websites
+- **QR-Code-Generierung**: Generierung von QR-Codes für digitale Visitenkarten
+- **Blog-System**: Erstellung und Verwaltung von Blog-Beiträgen
+
+## QR-Code-Funktionalität
+
+Die QR-Code-Funktionalität umfasst:
+
+1. **Generierung**: Automatische Generierung von QR-Codes für digitale Visitenkarten
+2. **Neugenerierung**: Mehrstufiger Bestätigungsprozess für die Neugenerierung von QR-Codes
+3. **Download**: Möglichkeit zum Herunterladen des QR-Codes für Marketingmaterialien
+4. **Dokumentation**: Speicherung alter QR-Codes für zukünftige Referenz
 
 ## Lizenz
 

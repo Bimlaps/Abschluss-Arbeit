@@ -81,11 +81,11 @@ async function seedDatabase() {
     await Design.deleteMany({});
     await ColorScheme.deleteMany({});
     await Website.deleteMany({});
-    
+
     // Layouts erstellen
     const layouts = await Layout.insertMany(layoutsData);
     console.log('Layouts created:', layouts.map(layout => layout._id));
-    
+
     // Designs erstellen (für jedes Layout ein Design)
     const designsData = [
       {
@@ -170,22 +170,22 @@ async function seedDatabase() {
         `
       }
     ];
-    
+
     const designs = await Design.insertMany(designsData);
     console.log('Designs created:', designs.map(design => design._id));
-    
+
     // Farbschemata erstellen
     const colorSchemes = await ColorScheme.insertMany(colorSchemesData);
     console.log('Color schemes created:', colorSchemes.map(scheme => scheme._id));
-    
+
     // Finde einen Benutzer (Admin oder Customer)
     const user = await User.findOne({ role: 'admin' });
-    
+
     if (!user) {
       throw new Error('No user found. Please run seed-users.js first.');
     }
-    
-    // Beispiel-Website erstellen
+
+    // Beispiel-Website erstellen (veröffentlichte Website)
     const website = await Website.create({
       name: 'Meine Handwerker-Website',
       subdomain: 'musterhandwerker',
@@ -230,16 +230,62 @@ async function seedDatabase() {
           address: 'Musterstraße 123, 12345 Musterstadt'
         }
       },
-      published: true
+      published: true,
+      isDemo: false
     });
-    console.log('Website created:', website._id);
-    
-    // Website zum Benutzer hinzufügen
+    console.log('Published website created:', website._id);
+
+    // Beispiel-Demo-Website erstellen
+    const demoWebsite = await Website.create({
+      name: 'Meine Demo-Website',
+      subdomain: 'demo-handwerker',
+      layout: layouts[1]._id, // Mehrseitig
+      design: designs[1]._id, // Eleganter Handwerker
+      colorScheme: colorSchemes[1]._id, // Grün & Lila
+      owner: user._id, // Besitzer setzen
+      content: {
+        title: 'Demo Handwerker GmbH',
+        description: 'Eine Demo-Website für Testzwecke',
+        logo: 'https://via.placeholder.com/150x50',
+        hero: {
+          title: 'Demo-Website',
+          subtitle: 'Hier können Sie neue Designs und Inhalte testen',
+          image: 'https://via.placeholder.com/1200x600'
+        },
+        about: {
+          title: 'Über diese Demo',
+          text: 'Diese Demo-Website dient zum Testen neuer Funktionen und Designs...',
+          image: 'https://via.placeholder.com/600x400'
+        },
+        services: [
+          {
+            title: 'Testfunktion 1',
+            description: 'Beschreibung der Testfunktion 1',
+            icon: '🧪'
+          },
+          {
+            title: 'Testfunktion 2',
+            description: 'Beschreibung der Testfunktion 2',
+            icon: '📊'
+          }
+        ],
+        contact: {
+          email: 'demo@example.com',
+          phone: '+49 987 654321',
+          address: 'Demostraße 456, 54321 Demostadt'
+        }
+      },
+      published: false,
+      isDemo: true
+    });
+    console.log('Demo website created:', demoWebsite._id);
+
+    // Websites zum Benutzer hinzufügen
     await User.findByIdAndUpdate(
       user._id,
-      { $push: { websites: website._id } }
+      { $push: { websites: { $each: [website._id, demoWebsite._id] } } }
     );
-    
+
     console.log('Database seeded successfully');
     process.exit(0);
   } catch (error) {
