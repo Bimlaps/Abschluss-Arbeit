@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mustermann Handwerk - Vorschau</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+              950: '#082f49',
+            },
+          },
+        },
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+</head>
+<body class="bg-white">
+  <!-- Preview Toolbar -->
+  <div class="fixed top-0 left-0 right-0 bg-gray-800 text-white z-50 px-4 py-2 flex justify-between items-center">
+    <div class="flex items-center">
+      <span class="mr-4">Vorschau: Mustermann Handwerk</span>
+      <div class="flex space-x-2">
+        <button class="px-2 py-1 bg-gray-700 rounded text-sm">Desktop</button>
+        <button class="px-2 py-1 hover:bg-gray-700 rounded text-sm">Tablet</button>
+        <button class="px-2 py-1 hover:bg-gray-700 rounded text-sm">Mobil</button>
+      </div>
+    </div>
+    <div>
+      <a href="website-builder.html" class="px-3 py-1 bg-primary-600 text-white rounded-md hover:bg-primary-700 text-sm">
+        Zurück zum Editor
+      </a>
+    </div>
+  </div>
+  
+  <!-- Website Preview with padding for toolbar -->
+  <div class="pt-12">
+    <!-- Header -->
+    <header class="bg-primary-700 text-white shadow-md">
+      <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <a href="#" class="text-2xl font-bold">Mustermann Handwerk</a>
+        
+        <nav class="hidden md:flex space-x-6">
+          <a href="#" class="hover:text-primary-200 transition-colors font-medium">Home</a>
+          <a href="#" class="hover:text-primary-200 transition-colors font-medium">Über uns</a>
+          <a href="#" class="hover:text-primary-200 transition-colors font-medium">Dienstleistungen</a>
+          <a href="#" class="hover:text-primary-200 transition-colors font-medium">Galerie</a>
+          <a href="#" class="hover:text-primary-200 transition-colors font-medium">Kontakt</a>
+        </nav>
+        
+        <button class="md:hidden text-white focus:outline-none">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-primary-700 text-white py-20">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">Qualität und Handwerkskunst seit 1995</h1>
+        <p class="text-xl mb-8 max-w-3xl mx-auto">
+          Ihr zuverlässiger Partner für hochwertige Handwerksarbeiten in der Region. Wir bieten maßgeschneiderte Lösungen für Ihre individuellen Anforderungen.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="#" class="px-8 py-3 bg-white text-primary-700 rounded-md font-semibold hover:bg-gray-100 transition-colors">
+            Kontakt aufnehmen
+          </a>
+          <a href="#" class="px-8 py-3 border border-white rounded-md font-semibold hover:bg-primary-600 transition-colors">
+            Unsere Leistungen
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="py-16">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-2">Über uns</h2>
+        <p class="text-xl text-center text-gray-600 mb-8">Erfahrung und Qualität seit 1995</p>
+        
+        <div class="flex flex-col md:flex-row gap-8 items-center max-w-5xl mx-auto">
+          <div class="md:w-1/2">
+            <img src="https://via.placeholder.com/600x400" alt="Über uns" class="rounded-lg shadow-md w-full" />
+          </div>
+          <div class="md:w-1/2">
+            <p class="text-gray-700 mb-4">Willkommen bei Mustermann Handwerk! Seit über 25 Jahren sind wir Ihr zuverlässiger Partner für hochwertige Handwerksarbeiten in der Region. Unser Familienbetrieb legt größten Wert auf Qualität, Zuverlässigkeit und Kundenzufriedenheit.</p>
+            <p class="text-gray-700 mb-4">Mit unserem erfahrenen Team aus qualifizierten Fachkräften bieten wir Ihnen maßgeschneiderte Lösungen für Ihre individuellen Anforderungen. Wir verwenden ausschließlich hochwertige Materialien und arbeiten mit modernsten Techniken, um optimale Ergebnisse zu erzielen.</p>
+            <p class="text-gray-700">Kontaktieren Sie uns für eine kostenlose Beratung und überzeugen Sie sich selbst von unserer Handwerkskunst!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-2">Unsere Dienstleistungen</h2>
+        <p class="text-xl text-center text-gray-600 mb-12">Professionelle Lösungen für Ihre Anforderungen</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mb-4 mx-auto">
+              <i class="fas fa-hammer text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2 text-center">Zimmererarbeiten</h3>
+            <p class="text-gray-600 text-center">
+              Von Dachstühlen bis zu Holzkonstruktionen – wir bieten hochwertige Zimmererarbeiten für Ihr Zuhause.
+            </p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mb-4 mx-auto">
+              <i class="fas fa-paint-roller text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2 text-center">Malerarbeiten</h3>
+            <p class="text-gray-600 text-center">
+              Frische Farbe für Ihre Räume – innen und außen. Wir sorgen für ein perfektes Finish.
+            </p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mb-4 mx-auto">
+              <i class="fas fa-tools text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2 text-center">Renovierungen</h3>
+            <p class="text-gray-600 text-center">
+              Komplette Renovierungen oder einzelne Projekte – wir setzen Ihre Wünsche professionell um.
+            </p>
+          </div>
+        </div>
+        
+        <div class="text-center mt-12">
+          <a href="#" class="px-6 py-3 bg-primary-600 text-white rounded-md font-semibold hover:bg-primary-700 transition-colors inline-block">
+            Alle Leistungen ansehen
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-16">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-2">Unsere Projekte</h2>
+        <p class="text-xl text-center text-gray-600 mb-12">Einblicke in unsere Arbeit</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div class="overflow-hidden rounded-lg shadow-md">
+            <img src="https://via.placeholder.com/600x400/0369a1/FFFFFF?text=Projekt+1" alt="Projekt 1" class="w-full h-64 object-cover transition-transform duration-300 hover:scale-105" />
+          </div>
+          <div class="overflow-hidden rounded-lg shadow-md">
+            <img src="https://via.placeholder.com/600x400/0369a1/FFFFFF?text=Projekt+2" alt="Projekt 2" class="w-full h-64 object-cover transition-transform duration-300 hover:scale-105" />
+          </div>
+          <div class="overflow-hidden rounded-lg shadow-md">
+            <img src="https://via.placeholder.com/600x400/0369a1/FFFFFF?text=Projekt+3" alt="Projekt 3" class="w-full h-64 object-cover transition-transform duration-300 hover:scale-105" />
+          </div>
+          <div class="overflow-hidden rounded-lg shadow-md">
+            <img src="https://via.placeholder.com/600x400/0369a1/FFFFFF?text=Projekt+4" alt="Projekt 4" class="w-full h-64 object-cover transition-transform duration-300 hover:scale-105" />
+          </div>
+          <div class="overflow-hidden rounded-lg shadow-md">
+            <img src="https://via.placeholder.com/600x400/0369a1/FFFFFF?text=Projekt+5" alt="Projekt 5" class="w-full h-64 object-cover transition-transform duration-300 hover:scale-105" />
+          </div>
+          <div class="overflow-hidden rounded-lg shadow-md">
+            <img src="https://via.placeholder.com/600x400/0369a1/FFFFFF?text=Projekt+6" alt="Projekt 6" class="w-full h-64 object-cover transition-transform duration-300 hover:scale-105" />
+          </div>
+        </div>
+        
+        <div class="text-center mt-12">
+          <a href="#" class="px-6 py-3 bg-primary-600 text-white rounded-md font-semibold hover:bg-primary-700 transition-colors inline-block">
+            Alle Projekte ansehen
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-2">Kontakt</h2>
+        <p class="text-xl text-center text-gray-600 mb-12">Wir freuen uns auf Ihre Anfrage</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Kontaktinformationen</h3>
+            <ul class="space-y-4">
+              <li class="flex items-start">
+                <i class="fas fa-map-marker-alt text-primary-600 mt-1 mr-3"></i>
+                <span>Musterstraße 123<br />12345 Musterstadt</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-phone text-primary-600 mr-3"></i>
+                <span>+49 123 456789</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-envelope text-primary-600 mr-3"></i>
+                <span>info@mustermann-handwerk.de</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-clock text-primary-600 mr-3"></i>
+                <span>Mo-Fr: 8:00 - 17:00 Uhr</span>
+              </li>
+            </ul>
+            
+            <div class="mt-6">
+              <h3 class="text-xl font-semibold mb-4">Folgen Sie uns</h3>
+              <div class="flex space-x-4">
+                <a href="#" class="w-10 h-10 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700 transition-colors">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="w-10 h-10 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700 transition-colors">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="w-10 h-10 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700 transition-colors">
+                  <i class="fab fa-linkedin-in"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <form>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Betreff</label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  required
+                />
+              </div>
+              
+              <div class="mb-4">
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Nachricht</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="5"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  required
+                ></textarea>
+              </div>
+              
+              <div class="flex items-center mb-4">
+                <input
+                  type="checkbox"
+                  id="privacy"
+                  name="privacy"
+                  class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  required
+                />
+                <label for="privacy" class="ml-2 text-sm text-gray-700">
+                  Ich habe die <a href="#" class="text-primary-600 hover:text-primary-800">Datenschutzerklärung</a> gelesen und stimme zu.
+                </label>
+              </div>
+              
+              <button
+                type="submit"
+                class="w-full px-4 py-2 bg-primary-600 text-white rounded-md font-semibold hover:bg-primary-700 transition-colors"
+              >
+                Nachricht senden
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Mustermann Handwerk</h3>
+            <p class="text-gray-400">
+              Ihr zuverlässiger Partner für hochwertige Handwerksarbeiten in der Region seit 1995.
+            </p>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Kontakt</h3>
+            <ul class="space-y-2 text-gray-400">
+              <li>Musterstraße 123, 12345 Musterstadt</li>
+              <li>Telefon: +49 123 456789</li>
+              <li>E-Mail: info@mustermann-handwerk.de</li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Links</h3>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Über uns</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Dienstleistungen</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Galerie</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Rechtliches</h3>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Impressum</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Datenschutz</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">AGB</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+          <p>&copy; 2023 Mustermann Handwerk. Alle Rechte vorbehalten. | Erstellt mit <a href="preview.html" class="text-primary-400 hover:text-primary-300">247Vitrine</a></p>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
