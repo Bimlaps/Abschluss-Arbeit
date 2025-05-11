@@ -1,0 +1,160 @@
+.preview-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+  overflow: hidden; /* Verhindert Scrollbars auf der Hauptseite */
+}
+
+.preview-header {
+  position: relative;
+  padding: 15px;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: #f0f9ff;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px; /* Feste Höhe für den Header */
+  min-height: 60px; /* Minimale Höhe sicherstellen */
+  box-sizing: border-box; /* Padding in die Höhe einbeziehen */
+}
+
+.preview-header h3 {
+  margin: 0;
+  color: #0284c7;
+  font-size: 16px;
+}
+
+.device-selector {
+  display: flex;
+  gap: 8px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.device-button {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+  color: #666;
+}
+
+.device-button:hover {
+  background-color: #e0e0e0;
+}
+
+.device-button.active {
+  background-color: #0284c7;
+  color: white;
+  border-color: #0284c7;
+}
+
+.back-button {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+.preview-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0; /* Padding entfernt für maximale Höhe */
+  height: calc(100vh - 60px); /* Restliche Höhe nach Abzug des Headers */
+}
+
+.preview-frame {
+  flex: 1; /* Nimmt den gesamten verfügbaren Platz ein */
+  position: relative;
+  min-height: calc(100vh - 60px); /* Mindesthöhe sicherstellen */
+  background-color: white;
+  transition: all 0.3s ease;
+  border-radius: 0; /* Keine abgerundeten Ecken für maximale Größe */
+  box-shadow: none; /* Kein Schatten für nahtloses Aussehen */
+  overflow: hidden; /* Verhindert Scrollbars im Frame */
+}
+
+.preview-desktop {
+  width: 100%;
+}
+
+.preview-tablet {
+  width: 768px;
+  margin: 0 auto;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+}
+
+.preview-mobile {
+  width: 375px;
+  margin: 0 auto;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+}
+
+.preview-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  position: relative;
+  z-index: 0;
+  display: block; /* Sicherstellen, dass es als Block-Element angezeigt wird */
+}
+
+.preview-loading,
+.preview-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  padding: 20px;
+}
+
+.preview-error {
+  color: #e53e3e;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .preview-header {
+    flex-direction: column;
+    padding: 15px 10px;
+    gap: 10px;
+  }
+
+  .back-button {
+    position: static;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .device-selector {
+    position: static;
+    margin-top: 10px;
+  }
+
+  .preview-container {
+    padding: 10px;
+  }
+
+  .preview-tablet {
+    width: 100%;
+  }
+
+  .preview-mobile {
+    width: 100%;
+    max-width: 375px;
+  }
+}

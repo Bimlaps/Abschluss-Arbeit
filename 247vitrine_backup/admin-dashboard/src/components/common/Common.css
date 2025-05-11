@@ -1,0 +1,223 @@
+/* Gemeinsame Styles für wiederverwendbare Komponenten */
+
+/* Navigationsleiste mit Geräte-Auswahl */
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-device-selector {
+  display: flex;
+  gap: 8px;
+  margin-right: 20px;
+}
+
+.nav-device-button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  color: #666;
+}
+
+.nav-device-button:hover {
+  background-color: #f0f0f0;
+}
+
+.nav-device-button.active {
+  background-color: #0284c7;
+  color: white;
+  border-color: #0284c7;
+}
+
+/* Geräte-Auswahl Styles */
+.device-toolbar {
+  display: flex;
+  align-items: center;
+  background-color: #0369a1;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.device-toolbar .device-selector {
+  display: flex;
+  gap: 8px;
+}
+
+.device-toolbar .device-button {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+  color: white;
+}
+
+.device-toolbar .device-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.device-toolbar .device-button.active {
+  background-color: white;
+  color: #0369a1;
+  border-color: white;
+}
+
+.device-toolbar .publish-button,
+.publish-button-container .publish-button {
+  margin-left: auto;
+  background-color: white;
+  color: #0369a1;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.device-toolbar .publish-button:hover,
+.publish-button-container .publish-button:hover {
+  background-color: #f0f0f0;
+}
+
+.device-toolbar .publish-button:disabled,
+.publish-button-container .publish-button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.publish-button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 16px;
+  background-color: #0369a1;
+  border-radius: 4px 4px 0 0;
+}
+
+/* Website Preview Styles */
+.website-preview {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.website-preview-header {
+  background-color: #0369a1;
+  padding: 10px;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.website-status-container {
+  display: flex;
+  gap: 10px;
+}
+
+.demo-badge {
+  background-color: #f59e0b;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.published-badge {
+  background-color: #10b981;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.website-preview-content {
+  flex: 1;
+  position: relative;
+  border: 1px solid #e2e8f0;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+  background-color: white;
+  height: 600px;
+}
+
+.website-preview-content.preview-desktop {
+  width: 100%;
+}
+
+.website-preview-content.preview-tablet {
+  width: 768px;
+  margin: 0 auto;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+}
+
+.website-preview-content.preview-mobile {
+  width: 375px;
+  margin: 0 auto;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+}
+
+.preview-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+  .device-toolbar {
+    padding: 8px;
+  }
+
+  .device-toolbar .device-button {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .device-toolbar .publish-button {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .preview-container.preview-tablet {
+    width: 100%;
+  }
+}
