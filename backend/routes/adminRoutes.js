@@ -13,6 +13,7 @@ const colorSchemeController = require('../controllers/colorSchemeController');
 const adminAuth = [authenticate, authorize(['admin'])];
 
 // Benutzer-Routen
+router.get('/users/stats', adminAuth, userController.getUserStats);
 router.get('/users', adminAuth, userController.getUsers);
 router.get('/users/:id', adminAuth, userController.getUserById);
 router.post(
@@ -40,9 +41,9 @@ router.put(
   userController.updateUser
 );
 router.delete('/users/:id', adminAuth, userController.deleteUser);
-router.get('/users/stats', adminAuth, userController.getUserStats);
 
 // Template-Routen
+router.get('/templates/stats', adminAuth, templateController.getTemplateStats);
 router.get('/templates', adminAuth, templateController.getTemplates);
 router.get('/templates/:id', adminAuth, templateController.getTemplateById);
 router.post(
@@ -62,13 +63,13 @@ router.put(
   templateController.updateTemplate
 );
 router.delete('/templates/:id', adminAuth, templateController.deleteTemplate);
-router.get('/templates/stats', adminAuth, templateController.getTemplateStats);
 
 // Design-Routen
-router.get('/designs', adminAuth, designController.getDesigns);
-router.get('/designs/:id', adminAuth, designController.getDesignById);
+router.get('/designs/stats', adminAuth, designController.getDesignStats);
 router.get('/designs/by-layout/:layoutId', adminAuth, designController.getDesignsByLayout);
 router.get('/designs/by-category/:category', adminAuth, designController.getDesignsByCategory);
+router.get('/designs', adminAuth, designController.getDesigns);
+router.get('/designs/:id', adminAuth, designController.getDesignById);
 router.post(
   '/designs',
   [
@@ -86,9 +87,9 @@ router.put(
   designController.updateDesign
 );
 router.delete('/designs/:id', adminAuth, designController.deleteDesign);
-router.get('/designs/stats', adminAuth, designController.getDesignStats);
 
 // Farbschema-Routen
+router.get('/color-schemes/stats', adminAuth, colorSchemeController.getColorSchemeStats);
 router.get('/color-schemes', adminAuth, colorSchemeController.getColorSchemes);
 router.get('/color-schemes/:id', adminAuth, colorSchemeController.getColorSchemeById);
 router.post(
@@ -111,23 +112,22 @@ router.put(
   colorSchemeController.updateColorScheme
 );
 router.delete('/color-schemes/:id', adminAuth, colorSchemeController.deleteColorScheme);
-router.get('/color-schemes/stats', adminAuth, colorSchemeController.getColorSchemeStats);
 
 // Dashboard-Statistiken
 router.get('/dashboard', adminAuth, async (req, res) => {
   try {
     // Benutzerstatistiken
     const userStats = await userController.getUserStats(req, res);
-    
+
     // Template-Statistiken
     const templateStats = await templateController.getTemplateStats(req, res);
-    
+
     // Design-Statistiken
     const designStats = await designController.getDesignStats(req, res);
-    
+
     // Farbschema-Statistiken
     const colorSchemeStats = await colorSchemeController.getColorSchemeStats(req, res);
-    
+
     // Kombinierte Statistiken zurückgeben
     res.json({
       userStats,

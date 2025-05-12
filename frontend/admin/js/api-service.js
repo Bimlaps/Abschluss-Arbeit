@@ -6,6 +6,12 @@ class ApiService {
   constructor() {
     this.baseUrl = '/api';
     this.adminUrl = `${this.baseUrl}/admin`;
+
+    // Für lokale Entwicklung
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      this.baseUrl = 'http://localhost:3001/api';
+      this.adminUrl = `${this.baseUrl}/admin`;
+    }
   }
 
   /**
@@ -17,25 +23,25 @@ class ApiService {
    */
   async fetchApi(url, method = 'GET', data = null) {
     const token = localStorage.getItem('token');
-    
+
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': token ? `Bearer ${token}` : ''
     };
-    
+
     const options = {
       method,
       headers,
       credentials: 'same-origin'
     };
-    
+
     if (data && (method === 'POST' || method === 'PUT')) {
       options.body = JSON.stringify(data);
     }
-    
+
     try {
       const response = await fetch(url, options);
-      
+
       // Wenn der Token abgelaufen ist, zur Login-Seite umleiten
       if (response.status === 401) {
         localStorage.removeItem('token');
@@ -43,13 +49,13 @@ class ApiService {
         window.location.href = '/login';
         return null;
       }
-      
+
       const result = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(result.message || 'Ein Fehler ist aufgetreten');
       }
-      
+
       return result;
     } catch (error) {
       console.error('API-Fehler:', error);

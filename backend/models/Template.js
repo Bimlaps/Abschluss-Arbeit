@@ -9,21 +9,26 @@ const templateSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  layout: {
+    type: String,
+    enum: ['one-page', 'multi-page', 'sidebar'],
+    required: true
+  },
   category: {
     type: String,
-    required: true
+    default: 'handwerker'
   },
   thumbnail: {
     type: String,
-    required: true
+    default: ''
   },
   html: {
     type: String,
-    required: true
+    default: ''
   },
   css: {
     type: String,
-    required: true
+    default: ''
   },
   js: {
     type: String,
