@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>247Vitrine - Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="bg-primary-800 text-white w-64 flex-shrink-0">
+      <div class="p-4 flex items-center">
+        <i class="fas fa-store-alt text-2xl mr-3"></i>
+        <h1 class="text-2xl font-bold">247Vitrine</h1>
+      </div>
+      <div class="px-4 py-2">
+        <p class="text-primary-200 text-sm">Admin-Bereich</p>
+      </div>
+      <nav class="mt-4">
+        <a href="#" class="flex items-center py-2.5 px-4 rounded transition duration-200 bg-primary-700 hover:bg-primary-600">
+          <i class="fas fa-tachometer-alt w-6"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="users.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-users w-6"></i>
+          <span>Benutzerverwaltung</span>
+        </a>
+        <a href="templates.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-layer-group w-6"></i>
+          <span>Templates</span>
+        </a>
+        <a href="designs.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-palette w-6"></i>
+          <span>Designs</span>
+        </a>
+        <a href="color-schemes.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-swatchbook w-6"></i>
+          <span>Farbschemata</span>
+        </a>
+        <a href="statistics.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-chart-bar w-6"></i>
+          <span>Statistiken</span>
+        </a>
+        <a href="settings.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-cog w-6"></i>
+          <span>Einstellungen</span>
+        </a>
+        <a href="#" id="logoutBtn" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700 mt-8">
+          <i class="fas fa-sign-out-alt w-6"></i>
+          <span>Abmelden</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-auto">
+      <!-- Top Navigation -->
+      <div class="bg-white shadow-sm">
+        <div class="flex justify-between items-center py-3 px-6">
+          <div>
+            <button id="sidebarToggle" class="text-gray-500 focus:outline-none lg:hidden">
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+          <div class="flex items-center">
+            <div class="relative">
+              <button class="flex items-center text-gray-500 focus:outline-none">
+                <span class="mr-2 text-sm">Admin</span>
+                <img class="h-8 w-8 rounded-full object-cover" src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="Admin">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Content -->
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <div>
+            <span class="text-sm text-gray-500">Letzte Aktualisierung: <span id="lastUpdate">Heute, 12:30 Uhr</span></span>
+          </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <div class="bg-white rounded-lg shadow p-5">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-gray-500 text-sm">Benutzer</h3>
+                <p class="text-3xl font-bold" id="userCount">124</p>
+              </div>
+              <div class="bg-primary-100 p-3 rounded-full">
+                <i class="fas fa-users text-primary-600"></i>
+              </div>
+            </div>
+            <p class="text-green-500 text-sm mt-2"><i class="fas fa-arrow-up"></i> 12% mehr als letzten Monat</p>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-5">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-gray-500 text-sm">Websites</h3>
+                <p class="text-3xl font-bold" id="websiteCount">87</p>
+              </div>
+              <div class="bg-green-100 p-3 rounded-full">
+                <i class="fas fa-globe text-green-600"></i>
+              </div>
+            </div>
+            <p class="text-green-500 text-sm mt-2"><i class="fas fa-arrow-up"></i> 8% mehr als letzten Monat</p>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-5">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-gray-500 text-sm">QR-Code Scans</h3>
+                <p class="text-3xl font-bold" id="qrScans">1,432</p>
+              </div>
+              <div class="bg-purple-100 p-3 rounded-full">
+                <i class="fas fa-qrcode text-purple-600"></i>
+              </div>
+            </div>
+            <p class="text-green-500 text-sm mt-2"><i class="fas fa-arrow-up"></i> 24% mehr als letzten Monat</p>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-5">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-gray-500 text-sm">Neue Registrierungen</h3>
+                <p class="text-3xl font-bold" id="newRegistrations">18</p>
+              </div>
+              <div class="bg-yellow-100 p-3 rounded-full">
+                <i class="fas fa-user-plus text-yellow-600"></i>
+              </div>
+            </div>
+            <p class="text-yellow-500 text-sm mt-2"><i class="fas fa-arrow-right"></i> Gleich wie letzten Monat</p>
+          </div>
+        </div>
+
+        <!-- Recent Activity and Users -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <!-- Recent Activity -->
+          <div class="bg-white rounded-lg shadow">
+            <div class="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
+              <h2 class="font-semibold text-gray-800">Letzte Aktivitäten</h2>
+              <a href="#" class="text-primary-600 text-sm">Alle anzeigen</a>
+            </div>
+            <div class="p-5">
+              <ul class="space-y-4" id="recentActivities">
+                <li class="flex items-start">
+                  <div class="bg-green-100 p-2 rounded-full mr-3">
+                    <i class="fas fa-plus text-green-600 text-sm"></i>
+                  </div>
+                  <div>
+                    <p class="text-gray-800">Neuer Benutzer <span class="font-semibold">Max Mustermann</span> hat sich registriert</p>
+                    <p class="text-gray-500 text-sm">Vor 2 Stunden</p>
+                  </div>
+                </li>
+                <li class="flex items-start">
+                  <div class="bg-blue-100 p-2 rounded-full mr-3">
+                    <i class="fas fa-edit text-blue-600 text-sm"></i>
+                  </div>
+                  <div>
+                    <p class="text-gray-800"><span class="font-semibold">Handwerker GmbH</span> hat ihre Website aktualisiert</p>
+                    <p class="text-gray-500 text-sm">Vor 4 Stunden</p>
+                  </div>
+                </li>
+                <li class="flex items-start">
+                  <div class="bg-purple-100 p-2 rounded-full mr-3">
+                    <i class="fas fa-qrcode text-purple-600 text-sm"></i>
+                  </div>
+                  <div>
+                    <p class="text-gray-800"><span class="font-semibold">Elektro Meier</span> hat einen neuen QR-Code generiert</p>
+                    <p class="text-gray-500 text-sm">Vor 6 Stunden</p>
+                  </div>
+                </li>
+                <li class="flex items-start">
+                  <div class="bg-yellow-100 p-2 rounded-full mr-3">
+                    <i class="fas fa-star text-yellow-600 text-sm"></i>
+                  </div>
+                  <div>
+                    <p class="text-gray-800"><span class="font-semibold">Tischlerei Schmidt</span> hat eine neue Bewertung erhalten</p>
+                    <p class="text-gray-500 text-sm">Vor 8 Stunden</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Recent Users -->
+          <div class="bg-white rounded-lg shadow">
+            <div class="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
+              <h2 class="font-semibold text-gray-800">Neueste Benutzer</h2>
+              <a href="users.html" class="text-primary-600 text-sm">Alle anzeigen</a>
+            </div>
+            <div class="p-5">
+              <ul class="space-y-4" id="recentUsers">
+                <li class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <img class="h-10 w-10 rounded-full object-cover mr-3" src="https://ui-avatars.com/api/?name=Max+Mustermann&background=0D8ABC&color=fff" alt="Max Mustermann">
+                    <div>
+                      <p class="font-semibold text-gray-800">Max Mustermann</p>
+                      <p class="text-gray-500 text-sm">max.mustermann@example.com</p>
+                    </div>
+                  </div>
+                  <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Neu</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <img class="h-10 w-10 rounded-full object-cover mr-3" src="https://ui-avatars.com/api/?name=Anna+Schmidt&background=0D8ABC&color=fff" alt="Anna Schmidt">
+                    <div>
+                      <p class="font-semibold text-gray-800">Anna Schmidt</p>
+                      <p class="text-gray-500 text-sm">anna.schmidt@example.com</p>
+                    </div>
+                  </div>
+                  <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Neu</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <img class="h-10 w-10 rounded-full object-cover mr-3" src="https://ui-avatars.com/api/?name=Peter+Müller&background=0D8ABC&color=fff" alt="Peter Müller">
+                    <div>
+                      <p class="font-semibold text-gray-800">Peter Müller</p>
+                      <p class="text-gray-500 text-sm">peter.mueller@example.com</p>
+                    </div>
+                  </div>
+                  <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Aktiv</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <img class="h-10 w-10 rounded-full object-cover mr-3" src="https://ui-avatars.com/api/?name=Lisa+Weber&background=0D8ABC&color=fff" alt="Lisa Weber">
+                    <div>
+                      <p class="font-semibold text-gray-800">Lisa Weber</p>
+                      <p class="text-gray-500 text-sm">lisa.weber@example.com</p>
+                    </div>
+                  </div>
+                  <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Aktiv</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Prüfen, ob der Benutzer eingeloggt ist und Admin-Rechte hat
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      
+      if (!token || user.role !== 'admin') {
+        // Umleitung zur Login-Seite, wenn nicht eingeloggt oder keine Admin-Rechte
+        window.location.href = '/login';
+      }
+      
+      // Logout-Funktion
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      });
+      
+      // Sidebar Toggle für mobile Ansicht
+      document.getElementById('sidebarToggle').addEventListener('click', function() {
+        const sidebar = document.querySelector('.bg-primary-800');
+        sidebar.classList.toggle('hidden');
+      });
+      
+      // Aktuelles Datum für "Letzte Aktualisierung" setzen
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      document.getElementById('lastUpdate').textContent = now.toLocaleDateString('de-DE', options);
+      
+      // Hier würden API-Aufrufe folgen, um echte Daten zu laden
+      // Beispiel:
+      // fetchDashboardData();
+    });
+    
+    // Funktion zum Laden der Dashboard-Daten vom Backend
+    async function fetchDashboardData() {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/admin/dashboard', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Statistiken aktualisieren
+          document.getElementById('userCount').textContent = data.userCount;
+          document.getElementById('websiteCount').textContent = data.websiteCount;
+          document.getElementById('qrScans').textContent = data.qrScans;
+          document.getElementById('newRegistrations').textContent = data.newRegistrations;
+          
+          // Aktivitäten und Benutzer aktualisieren
+          updateRecentActivities(data.recentActivities);
+          updateRecentUsers(data.recentUsers);
+        }
+      } catch (error) {
+        console.error('Fehler beim Laden der Dashboard-Daten:', error);
+      }
+    }
+    
+    function updateRecentActivities(activities) {
+      // Implementierung zum Aktualisieren der Aktivitätenliste
+    }
+    
+    function updateRecentUsers(users) {
+      // Implementierung zum Aktualisieren der Benutzerliste
+    }
+  </script>
+</body>
+</html>

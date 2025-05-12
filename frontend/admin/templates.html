@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>247Vitrine - Template-Verwaltung</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="bg-primary-800 text-white w-64 flex-shrink-0">
+      <div class="p-4 flex items-center">
+        <i class="fas fa-store-alt text-2xl mr-3"></i>
+        <h1 class="text-2xl font-bold">247Vitrine</h1>
+      </div>
+      <div class="px-4 py-2">
+        <p class="text-primary-200 text-sm">Admin-Bereich</p>
+      </div>
+      <nav class="mt-4">
+        <a href="index.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-tachometer-alt w-6"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="users.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-users w-6"></i>
+          <span>Benutzerverwaltung</span>
+        </a>
+        <a href="templates.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 bg-primary-700 hover:bg-primary-600">
+          <i class="fas fa-layer-group w-6"></i>
+          <span>Templates</span>
+        </a>
+        <a href="designs.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-palette w-6"></i>
+          <span>Designs</span>
+        </a>
+        <a href="color-schemes.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-swatchbook w-6"></i>
+          <span>Farbschemata</span>
+        </a>
+        <a href="statistics.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-chart-bar w-6"></i>
+          <span>Statistiken</span>
+        </a>
+        <a href="settings.html" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          <i class="fas fa-cog w-6"></i>
+          <span>Einstellungen</span>
+        </a>
+        <a href="#" id="logoutBtn" class="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700 mt-8">
+          <i class="fas fa-sign-out-alt w-6"></i>
+          <span>Abmelden</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-auto">
+      <!-- Top Navigation -->
+      <div class="bg-white shadow-sm">
+        <div class="flex justify-between items-center py-3 px-6">
+          <div>
+            <button id="sidebarToggle" class="text-gray-500 focus:outline-none lg:hidden">
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+          <div class="flex items-center">
+            <div class="relative">
+              <button class="flex items-center text-gray-500 focus:outline-none">
+                <span class="mr-2 text-sm">Admin</span>
+                <img class="h-8 w-8 rounded-full object-cover" src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="Admin">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Templates Content -->
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-3xl font-bold text-gray-900">Template-Verwaltung</h1>
+          <div>
+            <button id="addTemplateBtn" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded flex items-center">
+              <i class="fas fa-plus mr-2"></i> Neues Template
+            </button>
+          </div>
+        </div>
+
+        <!-- Filters and Search -->
+        <div class="bg-white p-4 rounded-lg shadow mb-6">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0">
+            <div class="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-4">
+              <div>
+                <label for="layoutFilter" class="block text-sm font-medium text-gray-700 mb-1">Layout</label>
+                <select id="layoutFilter" class="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                  <option value="">Alle Layouts</option>
+                  <option value="one-page">One-Page</option>
+                  <option value="multi-page">Multi-Page</option>
+                  <option value="sidebar">Sidebar</option>
+                </select>
+              </div>
+              <div>
+                <label for="statusFilter" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select id="statusFilter" class="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                  <option value="">Alle Status</option>
+                  <option value="active">Aktiv</option>
+                  <option value="inactive">Inaktiv</option>
+                </select>
+              </div>
+            </div>
+            <div class="w-full md:w-64">
+              <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-1">Suche</label>
+              <div class="relative">
+                <input type="text" id="searchInput" placeholder="Templatename" class="w-full border border-gray-300 rounded-md shadow-sm py-2 pl-10 pr-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="fas fa-search text-gray-400"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Templates Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Template Card 1 -->
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="relative">
+              <img src="https://via.placeholder.com/400x300/0284c7/FFFFFF?text=One-Page+Template" alt="One-Page Template" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                  Aktiv
+                </span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-semibold text-gray-900">Handwerker Basic</h3>
+              <p class="text-sm text-gray-500 mb-2">One-Page Layout</p>
+              <p class="text-sm text-gray-600 mb-4">Einfaches Template für Handwerker mit allen wichtigen Sektionen.</p>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">Erstellt: 01.05.2023</span>
+                <div>
+                  <button class="text-primary-600 hover:text-primary-900 mr-2" data-template-id="1" data-action="edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-primary-600 hover:text-primary-900 mr-2" data-template-id="1" data-action="preview">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900" data-template-id="1" data-action="delete">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Template Card 2 -->
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="relative">
+              <img src="https://via.placeholder.com/400x300/0284c7/FFFFFF?text=Multi-Page+Template" alt="Multi-Page Template" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                  Aktiv
+                </span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-semibold text-gray-900">Handwerker Pro</h3>
+              <p class="text-sm text-gray-500 mb-2">Multi-Page Layout</p>
+              <p class="text-sm text-gray-600 mb-4">Professionelles Template mit mehreren Seiten für umfangreiche Inhalte.</p>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">Erstellt: 15.04.2023</span>
+                <div>
+                  <button class="text-primary-600 hover:text-primary-900 mr-2" data-template-id="2" data-action="edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-primary-600 hover:text-primary-900 mr-2" data-template-id="2" data-action="preview">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900" data-template-id="2" data-action="delete">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Template Card 3 -->
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="relative">
+              <img src="https://via.placeholder.com/400x300/0284c7/FFFFFF?text=Sidebar+Template" alt="Sidebar Template" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                  Inaktiv
+                </span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-semibold text-gray-900">Handwerker Premium</h3>
+              <p class="text-sm text-gray-500 mb-2">Sidebar Layout</p>
+              <p class="text-sm text-gray-600 mb-4">Premium-Template mit Sidebar-Navigation und erweiterten Funktionen.</p>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">Erstellt: 10.03.2023</span>
+                <div>
+                  <button class="text-primary-600 hover:text-primary-900 mr-2" data-template-id="3" data-action="edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-primary-600 hover:text-primary-900 mr-2" data-template-id="3" data-action="preview">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900" data-template-id="3" data-action="delete">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-6 flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-700">
+              Zeige <span class="font-medium">1</span> bis <span class="font-medium">3</span> von <span class="font-medium">6</span> Templates
+            </p>
+          </div>
+          <div>
+            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+              <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <span class="sr-only">Zurück</span>
+                <i class="fas fa-chevron-left"></i>
+              </a>
+              <a href="#" aria-current="page" class="z-10 bg-primary-50 border-primary-500 text-primary-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                1
+              </a>
+              <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                2
+              </a>
+              <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <span class="sr-only">Weiter</span>
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Template Modal -->
+  <div id="templateModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold" id="modalTitle">Template hinzufügen</h2>
+        <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form id="templateForm">
+        <input type="hidden" id="templateId" value="">
+        <div class="mb-4">
+          <label for="templateName" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <input type="text" id="templateName" name="templateName" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+        </div>
+        <div class="mb-4">
+          <label for="templateLayout" class="block text-sm font-medium text-gray-700 mb-1">Layout</label>
+          <select id="templateLayout" name="templateLayout" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+            <option value="one-page">One-Page</option>
+            <option value="multi-page">Multi-Page</option>
+            <option value="sidebar">Sidebar</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label for="templateDescription" class="block text-sm font-medium text-gray-700 mb-1">Beschreibung</label>
+          <textarea id="templateDescription" name="templateDescription" rows="3" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"></textarea>
+        </div>
+        <div class="mb-4">
+          <label for="templateImage" class="block text-sm font-medium text-gray-700 mb-1">Vorschaubild</label>
+          <input type="file" id="templateImage" name="templateImage" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+        </div>
+        <div class="mb-4">
+          <label for="templateStatus" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <select id="templateStatus" name="templateStatus" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+            <option value="active">Aktiv</option>
+            <option value="inactive">Inaktiv</option>
+          </select>
+        </div>
+        <div class="flex justify-end">
+          <button type="button" id="cancelBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
+            Abbrechen
+          </button>
+          <button type="submit" id="saveTemplateBtn" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded">
+            Speichern
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">Template löschen</h2>
+        <button id="closeDeleteModal" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <p class="mb-4">Sind Sie sicher, dass Sie dieses Template löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.</p>
+      <div class="flex justify-end">
+        <button type="button" id="cancelDeleteBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
+          Abbrechen
+        </button>
+        <button type="button" id="confirmDeleteBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+          Löschen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Modal -->
+  <div id="previewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl h-3/4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">Template-Vorschau</h2>
+        <button id="closePreviewModal" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="h-full overflow-auto border border-gray-300 rounded-md">
+        <iframe id="previewFrame" src="about:blank" class="w-full h-full"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Prüfen, ob der Benutzer eingeloggt ist und Admin-Rechte hat
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      
+      if (!token || user.role !== 'admin') {
+        // Umleitung zur Login-Seite, wenn nicht eingeloggt oder keine Admin-Rechte
+        window.location.href = '/login';
+      }
+      
+      // Logout-Funktion
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      });
+      
+      // Sidebar Toggle für mobile Ansicht
+      document.getElementById('sidebarToggle').addEventListener('click', function() {
+        const sidebar = document.querySelector('.bg-primary-800');
+        sidebar.classList.toggle('hidden');
+      });
+      
+      // Modal-Funktionen
+      const templateModal = document.getElementById('templateModal');
+      const deleteModal = document.getElementById('deleteModal');
+      const previewModal = document.getElementById('previewModal');
+      const addTemplateBtn = document.getElementById('addTemplateBtn');
+      const closeModal = document.getElementById('closeModal');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const closeDeleteModal = document.getElementById('closeDeleteModal');
+      const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+      const closePreviewModal = document.getElementById('closePreviewModal');
+      
+      // Modal öffnen für neues Template
+      addTemplateBtn.addEventListener('click', function() {
+        document.getElementById('modalTitle').textContent = 'Template hinzufügen';
+        document.getElementById('templateForm').reset();
+        document.getElementById('templateId').value = '';
+        templateModal.classList.remove('hidden');
+      });
+      
+      // Modal schließen
+      closeModal.addEventListener('click', function() {
+        templateModal.classList.add('hidden');
+      });
+      
+      cancelBtn.addEventListener('click', function() {
+        templateModal.classList.add('hidden');
+      });
+      
+      // Lösch-Modal schließen
+      closeDeleteModal.addEventListener('click', function() {
+        deleteModal.classList.add('hidden');
+      });
+      
+      cancelDeleteBtn.addEventListener('click', function() {
+        deleteModal.classList.add('hidden');
+      });
+      
+      // Vorschau-Modal schließen
+      closePreviewModal.addEventListener('click', function() {
+        previewModal.classList.add('hidden');
+      });
+      
+      // Bearbeiten-Buttons
+      const editButtons = document.querySelectorAll('[data-action="edit"]');
+      editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const templateId = this.getAttribute('data-template-id');
+          // Hier würden wir normalerweise die Template-Daten vom Server laden
+          // Für dieses Beispiel verwenden wir Dummy-Daten
+          document.getElementById('modalTitle').textContent = 'Template bearbeiten';
+          document.getElementById('templateId').value = templateId;
+          
+          // Dummy-Daten für Template 1
+          if (templateId === '1') {
+            document.getElementById('templateName').value = 'Handwerker Basic';
+            document.getElementById('templateLayout').value = 'one-page';
+            document.getElementById('templateDescription').value = 'Einfaches Template für Handwerker mit allen wichtigen Sektionen.';
+            document.getElementById('templateStatus').value = 'active';
+          }
+          // Dummy-Daten für Template 2
+          else if (templateId === '2') {
+            document.getElementById('templateName').value = 'Handwerker Pro';
+            document.getElementById('templateLayout').value = 'multi-page';
+            document.getElementById('templateDescription').value = 'Professionelles Template mit mehreren Seiten für umfangreiche Inhalte.';
+            document.getElementById('templateStatus').value = 'active';
+          }
+          // Dummy-Daten für Template 3
+          else if (templateId === '3') {
+            document.getElementById('templateName').value = 'Handwerker Premium';
+            document.getElementById('templateLayout').value = 'sidebar';
+            document.getElementById('templateDescription').value = 'Premium-Template mit Sidebar-Navigation und erweiterten Funktionen.';
+            document.getElementById('templateStatus').value = 'inactive';
+          }
+          
+          templateModal.classList.remove('hidden');
+        });
+      });
+      
+      // Vorschau-Buttons
+      const previewButtons = document.querySelectorAll('[data-action="preview"]');
+      previewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const templateId = this.getAttribute('data-template-id');
+          // Hier würden wir normalerweise die Vorschau-URL vom Server laden
+          // Für dieses Beispiel verwenden wir Dummy-URLs
+          let previewUrl = '';
+          
+          if (templateId === '1') {
+            previewUrl = 'https://via.placeholder.com/800x600/0284c7/FFFFFF?text=One-Page+Template+Preview';
+          } else if (templateId === '2') {
+            previewUrl = 'https://via.placeholder.com/800x600/0284c7/FFFFFF?text=Multi-Page+Template+Preview';
+          } else if (templateId === '3') {
+            previewUrl = 'https://via.placeholder.com/800x600/0284c7/FFFFFF?text=Sidebar+Template+Preview';
+          }
+          
+          document.getElementById('previewFrame').src = previewUrl;
+          previewModal.classList.remove('hidden');
+        });
+      });
+      
+      // Löschen-Buttons
+      const deleteButtons = document.querySelectorAll('[data-action="delete"]');
+      deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const templateId = this.getAttribute('data-template-id');
+          document.getElementById('confirmDeleteBtn').setAttribute('data-template-id', templateId);
+          deleteModal.classList.remove('hidden');
+        });
+      });
+      
+      // Template speichern
+      document.getElementById('templateForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const templateId = document.getElementById('templateId').value;
+        const templateName = document.getElementById('templateName').value;
+        const templateLayout = document.getElementById('templateLayout').value;
+        const templateDescription = document.getElementById('templateDescription').value;
+        const templateStatus = document.getElementById('templateStatus').value;
+        
+        // Hier würden wir normalerweise die Daten an den Server senden
+        console.log('Template speichern:', {
+          templateId,
+          templateName,
+          templateLayout,
+          templateDescription,
+          templateStatus
+        });
+        
+        // Modal schließen
+        templateModal.classList.add('hidden');
+        
+        // Erfolgsbenachrichtigung anzeigen (in einer echten Anwendung)
+        alert('Template erfolgreich gespeichert!');
+      });
+      
+      // Template löschen
+      document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        const templateId = this.getAttribute('data-template-id');
+        
+        // Hier würden wir normalerweise die Löschanfrage an den Server senden
+        console.log('Template löschen:', templateId);
+        
+        // Modal schließen
+        deleteModal.classList.add('hidden');
+        
+        // Erfolgsbenachrichtigung anzeigen (in einer echten Anwendung)
+        alert('Template erfolgreich gelöscht!');
+      });
+      
+      // Filter- und Suchfunktionen
+      document.getElementById('layoutFilter').addEventListener('change', filterTemplates);
+      document.getElementById('statusFilter').addEventListener('change', filterTemplates);
+      document.getElementById('searchInput').addEventListener('input', filterTemplates);
+      
+      function filterTemplates() {
+        const layoutFilter = document.getElementById('layoutFilter').value;
+        const statusFilter = document.getElementById('statusFilter').value;
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        
+        // Hier würden wir normalerweise eine Anfrage an den Server senden
+        // Für dieses Beispiel filtern wir die vorhandenen Karten
+        console.log('Filter anwenden:', {
+          layout: layoutFilter,
+          status: statusFilter,
+          search: searchInput
+        });
+        
+        // In einer echten Anwendung würden wir hier die Karten aktualisieren
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>247Vitrine - Website-Builder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="bg-primary-800 text-white w-64 flex-shrink-0">
+      <div class="p-4">
+        <h1 class="text-2xl font-bold">247Vitrine</h1>
+      </div>
+      <nav class="mt-8">
+        <a href="/dashboard" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          Dashboard
+        </a>
+        <a href="#" class="block py-2.5 px-4 rounded transition duration-200 bg-primary-700 hover:bg-primary-600">
+          Website erstellen
+        </a>
+        <a href="/preview" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          Vorschau
+        </a>
+        <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700">
+          Einstellungen
+        </a>
+        <a href="#" id="logoutBtn" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-primary-700 mt-8">
+          Abmelden
+        </a>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-auto">
+      <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <h1 class="text-3xl font-bold text-gray-900">Website-Builder</h1>
+          <div class="flex space-x-4">
+            <button id="previewBtn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+              Vorschau
+            </button>
+            <button id="saveBtn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+              Speichern
+            </button>
+          </div>
+        </div>
+      </header>
+      
+      <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+          <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <div class="px-4 py-5 sm:px-6">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">Website-Einstellungen</h3>
+              <p class="mt-1 max-w-2xl text-sm text-gray-500">Passen Sie Ihre Website nach Ihren Wünschen an.</p>
+            </div>
+            
+            <form id="websiteForm" class="border-t border-gray-200">
+              <!-- Grundlegende Informationen -->
+              <div class="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="col-span-3">
+                  <h4 class="text-md font-medium text-gray-900 mb-4">Grundlegende Informationen</h4>
+                </div>
+                
+                <div class="col-span-3 sm:col-span-1">
+                  <label for="websiteTitle" class="block text-sm font-medium text-gray-700">Website-Titel</label>
+                  <input type="text" id="websiteTitle" name="websiteTitle" value="Meisterbetrieb Schmidt" 
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                </div>
+                
+                <div class="col-span-3 sm:col-span-2">
+                  <label for="websiteTagline" class="block text-sm font-medium text-gray-700">Slogan</label>
+                  <input type="text" id="websiteTagline" name="websiteTagline" value="Qualität und Zuverlässigkeit seit 1995" 
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                </div>
+              </div>
+              
+              <!-- Design-Auswahl -->
+              <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="col-span-3">
+                  <h4 class="text-md font-medium text-gray-900 mb-4">Design</h4>
+                </div>
+                
+                <div class="col-span-3 sm:col-span-1">
+                  <label for="layoutType" class="block text-sm font-medium text-gray-700">Layout-Typ</label>
+                  <select id="layoutType" name="layoutType" 
+                          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                    <option value="onePage" selected>One-Page</option>
+                    <option value="multiPage">Multi-Page</option>
+                    <option value="sidebar">Mit Seitenleiste</option>
+                  </select>
+                </div>
+                
+                <div class="col-span-3 sm:col-span-1">
+                  <label for="colorScheme" class="block text-sm font-medium text-gray-700">Farbschema</label>
+                  <select id="colorScheme" name="colorScheme" 
+                          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                    <option value="blue" selected>Blau</option>
+                    <option value="green">Grün</option>
+                    <option value="red">Rot</option>
+                    <option value="purple">Lila</option>
+                    <option value="orange">Orange</option>
+                  </select>
+                </div>
+                
+                <div class="col-span-3 sm:col-span-1">
+                  <label for="fontStyle" class="block text-sm font-medium text-gray-700">Schriftart</label>
+                  <select id="fontStyle" name="fontStyle" 
+                          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                    <option value="sans" selected>Sans-Serif</option>
+                    <option value="serif">Serif</option>
+                    <option value="mono">Monospace</option>
+                  </select>
+                </div>
+              </div>
+              
+              <!-- Über uns -->
+              <div class="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="col-span-3">
+                  <h4 class="text-md font-medium text-gray-900 mb-4">Über uns</h4>
+                </div>
+                
+                <div class="col-span-3">
+                  <label for="aboutText" class="block text-sm font-medium text-gray-700">Beschreibung</label>
+                  <textarea id="aboutText" name="aboutText" rows="4" 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">Willkommen bei Meisterbetrieb Schmidt! Wir sind Ihr zuverlässiger Partner für alle Tischlerarbeiten in Berlin und Umgebung. Mit über 25 Jahren Erfahrung garantieren wir höchste Qualität und Kundenzufriedenheit.</textarea>
+                </div>
+              </div>
+              
+              <!-- Kontaktinformationen -->
+              <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div class="col-span-3">
+                  <h4 class="text-md font-medium text-gray-900 mb-4">Kontaktinformationen</h4>
+                </div>
+                
+                <div class="col-span-3 sm:col-span-1">
+                  <label for="address" class="block text-sm font-medium text-gray-700">Adresse</label>
+                  <textarea id="address" name="address" rows="3" 
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">Musterstraße 123
+12345 Berlin</textarea>
+                </div>
+                
+                <div class="col-span-3 sm:col-span-1">
+                  <label for="phone" class="block text-sm font-medium text-gray-700">Telefon</label>
+                  <input type="text" id="phone" name="phone" value="030 12345678" 
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                </div>
+                
+                <div class="col-span-3 sm:col-span-1">
+                  <label for="email" class="block text-sm font-medium text-gray-700">E-Mail</label>
+                  <input type="email" id="email" name="email" value="info@meisterbetrieb-schmidt.de" 
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Prüfen, ob der Benutzer eingeloggt ist
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = '/login';
+      }
+      
+      // Logout-Funktion
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      });
+      
+      // Vorschau-Button
+      document.getElementById('previewBtn').addEventListener('click', function() {
+        window.location.href = '/preview';
+      });
+      
+      // Speichern-Button
+      document.getElementById('saveBtn').addEventListener('click', function() {
+        alert('Änderungen wurden gespeichert!');
+      });
+    });
+  </script>
+</body>
+</html>

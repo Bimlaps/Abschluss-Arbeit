@@ -30,7 +30,40 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
 }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Statische Dateien bereitstellen
+// Wichtig: Die Reihenfolge ist entscheidend!
+// Zuerst die expliziten Routen definieren, dann die statischen Middleware-Funktionen
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
+// Explizite Routen für HTML-Dateien
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get('/login.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get('/dashboard.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+app.get('/register.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+app.get('/preview.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'preview.html'));
+});
+
+app.get('/website-builder.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'website-builder.html'));
+});
+
+app.get('/test.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'test.html'));
+});
 
 // MongoDB-Verbindung
 console.log('Connecting to MongoDB with URI:', process.env.MONGODB_URI ? 'URI from .env file' : 'Fallback URI');
