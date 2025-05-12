@@ -21,11 +21,40 @@ app.use((req, res, next) => {
   next();
 });
 
+// Mock-Benutzer für Login
+const mockUsers = [
+  {
+    _id: '1',
+    firstName: 'Max',
+    lastName: 'Mustermann',
+    email: 'max@example.com',
+    password: 'password123',
+    role: 'customer',
+    status: 'active',
+    createdAt: new Date('2023-05-01'),
+    websites: []
+  },
+  {
+    _id: '2',
+    firstName: 'Admin',
+    lastName: 'User',
+    email: 'admin@example.com',
+    password: 'admin123',
+    role: 'admin',
+    status: 'active',
+    createdAt: new Date('2023-04-15'),
+    websites: []
+  }
+];
+
 // Statische Dateien aus dem public-Verzeichnis bereitstellen
 app.use(express.static(path.join(__dirname, 'backend/public')));
 
 // Admin-Portal bereitstellen
 app.use('/admin', express.static(path.join(__dirname, 'frontend/admin')));
+
+// Kunden-Portal bereitstellen
+app.use('/customer', express.static(path.join(__dirname, 'frontend/customer')));
 
 // Mock-API für Templates
 app.get('/api/admin/templates', (req, res) => {
@@ -325,6 +354,29 @@ app.put('/api/admin/users/:id', (req, res) => {
 // DELETE-Methode für Benutzer
 app.delete('/api/admin/users/:id', (req, res) => {
   res.json({ message: 'Benutzer erfolgreich gelöscht' });
+});
+
+// Login-Endpunkt
+app.post('/api/auth/login', (req, res) => {
+  const { email, password } = req.body;
+
+  // Benutzer suchen
+  const user = mockUsers.find(u => u.email === email && u.password === password);
+
+  if (!user) {
+    return res.status(401).json({ message: 'Ungültige Anmeldedaten' });
+  }
+
+  // JWT-Token simulieren
+  const token = 'mock-jwt-token-' + Date.now();
+
+  // Benutzerinformationen ohne Passwort zurückgeben
+  const { password: _, ...userWithoutPassword } = user;
+
+  res.json({
+    token,
+    user: userWithoutPassword
+  });
 });
 
 // Explizite Routen für HTML-Dateien
