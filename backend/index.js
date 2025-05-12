@@ -8,6 +8,9 @@ const authController = require('./controllers/authController');
 const { authenticate, authorize } = require('./middleware/auth');
 const { sendEmail } = require('./utils/emailService');
 
+// Routen importieren
+const adminRoutes = require('./routes/adminRoutes');
+
 // Modelle importieren
 const Layout = require('./models/Layout');
 const Design = require('./models/Design');
@@ -90,6 +93,9 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://247vitrine-db:l9dyz9Hhhej
 app.post('/api/auth/register', authController.register);
 app.post('/api/auth/login', authController.login);
 app.get('/api/auth/me', authenticate, authController.getMe);
+
+// Admin-Routen registrieren
+app.use('/api/admin', adminRoutes);
 
 // Layout-Routen
 app.get('/api/layouts', async (req, res) => {

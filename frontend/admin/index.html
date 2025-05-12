@@ -267,74 +267,81 @@
     </div>
   </div>
 
+  <!-- API-Service einbinden -->
+  <script src="js/api-service.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Prüfen, ob der Benutzer eingeloggt ist und Admin-Rechte hat
       const token = localStorage.getItem('token');
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      
+
       if (!token || user.role !== 'admin') {
         // Umleitung zur Login-Seite, wenn nicht eingeloggt oder keine Admin-Rechte
         window.location.href = '/login';
       }
-      
+
       // Logout-Funktion
       document.getElementById('logoutBtn').addEventListener('click', function() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
       });
-      
+
       // Sidebar Toggle für mobile Ansicht
       document.getElementById('sidebarToggle').addEventListener('click', function() {
         const sidebar = document.querySelector('.bg-primary-800');
         sidebar.classList.toggle('hidden');
       });
-      
+
       // Aktuelles Datum für "Letzte Aktualisierung" setzen
       const now = new Date();
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
       document.getElementById('lastUpdate').textContent = now.toLocaleDateString('de-DE', options);
-      
-      // Hier würden API-Aufrufe folgen, um echte Daten zu laden
-      // Beispiel:
-      // fetchDashboardData();
+
+      // Dashboard-Daten laden
+      fetchDashboardData();
     });
-    
+
     // Funktion zum Laden der Dashboard-Daten vom Backend
     async function fetchDashboardData() {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('/api/admin/dashboard', {
-          headers: {
-            'Authorization': `Bearer ${token}`
+        // API-Service verwenden, um Dashboard-Daten zu laden
+        const dashboardData = await apiService.getDashboardStats();
+
+        if (dashboardData) {
+          // Benutzerstatistiken aktualisieren
+          if (dashboardData.userStats) {
+            document.getElementById('userCount').textContent = dashboardData.userStats.totalUsers || 0;
+            document.getElementById('newRegistrations').textContent = dashboardData.userStats.newUsers || 0;
           }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          
-          // Statistiken aktualisieren
-          document.getElementById('userCount').textContent = data.userCount;
-          document.getElementById('websiteCount').textContent = data.websiteCount;
-          document.getElementById('qrScans').textContent = data.qrScans;
-          document.getElementById('newRegistrations').textContent = data.newRegistrations;
-          
+
+          // Website-Statistiken aktualisieren
+          if (dashboardData.templateStats) {
+            document.getElementById('websiteCount').textContent = dashboardData.templateStats.totalTemplates || 0;
+          }
+
+          // QR-Code-Statistiken aktualisieren (Dummy-Daten beibehalten, da wir noch keine echten QR-Code-Statistiken haben)
+          // document.getElementById('qrScans').textContent = dashboardData.qrCodeStats.totalScans || 0;
+
           // Aktivitäten und Benutzer aktualisieren
-          updateRecentActivities(data.recentActivities);
-          updateRecentUsers(data.recentUsers);
+          // Diese Funktionen würden in einer echten Implementierung die Daten aus dem Backend verwenden
         }
       } catch (error) {
         console.error('Fehler beim Laden der Dashboard-Daten:', error);
+        // Fehlermeldung anzeigen
+        alert('Fehler beim Laden der Dashboard-Daten. Bitte versuchen Sie es später erneut.');
       }
     }
-    
+
     function updateRecentActivities(activities) {
       // Implementierung zum Aktualisieren der Aktivitätenliste
+      // In einer echten Implementierung würden wir hier die Aktivitätenliste dynamisch generieren
     }
-    
+
     function updateRecentUsers(users) {
       // Implementierung zum Aktualisieren der Benutzerliste
+      // In einer echten Implementierung würden wir hier die Benutzerliste dynamisch generieren
     }
   </script>
 </body>

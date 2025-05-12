@@ -354,30 +354,33 @@
     </div>
   </div>
 
+  <!-- API-Service einbinden -->
+  <script src="js/api-service.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Prüfen, ob der Benutzer eingeloggt ist und Admin-Rechte hat
       const token = localStorage.getItem('token');
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      
+
       if (!token || user.role !== 'admin') {
         // Umleitung zur Login-Seite, wenn nicht eingeloggt oder keine Admin-Rechte
         window.location.href = '/login';
       }
-      
+
       // Logout-Funktion
       document.getElementById('logoutBtn').addEventListener('click', function() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
       });
-      
+
       // Sidebar Toggle für mobile Ansicht
       document.getElementById('sidebarToggle').addEventListener('click', function() {
         const sidebar = document.querySelector('.bg-primary-800');
         sidebar.classList.toggle('hidden');
       });
-      
+
       // Modal-Funktionen
       const templateModal = document.getElementById('templateModal');
       const deleteModal = document.getElementById('deleteModal');
@@ -388,7 +391,10 @@
       const closeDeleteModal = document.getElementById('closeDeleteModal');
       const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
       const closePreviewModal = document.getElementById('closePreviewModal');
-      
+
+      // Templates laden
+      loadTemplates();
+
       // Modal öffnen für neues Template
       addTemplateBtn.addEventListener('click', function() {
         document.getElementById('modalTitle').textContent = 'Template hinzufügen';
@@ -396,157 +402,273 @@
         document.getElementById('templateId').value = '';
         templateModal.classList.remove('hidden');
       });
-      
+
       // Modal schließen
       closeModal.addEventListener('click', function() {
         templateModal.classList.add('hidden');
       });
-      
+
       cancelBtn.addEventListener('click', function() {
         templateModal.classList.add('hidden');
       });
-      
+
       // Lösch-Modal schließen
       closeDeleteModal.addEventListener('click', function() {
         deleteModal.classList.add('hidden');
       });
-      
+
       cancelDeleteBtn.addEventListener('click', function() {
         deleteModal.classList.add('hidden');
       });
-      
+
       // Vorschau-Modal schließen
       closePreviewModal.addEventListener('click', function() {
         previewModal.classList.add('hidden');
       });
-      
-      // Bearbeiten-Buttons
-      const editButtons = document.querySelectorAll('[data-action="edit"]');
-      editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const templateId = this.getAttribute('data-template-id');
-          // Hier würden wir normalerweise die Template-Daten vom Server laden
-          // Für dieses Beispiel verwenden wir Dummy-Daten
-          document.getElementById('modalTitle').textContent = 'Template bearbeiten';
-          document.getElementById('templateId').value = templateId;
-          
-          // Dummy-Daten für Template 1
-          if (templateId === '1') {
-            document.getElementById('templateName').value = 'Handwerker Basic';
-            document.getElementById('templateLayout').value = 'one-page';
-            document.getElementById('templateDescription').value = 'Einfaches Template für Handwerker mit allen wichtigen Sektionen.';
-            document.getElementById('templateStatus').value = 'active';
-          }
-          // Dummy-Daten für Template 2
-          else if (templateId === '2') {
-            document.getElementById('templateName').value = 'Handwerker Pro';
-            document.getElementById('templateLayout').value = 'multi-page';
-            document.getElementById('templateDescription').value = 'Professionelles Template mit mehreren Seiten für umfangreiche Inhalte.';
-            document.getElementById('templateStatus').value = 'active';
-          }
-          // Dummy-Daten für Template 3
-          else if (templateId === '3') {
-            document.getElementById('templateName').value = 'Handwerker Premium';
-            document.getElementById('templateLayout').value = 'sidebar';
-            document.getElementById('templateDescription').value = 'Premium-Template mit Sidebar-Navigation und erweiterten Funktionen.';
-            document.getElementById('templateStatus').value = 'inactive';
-          }
-          
-          templateModal.classList.remove('hidden');
-        });
-      });
-      
-      // Vorschau-Buttons
-      const previewButtons = document.querySelectorAll('[data-action="preview"]');
-      previewButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const templateId = this.getAttribute('data-template-id');
-          // Hier würden wir normalerweise die Vorschau-URL vom Server laden
-          // Für dieses Beispiel verwenden wir Dummy-URLs
-          let previewUrl = '';
-          
-          if (templateId === '1') {
-            previewUrl = 'https://via.placeholder.com/800x600/0284c7/FFFFFF?text=One-Page+Template+Preview';
-          } else if (templateId === '2') {
-            previewUrl = 'https://via.placeholder.com/800x600/0284c7/FFFFFF?text=Multi-Page+Template+Preview';
-          } else if (templateId === '3') {
-            previewUrl = 'https://via.placeholder.com/800x600/0284c7/FFFFFF?text=Sidebar+Template+Preview';
-          }
-          
-          document.getElementById('previewFrame').src = previewUrl;
-          previewModal.classList.remove('hidden');
-        });
-      });
-      
-      // Löschen-Buttons
-      const deleteButtons = document.querySelectorAll('[data-action="delete"]');
-      deleteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const templateId = this.getAttribute('data-template-id');
-          document.getElementById('confirmDeleteBtn').setAttribute('data-template-id', templateId);
-          deleteModal.classList.remove('hidden');
-        });
-      });
-      
+
       // Template speichern
-      document.getElementById('templateForm').addEventListener('submit', function(e) {
+      document.getElementById('templateForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         const templateId = document.getElementById('templateId').value;
         const templateName = document.getElementById('templateName').value;
         const templateLayout = document.getElementById('templateLayout').value;
         const templateDescription = document.getElementById('templateDescription').value;
         const templateStatus = document.getElementById('templateStatus').value;
-        
-        // Hier würden wir normalerweise die Daten an den Server senden
-        console.log('Template speichern:', {
-          templateId,
-          templateName,
-          templateLayout,
-          templateDescription,
-          templateStatus
-        });
-        
-        // Modal schließen
-        templateModal.classList.add('hidden');
-        
-        // Erfolgsbenachrichtigung anzeigen (in einer echten Anwendung)
-        alert('Template erfolgreich gespeichert!');
+
+        const templateData = {
+          name: templateName,
+          layout: templateLayout,
+          description: templateDescription,
+          isPublic: templateStatus === 'active'
+        };
+
+        try {
+          let result;
+
+          if (templateId) {
+            // Template aktualisieren
+            result = await apiService.updateTemplate(templateId, templateData);
+          } else {
+            // Neues Template erstellen
+            result = await apiService.createTemplate(templateData);
+          }
+
+          // Modal schließen
+          templateModal.classList.add('hidden');
+
+          // Templates neu laden
+          loadTemplates();
+
+          // Erfolgsbenachrichtigung anzeigen
+          alert(templateId ? 'Template erfolgreich aktualisiert!' : 'Template erfolgreich erstellt!');
+        } catch (error) {
+          console.error('Fehler beim Speichern des Templates:', error);
+          alert('Fehler beim Speichern des Templates: ' + error.message);
+        }
       });
-      
+
       // Template löschen
-      document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+      document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
         const templateId = this.getAttribute('data-template-id');
-        
-        // Hier würden wir normalerweise die Löschanfrage an den Server senden
-        console.log('Template löschen:', templateId);
-        
-        // Modal schließen
-        deleteModal.classList.add('hidden');
-        
-        // Erfolgsbenachrichtigung anzeigen (in einer echten Anwendung)
-        alert('Template erfolgreich gelöscht!');
+
+        try {
+          // Template löschen
+          await apiService.deleteTemplate(templateId);
+
+          // Modal schließen
+          deleteModal.classList.add('hidden');
+
+          // Templates neu laden
+          loadTemplates();
+
+          // Erfolgsbenachrichtigung anzeigen
+          alert('Template erfolgreich gelöscht!');
+        } catch (error) {
+          console.error('Fehler beim Löschen des Templates:', error);
+          alert('Fehler beim Löschen des Templates: ' + error.message);
+        }
       });
-      
+
       // Filter- und Suchfunktionen
       document.getElementById('layoutFilter').addEventListener('change', filterTemplates);
       document.getElementById('statusFilter').addEventListener('change', filterTemplates);
       document.getElementById('searchInput').addEventListener('input', filterTemplates);
-      
+
+      // Templates laden
+      async function loadTemplates() {
+        try {
+          const templates = await apiService.getTemplates();
+
+          // Template-Grid aktualisieren
+          updateTemplateGrid(templates);
+
+          // Event-Listener für Bearbeiten-, Vorschau- und Löschen-Buttons hinzufügen
+          setupTemplateActionButtons();
+        } catch (error) {
+          console.error('Fehler beim Laden der Templates:', error);
+          alert('Fehler beim Laden der Templates: ' + error.message);
+        }
+      }
+
+      // Template-Grid aktualisieren
+      function updateTemplateGrid(templates) {
+        const templateGrid = document.querySelector('.grid');
+
+        // Grid leeren
+        templateGrid.innerHTML = '';
+
+        // Templates hinzufügen
+        templates.forEach(template => {
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-lg shadow overflow-hidden';
+
+          card.innerHTML = `
+            <div class="relative">
+              <img src="https://via.placeholder.com/400x300/0284c7/FFFFFF?text=${template.layout}+Template" alt="${template.name}" class="w-full h-48 object-cover">
+              <div class="absolute top-2 right-2">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full ${template.isPublic ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                  ${template.isPublic ? 'Aktiv' : 'Inaktiv'}
+                </span>
+              </div>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-semibold text-gray-900">${template.name}</h3>
+              <p class="text-sm text-gray-500 mb-2">${template.layout} Layout</p>
+              <p class="text-sm text-gray-600 mb-4">${template.description}</p>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">Erstellt: ${new Date(template.createdAt).toLocaleDateString('de-DE')}</span>
+                <div>
+                  <button class="text-primary-600 hover:text-primary-900 mr-2" data-template-id="${template._id}" data-action="edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-primary-600 hover:text-primary-900 mr-2" data-template-id="${template._id}" data-action="preview">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900" data-template-id="${template._id}" data-action="delete">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          templateGrid.appendChild(card);
+        });
+      }
+
+      // Event-Listener für Bearbeiten-, Vorschau- und Löschen-Buttons hinzufügen
+      function setupTemplateActionButtons() {
+        // Bearbeiten-Buttons
+        const editButtons = document.querySelectorAll('[data-action="edit"]');
+        editButtons.forEach(button => {
+          button.addEventListener('click', async function() {
+            const templateId = this.getAttribute('data-template-id');
+
+            try {
+              // Template-Daten laden
+              const template = await apiService.getTemplateById(templateId);
+
+              // Modal-Titel setzen
+              document.getElementById('modalTitle').textContent = 'Template bearbeiten';
+
+              // Formular mit Template-Daten füllen
+              document.getElementById('templateId').value = template._id;
+              document.getElementById('templateName').value = template.name;
+              document.getElementById('templateLayout').value = template.layout;
+              document.getElementById('templateDescription').value = template.description;
+              document.getElementById('templateStatus').value = template.isPublic ? 'active' : 'inactive';
+
+              // Modal öffnen
+              templateModal.classList.remove('hidden');
+            } catch (error) {
+              console.error('Fehler beim Laden des Templates:', error);
+              alert('Fehler beim Laden des Templates: ' + error.message);
+            }
+          });
+        });
+
+        // Vorschau-Buttons
+        const previewButtons = document.querySelectorAll('[data-action="preview"]');
+        previewButtons.forEach(button => {
+          button.addEventListener('click', async function() {
+            const templateId = this.getAttribute('data-template-id');
+
+            try {
+              // Template-Daten laden
+              const template = await apiService.getTemplateById(templateId);
+
+              // Vorschau-URL generieren
+              // In einer echten Anwendung würden wir hier eine echte Vorschau anzeigen
+              const previewUrl = `https://via.placeholder.com/800x600/0284c7/FFFFFF?text=${template.layout}+Template+Preview`;
+
+              // Vorschau anzeigen
+              document.getElementById('previewFrame').src = previewUrl;
+              previewModal.classList.remove('hidden');
+            } catch (error) {
+              console.error('Fehler beim Laden der Template-Vorschau:', error);
+              alert('Fehler beim Laden der Template-Vorschau: ' + error.message);
+            }
+          });
+        });
+
+        // Löschen-Buttons
+        const deleteButtons = document.querySelectorAll('[data-action="delete"]');
+        deleteButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const templateId = this.getAttribute('data-template-id');
+            document.getElementById('confirmDeleteBtn').setAttribute('data-template-id', templateId);
+            deleteModal.classList.remove('hidden');
+          });
+        });
+      }
+
+      // Templates filtern
       function filterTemplates() {
         const layoutFilter = document.getElementById('layoutFilter').value;
         const statusFilter = document.getElementById('statusFilter').value;
         const searchInput = document.getElementById('searchInput').value.toLowerCase();
-        
-        // Hier würden wir normalerweise eine Anfrage an den Server senden
+
+        // In einer echten Anwendung würden wir hier eine Anfrage an den Server senden
         // Für dieses Beispiel filtern wir die vorhandenen Karten
-        console.log('Filter anwenden:', {
-          layout: layoutFilter,
-          status: statusFilter,
-          search: searchInput
+        const cards = document.querySelectorAll('.grid > div');
+
+        cards.forEach(card => {
+          let showCard = true;
+
+          // Layoutfilter anwenden
+          if (layoutFilter) {
+            const layoutText = card.querySelector('p.text-gray-500').textContent.toLowerCase();
+
+            if (!layoutText.includes(layoutFilter.toLowerCase())) {
+              showCard = false;
+            }
+          }
+
+          // Statusfilter anwenden
+          if (showCard && statusFilter) {
+            const statusBadge = card.querySelector('.absolute.top-2.right-2 span');
+            const statusText = statusBadge.textContent.trim().toLowerCase();
+
+            if ((statusFilter === 'active' && statusText !== 'aktiv') ||
+                (statusFilter === 'inactive' && statusText !== 'inaktiv')) {
+              showCard = false;
+            }
+          }
+
+          // Suchfilter anwenden
+          if (showCard && searchInput) {
+            const nameText = card.querySelector('h3').textContent.trim().toLowerCase();
+            const descriptionText = card.querySelector('p.text-gray-600').textContent.trim().toLowerCase();
+
+            if (!nameText.includes(searchInput) && !descriptionText.includes(searchInput)) {
+              showCard = false;
+            }
+          }
+
+          // Karte anzeigen oder ausblenden
+          card.style.display = showCard ? '' : 'none';
         });
-        
-        // In einer echten Anwendung würden wir hier die Karten aktualisieren
       }
     });
   </script>

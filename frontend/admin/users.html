@@ -360,30 +360,33 @@
     </div>
   </div>
 
+  <!-- API-Service einbinden -->
+  <script src="js/api-service.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Prüfen, ob der Benutzer eingeloggt ist und Admin-Rechte hat
       const token = localStorage.getItem('token');
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      
+
       if (!token || user.role !== 'admin') {
         // Umleitung zur Login-Seite, wenn nicht eingeloggt oder keine Admin-Rechte
         window.location.href = '/login';
       }
-      
+
       // Logout-Funktion
       document.getElementById('logoutBtn').addEventListener('click', function() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
       });
-      
+
       // Sidebar Toggle für mobile Ansicht
       document.getElementById('sidebarToggle').addEventListener('click', function() {
         const sidebar = document.querySelector('.bg-primary-800');
         sidebar.classList.toggle('hidden');
       });
-      
+
       // Modal-Funktionen
       const userModal = document.getElementById('userModal');
       const deleteModal = document.getElementById('deleteModal');
@@ -392,7 +395,10 @@
       const cancelBtn = document.getElementById('cancelBtn');
       const closeDeleteModal = document.getElementById('closeDeleteModal');
       const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-      
+
+      // Benutzer laden
+      loadUsers();
+
       // Modal öffnen für neuen Benutzer
       addUserBtn.addEventListener('click', function() {
         document.getElementById('modalTitle').textContent = 'Benutzer hinzufügen';
@@ -400,70 +406,29 @@
         document.getElementById('userId').value = '';
         userModal.classList.remove('hidden');
       });
-      
+
       // Modal schließen
       closeModal.addEventListener('click', function() {
         userModal.classList.add('hidden');
       });
-      
+
       cancelBtn.addEventListener('click', function() {
         userModal.classList.add('hidden');
       });
-      
+
       // Lösch-Modal schließen
       closeDeleteModal.addEventListener('click', function() {
         deleteModal.classList.add('hidden');
       });
-      
+
       cancelDeleteBtn.addEventListener('click', function() {
         deleteModal.classList.add('hidden');
       });
-      
-      // Bearbeiten-Buttons
-      const editButtons = document.querySelectorAll('[data-action="edit"]');
-      editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const userId = this.getAttribute('data-user-id');
-          // Hier würden wir normalerweise die Benutzerdaten vom Server laden
-          // Für dieses Beispiel verwenden wir Dummy-Daten
-          document.getElementById('modalTitle').textContent = 'Benutzer bearbeiten';
-          document.getElementById('userId').value = userId;
-          
-          // Dummy-Daten für Benutzer 1
-          if (userId === '1') {
-            document.getElementById('firstName').value = 'Max';
-            document.getElementById('lastName').value = 'Mustermann';
-            document.getElementById('email').value = 'max.mustermann@example.com';
-            document.getElementById('role').value = 'customer';
-            document.getElementById('status').value = 'active';
-          }
-          // Dummy-Daten für Benutzer 2
-          else if (userId === '2') {
-            document.getElementById('firstName').value = 'Anna';
-            document.getElementById('lastName').value = 'Schmidt';
-            document.getElementById('email').value = 'anna.schmidt@example.com';
-            document.getElementById('role').value = 'admin';
-            document.getElementById('status').value = 'active';
-          }
-          
-          userModal.classList.remove('hidden');
-        });
-      });
-      
-      // Löschen-Buttons
-      const deleteButtons = document.querySelectorAll('[data-action="delete"]');
-      deleteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const userId = this.getAttribute('data-user-id');
-          document.getElementById('confirmDeleteBtn').setAttribute('data-user-id', userId);
-          deleteModal.classList.remove('hidden');
-        });
-      });
-      
+
       // Benutzer speichern
-      document.getElementById('userForm').addEventListener('submit', function(e) {
+      document.getElementById('userForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         const userId = document.getElementById('userId').value;
         const firstName = document.getElementById('firstName').value;
         const lastName = document.getElementById('lastName').value;
@@ -471,58 +436,234 @@
         const role = document.getElementById('role').value;
         const status = document.getElementById('status').value;
         const password = document.getElementById('password').value;
-        
-        // Hier würden wir normalerweise die Daten an den Server senden
-        console.log('Benutzer speichern:', {
-          userId,
+
+        const userData = {
           firstName,
           lastName,
           email,
           role,
-          status,
-          password: password ? '********' : '(unverändert)'
-        });
-        
-        // Modal schließen
-        userModal.classList.add('hidden');
-        
-        // Erfolgsbenachrichtigung anzeigen (in einer echten Anwendung)
-        alert('Benutzer erfolgreich gespeichert!');
+          status
+        };
+
+        // Passwort nur hinzufügen, wenn es angegeben wurde
+        if (password) {
+          userData.password = password;
+        }
+
+        try {
+          let result;
+
+          if (userId) {
+            // Benutzer aktualisieren
+            result = await apiService.updateUser(userId, userData);
+          } else {
+            // Neuen Benutzer erstellen
+            result = await apiService.createUser(userData);
+          }
+
+          // Modal schließen
+          userModal.classList.add('hidden');
+
+          // Benutzer neu laden
+          loadUsers();
+
+          // Erfolgsbenachrichtigung anzeigen
+          alert(userId ? 'Benutzer erfolgreich aktualisiert!' : 'Benutzer erfolgreich erstellt!');
+        } catch (error) {
+          console.error('Fehler beim Speichern des Benutzers:', error);
+          alert('Fehler beim Speichern des Benutzers: ' + error.message);
+        }
       });
-      
+
       // Benutzer löschen
-      document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+      document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
         const userId = this.getAttribute('data-user-id');
-        
-        // Hier würden wir normalerweise die Löschanfrage an den Server senden
-        console.log('Benutzer löschen:', userId);
-        
-        // Modal schließen
-        deleteModal.classList.add('hidden');
-        
-        // Erfolgsbenachrichtigung anzeigen (in einer echten Anwendung)
-        alert('Benutzer erfolgreich gelöscht!');
+
+        try {
+          // Benutzer löschen
+          await apiService.deleteUser(userId);
+
+          // Modal schließen
+          deleteModal.classList.add('hidden');
+
+          // Benutzer neu laden
+          loadUsers();
+
+          // Erfolgsbenachrichtigung anzeigen
+          alert('Benutzer erfolgreich gelöscht!');
+        } catch (error) {
+          console.error('Fehler beim Löschen des Benutzers:', error);
+          alert('Fehler beim Löschen des Benutzers: ' + error.message);
+        }
       });
-      
+
       // Filter- und Suchfunktionen
       document.getElementById('roleFilter').addEventListener('change', filterUsers);
       document.getElementById('statusFilter').addEventListener('change', filterUsers);
       document.getElementById('searchInput').addEventListener('input', filterUsers);
-      
+
+      // Benutzer laden
+      async function loadUsers() {
+        try {
+          const users = await apiService.getUsers();
+
+          // Benutzertabelle aktualisieren
+          updateUserTable(users);
+
+          // Event-Listener für Bearbeiten- und Löschen-Buttons hinzufügen
+          setupUserActionButtons();
+        } catch (error) {
+          console.error('Fehler beim Laden der Benutzer:', error);
+          alert('Fehler beim Laden der Benutzer: ' + error.message);
+        }
+      }
+
+      // Benutzertabelle aktualisieren
+      function updateUserTable(users) {
+        const tableBody = document.getElementById('usersTableBody');
+
+        // Tabelle leeren
+        tableBody.innerHTML = '';
+
+        // Benutzer hinzufügen
+        users.forEach(user => {
+          const row = document.createElement('tr');
+
+          row.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10">
+                  <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=0D8ABC&color=fff" alt="${user.firstName} ${user.lastName}">
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900">${user.firstName} ${user.lastName}</div>
+                  <div class="text-sm text-gray-500">${user.email}</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">
+                ${user.role === 'admin' ? 'Admin' : 'Kunde'}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                ${user.status === 'active' ? 'Aktiv' : 'Inaktiv'}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              ${new Date(user.createdAt).toLocaleDateString('de-DE')}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              ${user.websites ? user.websites.length : 0}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <button class="text-primary-600 hover:text-primary-900 mr-3" data-user-id="${user._id}" data-action="edit">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="text-red-600 hover:text-red-900" data-user-id="${user._id}" data-action="delete">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          `;
+
+          tableBody.appendChild(row);
+        });
+      }
+
+      // Event-Listener für Bearbeiten- und Löschen-Buttons hinzufügen
+      function setupUserActionButtons() {
+        // Bearbeiten-Buttons
+        const editButtons = document.querySelectorAll('[data-action="edit"]');
+        editButtons.forEach(button => {
+          button.addEventListener('click', async function() {
+            const userId = this.getAttribute('data-user-id');
+
+            try {
+              // Benutzerdaten laden
+              const user = await apiService.getUserById(userId);
+
+              // Modal-Titel setzen
+              document.getElementById('modalTitle').textContent = 'Benutzer bearbeiten';
+
+              // Formular mit Benutzerdaten füllen
+              document.getElementById('userId').value = user._id;
+              document.getElementById('firstName').value = user.firstName;
+              document.getElementById('lastName').value = user.lastName;
+              document.getElementById('email').value = user.email;
+              document.getElementById('role').value = user.role;
+              document.getElementById('status').value = user.status;
+
+              // Modal öffnen
+              userModal.classList.remove('hidden');
+            } catch (error) {
+              console.error('Fehler beim Laden des Benutzers:', error);
+              alert('Fehler beim Laden des Benutzers: ' + error.message);
+            }
+          });
+        });
+
+        // Löschen-Buttons
+        const deleteButtons = document.querySelectorAll('[data-action="delete"]');
+        deleteButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            document.getElementById('confirmDeleteBtn').setAttribute('data-user-id', userId);
+            deleteModal.classList.remove('hidden');
+          });
+        });
+      }
+
+      // Benutzer filtern
       function filterUsers() {
         const roleFilter = document.getElementById('roleFilter').value;
         const statusFilter = document.getElementById('statusFilter').value;
         const searchInput = document.getElementById('searchInput').value.toLowerCase();
-        
-        // Hier würden wir normalerweise eine Anfrage an den Server senden
+
+        // In einer echten Anwendung würden wir hier eine Anfrage an den Server senden
         // Für dieses Beispiel filtern wir die vorhandenen Zeilen
-        console.log('Filter anwenden:', {
-          role: roleFilter,
-          status: statusFilter,
-          search: searchInput
+        const rows = document.querySelectorAll('#usersTableBody tr');
+
+        rows.forEach(row => {
+          let showRow = true;
+
+          // Rollenfilter anwenden
+          if (roleFilter) {
+            const roleCell = row.querySelector('td:nth-child(2) span');
+            const roleText = roleCell.textContent.trim().toLowerCase();
+
+            if ((roleFilter === 'admin' && roleText !== 'admin') ||
+                (roleFilter === 'customer' && roleText !== 'kunde')) {
+              showRow = false;
+            }
+          }
+
+          // Statusfilter anwenden
+          if (showRow && statusFilter) {
+            const statusCell = row.querySelector('td:nth-child(3) span');
+            const statusText = statusCell.textContent.trim().toLowerCase();
+
+            if ((statusFilter === 'active' && statusText !== 'aktiv') ||
+                (statusFilter === 'inactive' && statusText !== 'inaktiv')) {
+              showRow = false;
+            }
+          }
+
+          // Suchfilter anwenden
+          if (showRow && searchInput) {
+            const nameCell = row.querySelector('td:nth-child(1) .text-gray-900');
+            const emailCell = row.querySelector('td:nth-child(1) .text-gray-500');
+            const nameText = nameCell.textContent.trim().toLowerCase();
+            const emailText = emailCell.textContent.trim().toLowerCase();
+
+            if (!nameText.includes(searchInput) && !emailText.includes(searchInput)) {
+              showRow = false;
+            }
+          }
+
+          // Zeile anzeigen oder ausblenden
+          row.style.display = showRow ? '' : 'none';
         });
-        
-        // In einer echten Anwendung würden wir hier die Tabelle aktualisieren
       }
     });
   </script>
