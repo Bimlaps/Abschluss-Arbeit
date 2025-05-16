@@ -7,106 +7,79 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 // Registrierung
 exports.register = async (req, res) => {
   try {
-    console.log('Register API called with data:', { ...req.body, password: '***' });
+    const { email, password, name } = req.body;
 
-    const { email, password, firstName, lastName, company } = req.body;
-
-    // Prüfe, ob Benutzer bereits existiert
+    // Prüfe ob Benutzer bereits existiert
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log('Registration failed: User already exists:', email);
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'E-Mail ist bereits registriert' });
     }
 
     // Erstelle neuen Benutzer
     const user = new User({
       email,
       password,
-      firstName,
-      lastName,
-      company,
-      role: 'customer' // Standard-Rolle ist Kunde
+      name
     });
 
     await user.save();
-    console.log('New user created with ID:', user._id);
 
-    // Erstelle JWT Token
+    // Generiere JWT Token
     const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
+      { userId: user._id, email: user.email },
       JWT_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '24h' }
     );
 
-    console.log('JWT token created for user:', email);
-
-    const responseData = {
+    res.status(201).json({
+      message: 'Benutzer erfolgreich registriert',
       token,
       user: {
         id: user._id,
         email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role
+        name: user.name
       }
-    };
-
-    console.log('Registration successful, sending response');
-    res.status(201).json(responseData);
+    });
   } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ message: 'Server error during registration' });
+    res.status(500).json({ message: 'Fehler bei der Registrierung', error: error.message });
   }
 };
 
 // Login
 exports.login = async (req, res) => {
   try {
-    console.log('Login API called with email:', req.body.email);
-
     const { email, password } = req.body;
 
     // Finde Benutzer
     const user = await User.findOne({ email });
     if (!user) {
-      console.log('Login failed: User not found:', email);
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Ungültige E-Mail oder Passwort' });
     }
 
     // Überprüfe Passwort
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      console.log('Login failed: Invalid password for user:', email);
-      return res.status(400).json({ message: 'Invalid credentials' });
+    const isValidPassword = await user.comparePassword(password);
+    if (!isValidPassword) {
+      return res.status(401).json({ message: 'Ungültige E-Mail oder Passwort' });
     }
 
-    console.log('Login successful for user:', email);
-
-    // Erstelle JWT Token
+    // Generiere JWT Token
     const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
+      { userId: user._id, email: user.email },
       JWT_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '24h' }
     );
 
-    console.log('JWT token created for user:', email);
-
-    const responseData = {
+    res.json({
+      message: 'Erfolgreich eingeloggt',
       token,
       user: {
         id: user._id,
         email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role
+        name: user.name
       }
-    };
-
-    console.log('Login successful, sending response');
-    res.json(responseData);
+    });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error during login' });
+    res.status(500).json({ message: 'Fehler beim Login', error: error.message });
   }
 };
 

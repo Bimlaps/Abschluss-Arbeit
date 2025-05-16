@@ -13,55 +13,33 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  firstName: {
-    type: String,
-    required: true
-  },
-  lastName: {
+  name: {
     type: String,
     required: true
   },
   role: {
     type: String,
-    enum: ['admin', 'customer'],
-    default: 'customer'
+    enum: ['user', 'admin'],
+    default: 'user'
   },
-  company: {
-    name: String,
-    address: String,
-    phone: String,
-    industry: String
-  },
-  websites: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Website'
-  }],
   createdAt: {
     type: Date,
     default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
   }
 });
 
-// Vor dem Speichern: Passwort hashen
+// Password hashen vor dem Speichern
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
-  
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
 });
 
-// Methode zum Vergleichen von Passwörtern
+// Methode zum Passwort-Vergleich
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

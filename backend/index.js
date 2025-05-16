@@ -4,6 +4,11 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const fs = require('fs');
+const helmet = require('helmet');
+const compression = require('compression');
+const { rateLimit } = require('express-rate-limit');
+const { logger, expressLogger } = require('./config/logger');
+const { metricsMiddleware, getMetrics } = require('./config/metrics');
 const authController = require('./controllers/authController');
 const { authenticate, authorize } = require('./middleware/auth');
 const { sendEmail } = require('./utils/emailService');
@@ -25,6 +30,24 @@ dotenv.config();
 // Express-App erstellen
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Sicherheits-Middleware
+app.use(helmet());
+app.use(compression());
+
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 Minuten
+  max: 100 // Limit jede IP auf 100 Requests pro Fenster
+});
+app.use(limiter);
+
+// Logging & Monitoring Middleware
+app.use(expressLogger);
+app.use(metricsMiddleware);
+
+// Metrics Endpoint
+app.get('/metrics', getMetrics);
 
 // Middleware
 app.use(cors({
@@ -75,18 +98,20 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://247vitrine-db:l9dyz9Hhhej
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('MongoDB connected successfully'))
+.then(() => {
+  logger.info('MongoDB connected successfully');
+})
 .catch(err => {
-  console.error('MongoDB connection error:', err);
+  logger.error('MongoDB connection error:', err);
 
   // Versuche, mit lokaler MongoDB zu verbinden, wenn die Azure-Verbindung fehlschlägt
-  console.log('Attempting to connect to local MongoDB...');
+  logger.info('Attempting to connect to local MongoDB...');
   return mongoose.connect('mongodb://localhost:27017/247vitrine', {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
-  .then(() => console.log('Connected to local MongoDB successfully'))
-  .catch(localErr => console.error('Local MongoDB connection error:', localErr));
+  .then(() => logger.info('Connected to local MongoDB successfully'))
+  .catch(localErr => logger.error('Local MongoDB connection error:', localErr));
 });
 
 // Auth-Routen
@@ -1577,160 +1602,110 @@ app.get('/preview/:websiteId', async (req, res) => {
             </div>
           </div>
         </section>
-        ` : ''}
-
-        ${website.content.businessCard && website.content.businessCard.companyName ? `
-        <section class="business-card">
-          <div class="container">
-            <h2>Digitale Visitenkarte</h2>
-            <div class="card-container">
-              <div class="card-info">
-                <h3>${website.content.businessCard.companyName}</h3>
-                <p>${website.content.businessCard.contactPerson}</p>
-                <p>${website.content.businessCard.position}</p>
-                <p>${website.content.businessCard.address}</p>
-                <p>Tel: ${website.content.businessCard.phone}</p>
-                <p>Email: ${website.content.businessCard.email}</p>
-                <p>Web: ${website.content.businessCard.website || website.subdomain + '.247vitrine.com'}</p>
-              </div>
-              ${website.content.businessCard.qrCodeUrl ? `
-                <div class="card-qr">
-                  <img src="${website.content.businessCard.qrCodeUrl}" alt="QR-Code">
-                  <p>Scannen Sie den QR-Code für meine Kontaktdaten</p>
-                </div>
-              ` : ''}
-            </div>
-          </div>
-        </section>
-        ` : ''}
-
-        <footer>
-          <div class="container">
-            <p>&copy; ${new Date().getFullYear()} ${website.content.title}. Alle Rechte vorbehalten.</p>
-
-            ${website.content.socialMedia ? `
-            <div class="social-links">
-              ${website.content.socialMedia.facebook ? `<a href="${website.content.socialMedia.facebook}" target="_blank" class="social-icon">Facebook</a>` : ''}
-              ${website.content.socialMedia.instagram ? `<a href="${website.content.socialMedia.instagram}" target="_blank" class="social-icon">Instagram</a>` : ''}
-              ${website.content.socialMedia.linkedin ? `<a href="${website.content.socialMedia.linkedin}" target="_blank" class="social-icon">LinkedIn</a>` : ''}
-              ${website.content.socialMedia.xing ? `<a href="${website.content.socialMedia.xing}" target="_blank" class="social-icon">Xing</a>` : ''}
-              ${website.content.socialMedia.youtube ? `<a href="${website.content.socialMedia.youtube}" target="_blank" class="social-icon">YouTube</a>` : ''}
-              ${website.content.socialMedia.twitter ? `<a href="${website.content.socialMedia.twitter}" target="_blank" class="social-icon">Twitter</a>` : ''}
-            </div>
-            ` : ''}
-          </div>
-        </footer>
-
-        <script>
-          ${website.design.js}
-        </script>
+      ` : ''}
       </body>
       </html>
     `;
 
     res.send(html);
   } catch (error) {
-    console.error('Error generating preview:', error);
-    res.status(500).send('Fehler beim Generieren der Vorschau');
+    console.error('Error fetching website preview:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Kontaktformular-Route
-app.post('/api/contact', async (req, res) => {
+// Backup-Routen
+app.post('/api/backup', authenticate, authorize(['admin']), async (req, res) => {
   try {
-    const { name, email, phone, message, recipient } = req.body;
-
-    // Validiere die Eingaben
-    if (!name || !email || !message || !recipient) {
-      return res.status(400).json({
-        success: false,
-        message: 'Bitte fülle alle Pflichtfelder aus.'
-      });
-    }
-
-    // Sende die E-Mail
-    const result = await sendContactEmail({
-      name,
-      email,
-      phone,
-      message,
-      recipient
-    });
-
+    const { performBackup } = require('./scripts/backup');
+    const result = await performBackup();
+    
     if (result.success) {
-      res.json({ success: true, messageId: result.messageId });
+      res.json({
+        success: true,
+        message: 'Backup erfolgreich erstellt',
+        mongoBackupPath: result.mongoBackupPath,
+        fileBackupPath: result.fileBackupPath
+      });
     } else {
       res.status(500).json({
         success: false,
-        message: 'Fehler beim Senden der E-Mail.',
+        message: 'Backup fehlgeschlagen',
         error: result.error
       });
     }
   } catch (error) {
-    console.error('Error processing contact form:', error);
+    logger.error('Fehler beim Backup:', error);
     res.status(500).json({
       success: false,
-      message: 'Server-Fehler beim Verarbeiten des Kontaktformulars.'
+      message: 'Interner Server-Fehler beim Backup',
+      error: error.message
     });
   }
 });
 
-// Sitemap-Route
-app.get('/sitemap.xml', async (req, res) => {
+app.get('/api/backups', authenticate, authorize(['admin']), async (req, res) => {
   try {
-    // Prüfe, ob die Sitemap existiert
-    const sitemapPath = path.join(__dirname, 'public/sitemap.xml.gz');
-
-    if (fs.existsSync(sitemapPath)) {
-      // Wenn die Sitemap existiert, sende sie
-      res.setHeader('Content-Type', 'application/xml');
-      res.setHeader('Content-Encoding', 'gzip');
-
-      const sitemapFile = fs.createReadStream(sitemapPath);
-      sitemapFile.pipe(res);
-    } else {
-      // Wenn die Sitemap nicht existiert, generiere sie
-      const websites = await Website.find({});
-
-      // Bestimme die Basis-URL
-      const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
-
-      const success = await generateSitemap(websites, baseUrl);
-
-      if (success && fs.existsSync(sitemapPath)) {
-        res.setHeader('Content-Type', 'application/xml');
-        res.setHeader('Content-Encoding', 'gzip');
-
-        const sitemapFile = fs.createReadStream(sitemapPath);
-        sitemapFile.pipe(res);
-      } else {
-        res.status(500).send('Fehler bei der Generierung der Sitemap');
-      }
-    }
+    const { getAvailableBackups } = require('./scripts/restore');
+    const backups = await getAvailableBackups();
+    
+    res.json({
+      success: true,
+      backups: Object.entries(backups).map(([timestamp, files]) => ({
+        timestamp,
+        files
+      }))
+    });
   } catch (error) {
-    console.error('Fehler bei der Sitemap-Route:', error);
-    res.status(500).send('Fehler bei der Verarbeitung der Sitemap');
+    logger.error('Fehler beim Abrufen der Backups:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Fehler beim Abrufen der Backups',
+      error: error.message
+    });
   }
 });
 
-// Automatische Sitemap-Generierung bei Änderungen
-async function updateSitemap() {
+app.post('/api/restore/:timestamp', authenticate, authorize(['admin']), async (req, res) => {
   try {
-    const websites = await Website.find({});
-    const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
-    await generateSitemap(websites, baseUrl);
+    const { performRestore } = require('./scripts/restore');
+    const result = await performRestore(req.params.timestamp);
+    
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Wiederherstellung erfolgreich',
+        timestamp: result.timestamp,
+        mongoBackup: result.mongoBackup,
+        fileBackup: result.fileBackup
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Wiederherstellung fehlgeschlagen',
+        error: result.error
+      });
+    }
   } catch (error) {
-    console.error('Fehler bei der automatischen Sitemap-Generierung:', error);
+    logger.error('Fehler bei der Wiederherstellung:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Interner Server-Fehler bei der Wiederherstellung',
+      error: error.message
+    });
   }
-}
+});
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  logger.error('Unhandled Error:', err);
+  res.status(500).json({ message: 'Internal Server Error' });
+});
 
 // Server starten
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Server ist erreichbar unter:`);
-  console.log(`- Lokal: http://localhost:${PORT}`);
-  console.log(`- Im Netzwerk: http://<deine-lokale-IP>:${PORT}`);
-
-  // Generiere die Sitemap beim Start
-  updateSitemap();
+  logger.info(`Server running on port ${PORT}`);
+  logger.info('Server ist erreichbar unter:');
+  logger.info(`- Lokal: http://localhost:${PORT}`);
+  logger.info(`- Im Netzwerk: http://<deine-lokale-IP>:${PORT}`);
 });

@@ -1,0 +1,10 @@
+{"level":"info","message":"Server running on port 3003","timestamp":"2025-05-15 23:41:05"}
+{"level":"info","message":"Server ist erreichbar unter:","timestamp":"2025-05-15 23:41:05"}
+{"level":"info","message":"- Lokal: http://localhost:3003","timestamp":"2025-05-15 23:41:05"}
+{"level":"info","message":"- Im Netzwerk: http://<deine-lokale-IP>:3003","timestamp":"2025-05-15 23:41:05"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-05-15 23:41:06"}
+{"level":"info","message":"Server running on port 3003","timestamp":"2025-05-15 23:51:05"}
+{"level":"info","message":"Server ist erreichbar unter:","timestamp":"2025-05-15 23:51:06"}
+{"level":"info","message":"- Lokal: http://localhost:3003","timestamp":"2025-05-15 23:51:06"}
+{"level":"info","message":"- Im Netzwerk: http://<deine-lokale-IP>:3003","timestamp":"2025-05-15 23:51:06"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-05-15 23:51:06"}
