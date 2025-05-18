@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handwerker Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="bg-blue-600 text-white py-20">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">Ihr Handwerksbetrieb</h1>
+            <p class="text-xl mb-8">Qualität und Zuverlässigkeit seit 1990</p>
+            <button class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
+                Kontakt aufnehmen
+            </button>
+        </div>
+    </section>
+
+    <!-- Über uns Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap items-center">
+                <div class="w-full md:w-1/2 mb-8 md:mb-0">
+                    <img src="https://via.placeholder.com/600x400" alt="Über uns" class="rounded-lg shadow-lg">
+                </div>
+                <div class="w-full md:w-1/2 md:pl-12">
+                    <h2 class="text-3xl font-bold mb-4">Über uns</h2>
+                    <p class="text-gray-600 mb-6">
+                        Mit über 30 Jahren Erfahrung sind wir Ihr zuverlässiger Partner für alle Handwerksarbeiten.
+                        Unser Team aus qualifizierten Fachkräften steht für Qualität und termingerechte Ausführung.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            Qualifizierte Fachkräfte
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            30 Jahre Erfahrung
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            Termingerechte Ausführung
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leistungen Section -->
+    <section class="bg-gray-100 py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Unsere Leistungen</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <i class="fas fa-tools text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Reparaturen</h3>
+                    <p class="text-gray-600">
+                        Schnelle und zuverlässige Reparaturen aller Art für Ihr Zuhause oder Geschäft.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <i class="fas fa-home text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Renovierungen</h3>
+                    <p class="text-gray-600">
+                        Komplette Renovierung und Modernisierung von Wohnräumen und Geschäftsräumen.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <i class="fas fa-paint-roller text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Malerarbeiten</h3>
+                    <p class="text-gray-600">
+                        Professionelle Malerarbeiten für ein perfektes Finish in jedem Raum.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontakt Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap -mx-4">
+                <div class="w-full md:w-1/2 px-4 mb-8 md:mb-0">
+                    <h2 class="text-3xl font-bold mb-6">Kontaktieren Sie uns</h2>
+                    <form class="space-y-4">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Name</label>
+                            <input type="text" class="w-full p-3 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">E-Mail</label>
+                            <input type="email" class="w-full p-3 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Nachricht</label>
+                            <textarea class="w-full p-3 border rounded-lg" rows="4"></textarea>
+                        </div>
+                        <button class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700">
+                            Nachricht senden
+                        </button>
+                    </form>
+                </div>
+                <div class="w-full md:w-1/2 px-4">
+                    <div class="bg-gray-100 p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-4">Kontaktinformationen</h3>
+                        <div class="space-y-4">
+                            <p class="flex items-center">
+                                <i class="fas fa-map-marker-alt text-blue-600 mr-3"></i>
+                                Musterstraße 123, 12345 Musterstadt
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-phone text-blue-600 mr-3"></i>
+                                +49 123 456789
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-envelope text-blue-600 mr-3"></i>
+                                info@ihre-firma.de
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-clock text-blue-600 mr-3"></i>
+                                Mo-Fr: 8:00 - 17:00 Uhr
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap justify-between">
+                <div class="w-full md:w-auto mb-4 md:mb-0">
+                    <p>&copy; 2024 Ihr Handwerksbetrieb. Alle Rechte vorbehalten.</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-blue-400">Impressum</a>
+                    <a href="#" class="hover:text-blue-400">Datenschutz</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 
