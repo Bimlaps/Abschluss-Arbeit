@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Template Auswahl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .template-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .category-pill.active {
+            background-color: #3B82F6;
+            color: white;
+        }
+        .industry-pill.active {
+            background-color: #10B981;
+            color: white;
+        }
+        .search-container {
+            position: relative;
+        }
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6B7280;
+        }
+        .search-input {
+            padding-left: 40px;
+        }
+        .best-practice-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header mit Fortschrittsanzeige -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Template Auswahl</h1>
+                <div class="flex items-center space-x-2">
+                    <span class="text-blue-600 font-semibold">Schritt 1</span>
+                    <span class="text-gray-400">/</span>
+                    <span class="text-gray-400">5</span>
+                </div>
+            </div>
+            <!-- Fortschrittsbalken -->
+            <div class="mt-4 h-2 bg-gray-200 rounded-full">
+                <div class="h-full w-1/5 bg-blue-600 rounded-full"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Suche und Filter -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 space-y-4 md:space-y-0">
+            <!-- Kategoriefilter -->
+            <div class="w-full md:w-auto">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4">Wählen Sie eine Kategorie</h2>
+                <div class="flex flex-wrap gap-2">
+                    <button class="category-pill active px-4 py-2 rounded-full border hover:bg-blue-600 hover:text-white transition-colors" data-category="all">
+                        Alle Templates
+                    </button>
+                    <button class="category-pill px-4 py-2 rounded-full border hover:bg-blue-600 hover:text-white transition-colors" data-category="business">
+                        Business
+                    </button>
+                    <button class="category-pill px-4 py-2 rounded-full border hover:bg-blue-600 hover:text-white transition-colors" data-category="portfolio">
+                        Portfolio
+                    </button>
+                    <button class="category-pill px-4 py-2 rounded-full border hover:bg-blue-600 hover:text-white transition-colors" data-category="blog">
+                        Blog
+                    </button>
+                </div>
+            </div>
+
+            <!-- Branchen-Filter -->
+            <div class="w-full md:w-auto mt-4 md:mt-0">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4">Branche</h2>
+                <div class="flex flex-wrap gap-2">
+                    <button class="industry-pill active px-4 py-2 rounded-full border hover:bg-green-600 hover:text-white transition-colors" data-industry="all">
+                        Alle Branchen
+                    </button>
+                    <button class="industry-pill px-4 py-2 rounded-full border hover:bg-green-600 hover:text-white transition-colors" data-industry="retail">
+                        Einzelhandel
+                    </button>
+                    <button class="industry-pill px-4 py-2 rounded-full border hover:bg-green-600 hover:text-white transition-colors" data-industry="gastronomy">
+                        Gastronomie
+                    </button>
+                    <button class="industry-pill px-4 py-2 rounded-full border hover:bg-green-600 hover:text-white transition-colors" data-industry="services">
+                        Dienstleistungen
+                    </button>
+                    <button class="industry-pill px-4 py-2 rounded-full border hover:bg-green-600 hover:text-white transition-colors" data-industry="health">
+                        Gesundheit
+                    </button>
+                    <button class="industry-pill px-4 py-2 rounded-full border hover:bg-green-600 hover:text-white transition-colors" data-industry="tech">
+                        Technologie
+                    </button>
+                </div>
+            </div>
+
+            <!-- Aktionen -->
+            <div class="flex items-center space-x-4">
+                <!-- Suchfeld -->
+                <div class="w-64">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" 
+                               placeholder="Template suchen..." 
+                               class="search-input w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               onkeyup="searchTemplates(this.value)">
+                    </div>
+                </div>
+
+                <!-- Vergleichen Button -->
+                <button onclick="openCompare()" class="flex items-center px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors">
+                    <i class="fas fa-columns mr-2"></i>
+                    Vergleichen
+                </button>
+            </div>
+        </div>
+
+        <!-- Template Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Business Templates -->
+            <div class="template-card bg-white rounded-lg shadow-md overflow-hidden" data-category="business" data-name="modern business" data-features="responsive,contact-form,team,services,testimonials">
+                <img src="/images/templates/business-modern.jpg" alt="Modern Business Template" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold mb-2">Modern Business</h3>
+                    <p class="text-gray-600 text-sm mb-4">Professionelles Design für Unternehmen mit klarem, modernem Layout.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-blue-600">Business</span>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="showTemplateDetails('business-modern')" class="px-3 py-2 text-blue-600 hover:text-blue-700 transition-colors">
+                                <i class="fas fa-info-circle mr-1"></i>Details
+                            </button>
+                            <button onclick="toggleCompare('business-modern')" class="compare-btn px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors" data-template="business-modern">
+                                <i class="fas fa-columns mr-1"></i>Vergleichen
+                            </button>
+                            <button onclick="selectTemplate('business-modern')" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                Auswählen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="template-card bg-white rounded-lg shadow-md overflow-hidden" data-category="business" data-name="classic business" data-features="responsive,contact-form,team,references,partners,news">
+                <img src="/images/templates/business-classic.jpg" alt="Classic Business Template" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold mb-2">Classic Business</h3>
+                    <p class="text-gray-600 text-sm mb-4">Zeitloses Design für etablierte Unternehmen und Dienstleister.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-blue-600">Business</span>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="showTemplateDetails('business-classic')" class="px-3 py-2 text-blue-600 hover:text-blue-700 transition-colors">
+                                <i class="fas fa-info-circle mr-1"></i>Details
+                            </button>
+                            <button onclick="toggleCompare('business-classic')" class="compare-btn px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors" data-template="business-classic">
+                                <i class="fas fa-columns mr-1"></i>Vergleichen
+                            </button>
+                            <button onclick="selectTemplate('business-classic')" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                Auswählen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Portfolio Templates -->
+            <div class="template-card bg-white rounded-lg shadow-md overflow-hidden" data-category="portfolio" data-name="creative portfolio" data-features="responsive,gallery,projects,skills,contact-form">
+                <img src="/images/templates/portfolio-creative.jpg" alt="Creative Portfolio Template" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold mb-2">Creative Portfolio</h3>
+                    <p class="text-gray-600 text-sm mb-4">Dynamisches Layout für Kreative und Künstler.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-blue-600">Portfolio</span>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="showTemplateDetails('portfolio-creative')" class="px-3 py-2 text-blue-600 hover:text-blue-700 transition-colors">
+                                <i class="fas fa-info-circle mr-1"></i>Details
+                            </button>
+                            <button onclick="toggleCompare('portfolio-creative')" class="compare-btn px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors" data-template="portfolio-creative">
+                                <i class="fas fa-columns mr-1"></i>Vergleichen
+                            </button>
+                            <button onclick="selectTemplate('portfolio-creative')" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                Auswählen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="template-card bg-white rounded-lg shadow-md overflow-hidden" data-category="portfolio" data-name="minimal portfolio" data-features="responsive,gallery,about,contact-form">
+                <img src="/images/templates/portfolio-minimal.jpg" alt="Minimal Portfolio Template" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold mb-2">Minimal Portfolio</h3>
+                    <p class="text-gray-600 text-sm mb-4">Schlichtes Design mit Fokus auf visuelle Inhalte.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-blue-600">Portfolio</span>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="showTemplateDetails('portfolio-minimal')" class="px-3 py-2 text-blue-600 hover:text-blue-700 transition-colors">
+                                <i class="fas fa-info-circle mr-1"></i>Details
+                            </button>
+                            <button onclick="toggleCompare('portfolio-minimal')" class="compare-btn px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors" data-template="portfolio-minimal">
+                                <i class="fas fa-columns mr-1"></i>Vergleichen
+                            </button>
+                            <button onclick="selectTemplate('portfolio-minimal')" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                Auswählen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Templates -->
+            <div class="template-card bg-white rounded-lg shadow-md overflow-hidden" data-category="blog" data-name="magazine blog" data-features="responsive,articles,categories,search,newsletter">
+                <img src="/images/templates/blog-magazine.jpg" alt="Magazine Blog Template" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold mb-2">Magazine Blog</h3>
+                    <p class="text-gray-600 text-sm mb-4">Magazin-Style Layout für Content-fokussierte Websites.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-blue-600">Blog</span>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="showTemplateDetails('blog-magazine')" class="px-3 py-2 text-blue-600 hover:text-blue-700 transition-colors">
+                                <i class="fas fa-info-circle mr-1"></i>Details
+                            </button>
+                            <button onclick="toggleCompare('blog-magazine')" class="compare-btn px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors" data-template="blog-magazine">
+                                <i class="fas fa-columns mr-1"></i>Vergleichen
+                            </button>
+                            <button onclick="selectTemplate('blog-magazine')" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                Auswählen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="template-card bg-white rounded-lg shadow-md overflow-hidden" data-category="blog" data-name="personal blog" data-features="responsive,articles,about,social-media">
+                <img src="/images/templates/blog-personal.jpg" alt="Personal Blog Template" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold mb-2">Personal Blog</h3>
+                    <p class="text-gray-600 text-sm mb-4">Persönliches Layout für Blogger und Storyteller.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-blue-600">Blog</span>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="showTemplateDetails('blog-personal')" class="px-3 py-2 text-blue-600 hover:text-blue-700 transition-colors">
+                                <i class="fas fa-info-circle mr-1"></i>Details
+                            </button>
+                            <button onclick="toggleCompare('blog-personal')" class="compare-btn px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors" data-template="blog-personal">
+                                <i class="fas fa-columns mr-1"></i>Vergleichen
+                            </button>
+                            <button onclick="selectTemplate('blog-personal')" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                Auswählen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- "Keine Ergebnisse" Nachricht -->
+        <div id="noResults" class="hidden text-center py-8">
+            <div class="text-gray-500">
+                <i class="fas fa-search text-4xl mb-4"></i>
+                <p class="text-lg">Keine Templates gefunden.</p>
+                <p class="text-sm">Versuchen Sie es mit anderen Suchbegriffen.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Template Details Modal wird per JavaScript geladen -->
+    <div id="modalContainer"></div>
+
+    <!-- Template Auswahl Floating Button -->
+    <div id="compareFloat" class="fixed bottom-4 right-4 bg-white rounded-lg shadow-lg p-4 hidden">
+        <div class="flex items-center space-x-4">
+            <span class="text-gray-600" id="compareCount">0 Templates ausgewählt</span>
+            <button onclick="openCompare()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                Vergleichen
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Template Auswahl
+        function selectTemplate(templateId) {
+            localStorage.setItem('selectedTemplate', templateId);
+            window.location.href = 'layout-selection.html';
+        }
+
+        // Template Details Modal laden
+        async function loadTemplateModal() {
+            const response = await fetch('template-details.html');
+            const html = await response.text();
+            document.getElementById('modalContainer').innerHTML = html;
+        }
+
+        // Template Details anzeigen
+        function showTemplateDetails(templateId) {
+            const modal = document.getElementById('templateModal');
+            if (!modal) {
+                loadTemplateModal().then(() => {
+                    window.showModal(templateId);
+                });
+            } else {
+                window.showModal(templateId);
+            }
+        }
+
+        // Kategorie Filter
+        document.querySelectorAll('.category-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                // Aktiven Status aktualisieren
+                document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+
+                const category = pill.dataset.category;
+                filterTemplates(category);
+            });
+        });
+
+        // Branchen-Filter
+        document.querySelectorAll('.industry-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.industry-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                const industry = pill.dataset.industry;
+                filterByIndustry(industry);
+            });
+        });
+
+        // Template Suche
+        function searchTemplates(query) {
+            query = query.toLowerCase();
+            const cards = document.querySelectorAll('.template-card');
+            let hasResults = false;
+
+            cards.forEach(card => {
+                const name = card.dataset.name.toLowerCase();
+                const features = card.dataset.features.toLowerCase();
+                const isVisible = name.includes(query) || features.includes(query);
+                
+                card.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) hasResults = true;
+            });
+
+            document.getElementById('noResults').style.display = hasResults ? 'none' : 'block';
+        }
+
+        // Template Filterung
+        function filterTemplates(category) {
+            const cards = document.querySelectorAll('.template-card');
+            let hasResults = false;
+
+            cards.forEach(card => {
+                const isVisible = category === 'all' || card.dataset.category === category;
+                card.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) hasResults = true;
+            });
+
+            document.getElementById('noResults').style.display = hasResults ? 'none' : 'block';
+        }
+
+        // Template Daten mit Branchen-Informationen
+        const templateData = {
+            'business-modern': {
+                name: 'Modern Business',
+                industries: ['tech', 'services'],
+                bestPractices: {
+                    'tech': 'Optimiert für Tech-Startups',
+                    'services': 'Ideal für moderne Dienstleister'
+                }
+            },
+            'business-classic': {
+                name: 'Classic Business',
+                industries: ['retail', 'services', 'health'],
+                bestPractices: {
+                    'retail': 'Perfekt für traditionellen Einzelhandel',
+                    'services': 'Bewährt für etablierte Dienstleister',
+                    'health': 'Vertrauenswürdig für Gesundheitsdienstleister'
+                }
+            },
+            'portfolio-creative': {
+                name: 'Creative Portfolio',
+                industries: ['services', 'tech'],
+                bestPractices: {
+                    'services': 'Optimal für kreative Dienstleistungen',
+                    'tech': 'Innovativ für Tech-Portfolios'
+                }
+            },
+            'portfolio-minimal': {
+                name: 'Minimal Portfolio',
+                industries: ['services'],
+                bestPractices: {
+                    'services': 'Elegant für freiberufliche Dienstleister'
+                }
+            },
+            'blog-magazine': {
+                name: 'Magazine Blog',
+                industries: ['retail', 'gastronomy'],
+                bestPractices: {
+                    'retail': 'Ideal für Produkt-Präsentationen',
+                    'gastronomy': 'Perfekt für Food-Blogs und Restaurants'
+                }
+            },
+            'blog-personal': {
+                name: 'Personal Blog',
+                industries: ['health', 'services'],
+                bestPractices: {
+                    'health': 'Persönlich für Gesundheitsexperten',
+                    'services': 'Authentisch für Personal Branding'
+                }
+            }
+        };
+
+        // Branchen-Filter Logik
+        function filterByIndustry(industry) {
+            const cards = document.querySelectorAll('.template-card');
+            let hasResults = false;
+
+            cards.forEach(card => {
+                const templateId = card.querySelector('.compare-btn').dataset.template;
+                const template = templateData[templateId];
+                
+                const isVisible = industry === 'all' || template.industries.includes(industry);
+                card.style.display = isVisible ? 'block' : 'none';
+                
+                // Best-Practice Badge aktualisieren
+                const existingBadge = card.querySelector('.best-practice-badge');
+                if (existingBadge) {
+                    existingBadge.remove();
+                }
+                
+                if (isVisible && industry !== 'all' && template.bestPractices[industry]) {
+                    const badge = document.createElement('div');
+                    badge.className = 'best-practice-badge';
+                    badge.textContent = '✓ Best Practice';
+                    badge.setAttribute('title', template.bestPractices[industry]);
+                    card.querySelector('img').parentNode.appendChild(badge);
+                }
+                
+                if (isVisible) hasResults = true;
+            });
+
+            document.getElementById('noResults').style.display = hasResults ? 'none' : 'block';
+        }
+
+        // Kombinierte Filterung für Kategorie und Branche
+        function filterTemplates(category, industry = 'all') {
+            const cards = document.querySelectorAll('.template-card');
+            let hasResults = false;
+
+            cards.forEach(card => {
+                const templateId = card.querySelector('.compare-btn').dataset.template;
+                const template = templateData[templateId];
+                
+                const categoryMatch = category === 'all' || card.dataset.category === category;
+                const industryMatch = industry === 'all' || template.industries.includes(industry);
+                
+                const isVisible = categoryMatch && industryMatch;
+                card.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) hasResults = true;
+            });
+
+            document.getElementById('noResults').style.display = hasResults ? 'none' : 'block';
+        }
+
+        // Modal beim Laden der Seite vorbereiten
+        document.addEventListener('DOMContentLoaded', loadTemplateModal);
+
+        // Template zum Vergleich hinzufügen
+        let selectedForCompare = new Set();
+
+        function toggleCompare(templateId) {
+            if (selectedForCompare.has(templateId)) {
+                selectedForCompare.delete(templateId);
+            } else if (selectedForCompare.size < 3) {
+                selectedForCompare.add(templateId);
+            } else {
+                alert('Sie können maximal 3 Templates vergleichen');
+                return;
+            }
+
+            updateCompareUI();
+        }
+
+        function updateCompareUI() {
+            // Update compare buttons
+            document.querySelectorAll('.compare-btn').forEach(btn => {
+                const templateId = btn.dataset.template;
+                if (selectedForCompare.has(templateId)) {
+                    btn.classList.add('bg-green-600');
+                    btn.innerHTML = '<i class="fas fa-check mr-1"></i>Ausgewählt';
+                } else {
+                    btn.classList.remove('bg-green-600');
+                    btn.innerHTML = '<i class="fas fa-columns mr-1"></i>Vergleichen';
+                }
+            });
+
+            // Update floating button
+            const compareFloat = document.getElementById('compareFloat');
+            const compareCount = document.getElementById('compareCount');
+            
+            if (selectedForCompare.size > 0) {
+                compareFloat.classList.remove('hidden');
+                compareCount.textContent = `${selectedForCompare.size} Template${selectedForCompare.size > 1 ? 's' : ''} ausgewählt`;
+            } else {
+                compareFloat.classList.add('hidden');
+            }
+        }
+
+        function openCompare() {
+            if (selectedForCompare.size === 0) {
+                alert('Bitte wählen Sie mindestens ein Template zum Vergleichen aus');
+                return;
+            }
+
+            const compareUrl = new URL('template-compare.html', window.location.href);
+            compareUrl.searchParams.append('templates', Array.from(selectedForCompare).join(','));
+            window.location.href = compareUrl.toString();
+        }
+    </script>
+</body>
+</html> 
