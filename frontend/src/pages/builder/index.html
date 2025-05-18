@@ -15,11 +15,24 @@
                 <div class="flex justify-between h-16">
                     <div class="flex">
                         <div class="flex-shrink-0 flex items-center">
-                            <img class="h-8 w-auto" src="/logo.png" alt="247Vitrine">
+                            <a href="/" class="flex items-center">
+                                <img class="h-8 w-auto" src="/logo.png" alt="247Vitrine">
+                                <span class="ml-2 text-xl font-semibold">247Vitrine</span>
+                            </a>
+                        </div>
+                        <div class="hidden md:flex md:ml-6 md:space-x-4 items-center">
+                            <a href="/dashboard" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">Dashboard</a>
+                            <a href="/builder" class="text-blue-600 px-3 py-2 rounded-md">Website Builder</a>
+                            <a href="/preview" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">Vorschau</a>
                         </div>
                     </div>
-                    <div class="flex items-center">
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-700" title="Aktuelle Seite">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span class="breadcrumb-text">Website Builder</span>
+                        </span>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700" 
+                                title="Speichert den aktuellen Fortschritt">
                             Speichern
                         </button>
                     </div>
@@ -29,26 +42,35 @@
 
         <!-- Main Content -->
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-            <!-- Wizard Steps -->
+            <!-- Wizard Steps with Labels -->
             <div class="mb-8">
                 <div class="flex items-center justify-between">
                     <div class="flex-1">
                         <div class="relative">
-                            <div class="h-1 bg-blue-600 rounded"></div>
-                            <div class="absolute -top-2 left-0">
-                                <span class="w-6 h-6 bg-blue-600 rounded-full text-white flex items-center justify-center text-sm font-semibold">1</span>
-                            </div>
-                            <div class="absolute -top-2 left-1/4">
-                                <span class="w-6 h-6 bg-gray-300 rounded-full text-gray-600 flex items-center justify-center text-sm font-semibold">2</span>
-                            </div>
-                            <div class="absolute -top-2 left-1/2">
-                                <span class="w-6 h-6 bg-gray-300 rounded-full text-gray-600 flex items-center justify-center text-sm font-semibold">3</span>
-                            </div>
-                            <div class="absolute -top-2 left-3/4">
-                                <span class="w-6 h-6 bg-gray-300 rounded-full text-gray-600 flex items-center justify-center text-sm font-semibold">4</span>
-                            </div>
-                            <div class="absolute -top-2 right-0">
-                                <span class="w-6 h-6 bg-gray-300 rounded-full text-gray-600 flex items-center justify-center text-sm font-semibold">5</span>
+                            <div class="h-1 bg-blue-600 rounded w-1/4"></div>
+                            <div class="absolute -top-8 left-0 w-full">
+                                <div class="flex justify-between">
+                                    <div class="text-center" title="Wählen Sie Ihre Branche aus">
+                                        <span class="w-6 h-6 bg-blue-600 rounded-full text-white flex items-center justify-center text-sm font-semibold">1</span>
+                                        <span class="block text-sm mt-1">Branche</span>
+                                    </div>
+                                    <div class="text-center" title="Wählen Sie ein Layout für Ihre Website">
+                                        <span class="w-6 h-6 bg-gray-300 rounded-full text-gray-600 flex items-center justify-center text-sm font-semibold">2</span>
+                                        <span class="block text-sm mt-1">Layout</span>
+                                    </div>
+                                    <div class="text-center" title="Wählen Sie ein Design-Schema">
+                                        <span class="w-6 h-6 bg-gray-300 rounded-full text-gray-600 flex items-center justify-center text-sm font-semibold">3</span>
+                                        <span class="block text-sm mt-1">Design</span>
+                                    </div>
+                                    <div class="text-center" title="Wählen Sie Ihre Farbpalette">
+                                        <span class="w-6 h-6 bg-gray-300 rounded-full text-gray-600 flex items-center justify-center text-sm font-semibold">4</span>
+                                        <span class="block text-sm mt-1">Farben</span>
+                                    </div>
+                                    <div class="text-center" title="Fügen Sie Ihre Unternehmensinformationen hinzu">
+                                        <span class="w-6 h-6 bg-gray-300 rounded-full text-gray-600 flex items-center justify-center text-sm font-semibold">5</span>
+                                        <span class="block text-sm mt-1">Infos</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -61,15 +83,18 @@
                 <div class="step-content" id="step1">
                     <h2 class="text-2xl font-bold mb-4">Wählen Sie Ihre Branche</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <button class="p-4 border rounded-lg hover:bg-blue-50 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button class="p-4 border rounded-lg hover:bg-blue-50 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                title="Handwerksbetriebe aller Art">
                             <i class="fas fa-hammer text-3xl mb-2"></i>
                             <div>Handwerker</div>
                         </button>
-                        <button class="p-4 border rounded-lg hover:bg-blue-50 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button class="p-4 border rounded-lg hover:bg-blue-50 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                title="Elektroinstallation und -reparatur">
                             <i class="fas fa-bolt text-3xl mb-2"></i>
                             <div>Elektriker</div>
                         </button>
-                        <button class="p-4 border rounded-lg hover:bg-blue-50 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button class="p-4 border rounded-lg hover:bg-blue-50 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                title="Malerarbeiten und Raumgestaltung">
                             <i class="fas fa-paint-roller text-3xl mb-2"></i>
                             <div>Maler</div>
                         </button>
@@ -79,10 +104,13 @@
 
             <!-- Navigation Buttons -->
             <div class="mt-6 flex justify-between">
-                <button class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-400" disabled>
+                <button class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed" 
+                        disabled
+                        title="Zurück zum vorherigen Schritt">
                     Zurück
                 </button>
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                <button class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700"
+                        title="Weiter zum nächsten Schritt">
                     Weiter
                 </button>
             </div>
@@ -91,6 +119,32 @@
 
     <script>
         // Wizard-Logik hier implementieren
+        document.addEventListener('DOMContentLoaded', function() {
+            // Branchenauswahl
+            const branchenButtons = document.querySelectorAll('.grid button');
+            branchenButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Entferne aktive Klasse von allen Buttons
+                    branchenButtons.forEach(btn => btn.classList.remove('bg-blue-50', 'border-blue-500'));
+                    // Füge aktive Klasse zum geklickten Button hinzu
+                    this.classList.add('bg-blue-50', 'border-blue-500');
+                });
+            });
+
+            // Weiter-Button
+            const weiterButton = document.querySelector('.mt-6 button:last-child');
+            weiterButton.addEventListener('click', function() {
+                // Prüfe ob eine Branche ausgewählt wurde
+                const aktiveBranche = document.querySelector('.grid button.bg-blue-50');
+                if (aktiveBranche) {
+                    // Speichere die Auswahl und gehe zum nächsten Schritt
+                    localStorage.setItem('selectedBranche', aktiveBranche.textContent.trim());
+                    window.location.href = '/builder/layout';
+                } else {
+                    alert('Bitte wählen Sie eine Branche aus.');
+                }
+            });
+        });
     </script>
 </body>
 </html> 

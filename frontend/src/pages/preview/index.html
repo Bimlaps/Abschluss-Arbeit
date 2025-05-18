@@ -9,28 +9,58 @@
 </head>
 <body class="bg-gray-100">
     <div class="min-h-screen">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between h-16">
+                    <div class="flex">
+                        <div class="flex-shrink-0 flex items-center">
+                            <a href="/" class="flex items-center">
+                                <img class="h-8 w-auto" src="/logo.png" alt="247Vitrine">
+                                <span class="ml-2 text-xl font-semibold">247Vitrine</span>
+                            </a>
+                        </div>
+                        <div class="hidden md:flex md:ml-6 md:space-x-4 items-center">
+                            <a href="/dashboard" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">Dashboard</a>
+                            <a href="/builder" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">Website Builder</a>
+                            <a href="/preview" class="text-blue-600 px-3 py-2 rounded-md">Vorschau</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-700" title="Aktuelle Seite">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span class="breadcrumb-text">Vorschau</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
         <!-- Preview Control Bar -->
-        <div class="fixed top-0 left-0 right-0 bg-gray-800 text-white p-4 z-50">
+        <div class="fixed top-16 left-0 right-0 bg-gray-800 text-white p-4 z-50">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <div class="flex items-center space-x-4">
                     <!-- Device Switcher -->
                     <div class="flex space-x-2">
-                        <button class="p-2 rounded hover:bg-gray-700 active:bg-blue-600" title="Desktop Ansicht">
-                            <i class="fas fa-desktop"></i>
+                        <button class="p-2 rounded hover:bg-gray-700" title="Mobile Ansicht (375px)">
+                            <i class="fas fa-mobile-alt"></i>
                         </button>
-                        <button class="p-2 rounded hover:bg-gray-700" title="Tablet Ansicht">
+                        <button class="p-2 rounded hover:bg-gray-700" title="Tablet Ansicht (768px)">
                             <i class="fas fa-tablet-alt"></i>
                         </button>
-                        <button class="p-2 rounded hover:bg-gray-700" title="Mobile Ansicht">
-                            <i class="fas fa-mobile-alt"></i>
+                        <button class="p-2 rounded hover:bg-gray-700" title="Desktop Ansicht (1440px)">
+                            <i class="fas fa-desktop"></i>
                         </button>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" 
+                            title="Zurück zum Website-Builder"
+                            onclick="window.location.href='/builder'">
                         Zurück zum Editor
                     </button>
-                    <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                            title="Website veröffentlichen">
                         Veröffentlichen
                     </button>
                 </div>
@@ -38,19 +68,49 @@
         </div>
 
         <!-- Preview Frame Container -->
-        <div class="pt-20 pb-8 px-4">
-            <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden" style="min-height: 800px;">
-                <iframe id="previewFrame" src="about:blank" class="w-full h-full" style="min-height: 800px;"></iframe>
+        <div class="pt-32 pb-8 px-4">
+            <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300" 
+                 style="min-height: 800px;" 
+                 id="previewContainer">
+                <iframe id="previewFrame" 
+                        src="about:blank" 
+                        class="w-full h-full transition-all duration-300" 
+                        style="min-height: 800px;">
+                </iframe>
             </div>
         </div>
     </div>
 
     <script>
-        // Preview-Logik hier implementieren
         document.addEventListener('DOMContentLoaded', function() {
             const previewFrame = document.getElementById('previewFrame');
+            const previewContainer = document.getElementById('previewContainer');
+            const deviceButtons = document.querySelectorAll('.flex.space-x-2 button');
+
             // Lade die Vorschau-Template
             previewFrame.src = '/preview-template.html';
+
+            // Device Switcher
+            deviceButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Entferne aktive Klasse von allen Buttons
+                    deviceButtons.forEach(btn => btn.classList.remove('bg-blue-600'));
+                    // Füge aktive Klasse zum geklickten Button hinzu
+                    this.classList.add('bg-blue-600');
+
+                    // Setze die Breite des Containers basierend auf dem gewählten Gerät
+                    if (this.title.includes('Mobile')) {
+                        previewFrame.style.width = '375px';
+                        previewFrame.style.height = '667px';
+                    } else if (this.title.includes('Tablet')) {
+                        previewFrame.style.width = '768px';
+                        previewFrame.style.height = '1024px';
+                    } else if (this.title.includes('Desktop')) {
+                        previewFrame.style.width = '1440px';
+                        previewFrame.style.height = '900px';
+                    }
+                });
+            });
         });
     </script>
 </body>
