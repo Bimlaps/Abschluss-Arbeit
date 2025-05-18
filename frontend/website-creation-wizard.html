@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website erstellen - 247Vitrine</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .step-content {
+            display: none;
+        }
+        .step-content.active {
+            display: block;
+        }
+        .step-indicator.active {
+            background-color: #4F46E5;
+            color: white;
+        }
+        .step-indicator.completed {
+            background-color: #34D399;
+            color: white;
+        }
+        .preview-frame {
+            transition: width 0.3s ease;
+            margin: 0 auto;
+        }
+        .preview-frame.mobile {
+            width: 375px;
+        }
+        .preview-frame.desktop {
+            width: 100%;
+        }
+        .invalid-feedback {
+            color: #DC2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        .loading {
+            position: relative;
+        }
+        .loading:after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 0;
+            left: 100%;
+            margin-left: 8px;
+            border: 2px solid #4F46E5;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen py-12">
+        <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg">
+            <!-- Progress Bar -->
+            <div class="px-8 py-6 border-b">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="step-indicator active w-8 h-8 rounded-full flex items-center justify-center border-2 border-primary-600">
+                            1
+                        </div>
+                        <div class="h-1 w-16 bg-gray-200">
+                        </div>
+                        <div class="step-indicator w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-300">
+                            2
+                        </div>
+                        <div class="h-1 w-16 bg-gray-200">
+                        </div>
+                        <div class="step-indicator w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-300">
+                            3
+                        </div>
+                        <div class="h-1 w-16 bg-gray-200">
+                        </div>
+                        <div class="step-indicator w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-300">
+                            4
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Steps -->
+            <form id="websiteCreationForm" class="p-8">
+                <!-- Step 1: Grundinformationen -->
+                <div class="step-content active" id="step1">
+                    <h2 class="text-2xl font-bold mb-6">1. Grundinformationen</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Art des Handwerks
+                            </label>
+                            <select name="craftType" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500">
+                                <option value="">Bitte wählen Sie...</option>
+                                <option value="carpenter">Tischler</option>
+                                <option value="electrician">Elektriker</option>
+                                <option value="plumber">Installateur</option>
+                                <option value="painter">Maler</option>
+                                <option value="mason">Maurer</option>
+                                <option value="other">Sonstiges</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Name Ihres Unternehmens
+                            </label>
+                            <input type="text" name="companyName" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Ihre gewünschte Domain
+                            </label>
+                            <div class="flex items-center">
+                                <input type="text" name="subdomain" class="w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:ring-primary-500 focus:border-primary-500" required>
+                                <span class="px-3 py-2 bg-gray-100 text-gray-600 border border-l-0 border-gray-300 rounded-r-md">
+                                    .247vitrine.ma
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Design & Layout -->
+                <div class="step-content" id="step2">
+                    <h2 class="text-2xl font-bold mb-6">2. Design & Layout</h2>
+                    <div class="space-y-6">
+                        <div class="flex space-x-4 mb-4">
+                            <button type="button" id="desktopPreview" class="px-4 py-2 bg-gray-200 rounded-md">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </button>
+                            <button type="button" id="mobilePreview" class="px-4 py-2 bg-gray-200 rounded-md">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                            </button>
+                            <button type="button" id="openPreview" class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700">
+                                Vorschau öffnen
+                            </button>
+                        </div>
+                        <div class="preview-container bg-gray-100 p-4 rounded-lg">
+                            <iframe id="previewFrame" src="preview-template.html" class="w-full h-[600px] border-0 rounded-lg"></iframe>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Wählen Sie ein Template
+                            </label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="border rounded-lg p-4 cursor-pointer hover:border-primary-500 template-option">
+                                    <img src="assets/templates/modern.jpg" alt="Modern Template" class="w-full h-40 object-cover rounded mb-2">
+                                    <h3 class="font-medium">Modern</h3>
+                                    <p class="text-sm text-gray-500">Klares, zeitgemäßes Design</p>
+                                </div>
+                                <div class="border rounded-lg p-4 cursor-pointer hover:border-primary-500 template-option">
+                                    <img src="assets/templates/classic.jpg" alt="Classic Template" class="w-full h-40 object-cover rounded mb-2">
+                                    <h3 class="font-medium">Klassisch</h3>
+                                    <p class="text-sm text-gray-500">Traditionelles, vertrauenswürdiges Design</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Farbschema
+                            </label>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="color-option flex items-center space-x-2 p-2 border rounded cursor-pointer hover:bg-gray-50">
+                                    <div class="w-6 h-6 rounded-full bg-blue-600"></div>
+                                    <span>Blau</span>
+                                </div>
+                                <div class="color-option flex items-center space-x-2 p-2 border rounded cursor-pointer hover:bg-gray-50">
+                                    <div class="w-6 h-6 rounded-full bg-green-600"></div>
+                                    <span>Grün</span>
+                                </div>
+                                <div class="color-option flex items-center space-x-2 p-2 border rounded cursor-pointer hover:bg-gray-50">
+                                    <div class="w-6 h-6 rounded-full bg-red-600"></div>
+                                    <span>Rot</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Inhalte & SEO -->
+                <div class="step-content" id="step3">
+                    <h2 class="text-2xl font-bold mb-6">3. Inhalte & SEO</h2>
+                    <div class="space-y-8">
+                        <!-- Über uns -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Über uns Text
+                            </label>
+                            <div class="space-y-4">
+                                <textarea 
+                                    name="aboutUs" 
+                                    rows="4" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500"
+                                    placeholder="Beschreiben Sie Ihr Unternehmen..."
+                                ></textarea>
+                                <div class="text-sm text-gray-500">
+                                    Empfohlene Länge: 150-300 Zeichen
+                                    <span id="aboutUsCounter" class="ml-2">0/300</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dienstleistungen -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Ihre Dienstleistungen
+                            </label>
+                            <div id="services" class="space-y-4">
+                                <div class="service-item">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <input 
+                                            type="text" 
+                                            class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500" 
+                                            placeholder="z.B. Möbelbau"
+                                        >
+                                        <button type="button" class="text-red-600 hover:text-red-700">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <input 
+                                        type="text" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-sm" 
+                                        placeholder="Kurze Beschreibung der Dienstleistung"
+                                    >
+                                </div>
+                            </div>
+                            <button type="button" class="mt-2 text-sm text-primary-600 hover:text-primary-700" onclick="addService()">
+                                + Dienstleistung hinzufügen
+                            </button>
+                        </div>
+
+                        <!-- Kontaktinformationen -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Kontaktinformationen
+                            </label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <input 
+                                        type="tel" 
+                                        name="phone" 
+                                        placeholder="Telefonnummer" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500"
+                                    >
+                                    <div class="mt-1">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" class="form-checkbox text-primary-600">
+                                            <span class="ml-2 text-sm text-gray-600">WhatsApp Business aktivieren</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <input 
+                                        type="email" 
+                                        name="email" 
+                                        placeholder="E-Mail" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500"
+                                    >
+                                </div>
+                                <div class="col-span-2">
+                                    <input 
+                                        type="text" 
+                                        name="address" 
+                                        placeholder="Adresse" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Öffnungszeiten -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Öffnungszeiten
+                            </label>
+                            <div class="space-y-2">
+                                <div class="grid grid-cols-7 gap-2">
+                                    <button type="button" class="px-2 py-1 text-sm border rounded-md hover:bg-gray-50" data-day="mo">Mo</button>
+                                    <button type="button" class="px-2 py-1 text-sm border rounded-md hover:bg-gray-50" data-day="di">Di</button>
+                                    <button type="button" class="px-2 py-1 text-sm border rounded-md hover:bg-gray-50" data-day="mi">Mi</button>
+                                    <button type="button" class="px-2 py-1 text-sm border rounded-md hover:bg-gray-50" data-day="do">Do</button>
+                                    <button type="button" class="px-2 py-1 text-sm border rounded-md hover:bg-gray-50" data-day="fr">Fr</button>
+                                    <button type="button" class="px-2 py-1 text-sm border rounded-md hover:bg-gray-50" data-day="sa">Sa</button>
+                                    <button type="button" class="px-2 py-1 text-sm border rounded-md hover:bg-gray-50" data-day="so">So</button>
+                                </div>
+                                <div class="flex space-x-4">
+                                    <input type="time" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm" value="09:00">
+                                    <span class="self-center">-</span>
+                                    <input type="time" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm" value="18:00">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEO Einstellungen -->
+                        <div class="border-t pt-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">SEO Einstellungen</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Meta Titel
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="metaTitle" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500"
+                                        placeholder="z.B. Mustermann Handwerk - Ihr Experte für Möbelbau in Berlin"
+                                    >
+                                    <div class="text-sm text-gray-500 mt-1">
+                                        Empfohlene Länge: 50-60 Zeichen
+                                        <span id="metaTitleCounter" class="ml-2">0/60</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Meta Beschreibung
+                                    </label>
+                                    <textarea 
+                                        name="metaDescription" 
+                                        rows="2" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500"
+                                        placeholder="Kurze Beschreibung Ihrer Dienstleistungen für Suchergebnisse..."
+                                    ></textarea>
+                                    <div class="text-sm text-gray-500 mt-1">
+                                        Empfohlene Länge: 150-160 Zeichen
+                                        <span id="metaDescriptionCounter" class="ml-2">0/160</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Keywords (durch Komma getrennt)
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="keywords" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500"
+                                        placeholder="z.B. Handwerk, Möbelbau, Tischlerei, Berlin"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Überprüfung -->
+                <div class="step-content" id="step4">
+                    <h2 class="text-2xl font-bold mb-6">4. Überprüfung</h2>
+                    <div class="space-y-6">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-medium mb-2">Zusammenfassung</h3>
+                            <dl class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <dt class="text-sm text-gray-600">Unternehmen:</dt>
+                                    <dd class="font-medium" id="summary-company"></dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm text-gray-600">Domain:</dt>
+                                    <dd class="font-medium" id="summary-domain"></dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm text-gray-600">Template:</dt>
+                                    <dd class="font-medium" id="summary-template"></dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm text-gray-600">Farbschema:</dt>
+                                    <dd class="font-medium" id="summary-color"></dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="font-medium text-blue-800 mb-2">Nächste Schritte</h3>
+                            <p class="text-sm text-blue-700">
+                                Nach dem Erstellen Ihrer Website können Sie:
+                            </p>
+                            <ul class="mt-2 text-sm text-blue-700 list-disc list-inside">
+                                <li>Weitere Inhalte hinzufügen</li>
+                                <li>Bilder hochladen</li>
+                                <li>SEO-Einstellungen anpassen</li>
+                                <li>Die Website veröffentlichen</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="mt-8 flex justify-between">
+                    <button type="button" id="prevButton" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50" style="display: none;">
+                        Zurück
+                    </button>
+                    <button type="button" id="nextButton" class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700">
+                        Weiter
+                    </button>
+                    <button type="submit" id="submitButton" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700" style="display: none;">
+                        Website erstellen
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function updateStepVisibility() {
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(step => {
+                step.classList.remove('active');
+            });
+            // Show current step
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            
+            // Update progress indicators
+            document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+                if (index + 1 < currentStep) {
+                    indicator.classList.add('completed');
+                    indicator.classList.remove('active');
+                } else if (index + 1 === currentStep) {
+                    indicator.classList.add('active');
+                    indicator.classList.remove('completed');
+                } else {
+                    indicator.classList.remove('active', 'completed');
+                }
+            });
+
+            // Update buttons
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+            const submitButton = document.getElementById('submitButton');
+
+            prevButton.style.display = currentStep === 1 ? 'none' : 'block';
+            nextButton.style.display = currentStep === totalSteps ? 'none' : 'block';
+            submitButton.style.display = currentStep === totalSteps ? 'block' : 'none';
+        }
+
+        document.getElementById('nextButton').addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateStepVisibility();
+                if (currentStep === totalSteps) {
+                    updateSummary();
+                }
+            }
+        });
+
+        document.getElementById('prevButton').addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepVisibility();
+            }
+        });
+
+        function addService() {
+            const servicesContainer = document.getElementById('services');
+            const newService = document.createElement('div');
+            newService.className = 'service-item';
+            newService.innerHTML = `
+                <div class="flex items-center space-x-2 mb-2">
+                    <input 
+                        type="text" 
+                        class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500" 
+                        placeholder="z.B. Möbelbau"
+                    >
+                    <button type="button" class="text-red-600 hover:text-red-700" onclick="this.closest('.service-item').remove()">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <input 
+                    type="text" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-sm" 
+                    placeholder="Kurze Beschreibung der Dienstleistung"
+                >
+            `;
+            servicesContainer.appendChild(newService);
+        }
+
+        function updateSummary() {
+            document.getElementById('summary-company').textContent = document.querySelector('[name="companyName"]').value;
+            document.getElementById('summary-domain').textContent = document.querySelector('[name="subdomain"]').value + '.247vitrine.ma';
+            document.getElementById('summary-template').textContent = 'Modern'; // This should be updated based on selection
+            document.getElementById('summary-color').textContent = 'Blau'; // This should be updated based on selection
+        }
+
+        document.getElementById('websiteCreationForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Here you would typically send the form data to your backend
+            alert('Ihre Website wird erstellt! Sie werden weitergeleitet...');
+            window.location.href = '/website-builder.html';
+        });
+
+        // Initialize template selection
+        document.querySelectorAll('.template-option').forEach(template => {
+            template.addEventListener('click', () => {
+                document.querySelectorAll('.template-option').forEach(t => t.classList.remove('border-primary-500'));
+                template.classList.add('border-primary-500');
+            });
+        });
+
+        // Initialize color selection
+        document.querySelectorAll('.color-option').forEach(color => {
+            color.addEventListener('click', () => {
+                document.querySelectorAll('.color-option').forEach(c => c.classList.remove('border-primary-500'));
+                color.classList.add('border-primary-500');
+            });
+        });
+
+        // Live validation for subdomain
+        document.querySelector('[name="subdomain"]').addEventListener('input', async function(e) {
+            const subdomainInput = e.target;
+            const feedback = document.createElement('div');
+            feedback.className = 'invalid-feedback';
+            
+            // Remove any existing feedback
+            const existingFeedback = subdomainInput.parentElement.querySelector('.invalid-feedback');
+            if (existingFeedback) {
+                existingFeedback.remove();
+            }
+
+            // Add loading indicator
+            subdomainInput.classList.add('loading');
+
+            // Validate format
+            const subdomainRegex = /^[a-z0-9-]+$/;
+            if (!subdomainRegex.test(subdomainInput.value)) {
+                feedback.textContent = 'Nur Kleinbuchstaben, Zahlen und Bindestriche erlaubt';
+                subdomainInput.parentElement.appendChild(feedback);
+                subdomainInput.classList.remove('loading');
+                return;
+            }
+
+            // Simulate API check for subdomain availability
+            setTimeout(() => {
+                const isAvailable = Math.random() > 0.3; // Simulate 70% availability
+                if (!isAvailable) {
+                    feedback.textContent = 'Diese Domain ist bereits vergeben';
+                    subdomainInput.parentElement.appendChild(feedback);
+                }
+                subdomainInput.classList.remove('loading');
+            }, 500);
+        });
+
+        // Preview functionality
+        let previewWindow = null;
+
+        document.getElementById('openPreview').addEventListener('click', () => {
+            if (previewWindow && !previewWindow.closed) {
+                previewWindow.focus();
+            } else {
+                previewWindow = window.open('preview-template.html', 'preview', 'width=1200,height=800');
+            }
+            updatePreviewData();
+        });
+
+        function updatePreviewData() {
+            const previewData = {
+                type: 'previewUpdate',
+                previewData: {
+                    companyName: document.querySelector('[name="companyName"]').value || 'Ihr Unternehmen',
+                    aboutUs: document.querySelector('[name="aboutUs"]').value || 'Über uns Text kommt hier...',
+                    services: Array.from(document.querySelectorAll('.service-item')).map(item => ({
+                        title: item.querySelector('input:first-child').value || 'Dienstleistung',
+                        description: item.querySelector('input:last-child')?.value || 'Beschreibung der Dienstleistung'
+                    })),
+                    phone: document.querySelector('[name="phone"]').value || '+49 123 456789',
+                    email: document.querySelector('[name="email"]').value || 'info@example.com',
+                    address: document.querySelector('[name="address"]').value || 'Ihre Adresse',
+                    primaryColor: getSelectedColor()
+                }
+            };
+
+            // Update iframe preview
+            const iframe = document.getElementById('previewFrame');
+            if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage(previewData, '*');
+            }
+
+            // Update popup preview
+            if (previewWindow && !previewWindow.closed) {
+                previewWindow.postMessage(previewData, '*');
+            }
+        }
+
+        function getSelectedColor() {
+            const colorOption = document.querySelector('.color-option.border-primary-500');
+            if (colorOption) {
+                const colorName = colorOption.querySelector('span').textContent.toLowerCase();
+                const colorMap = {
+                    'blau': '#4F46E5',
+                    'grün': '#059669',
+                    'rot': '#DC2626'
+                };
+                return colorMap[colorName] || '#4F46E5';
+            }
+            return '#4F46E5';
+        }
+
+        // Update preview when form fields change
+        const formInputs = document.querySelectorAll('input, textarea, select');
+        formInputs.forEach(input => {
+            input.addEventListener('input', updatePreviewData);
+        });
+
+        // Update preview when template or color is selected
+        document.querySelectorAll('.template-option, .color-option').forEach(option => {
+            option.addEventListener('click', updatePreviewData);
+        });
+
+        // Mobile/Desktop preview toggle
+        document.getElementById('desktopPreview').addEventListener('click', () => {
+            const iframe = document.getElementById('previewFrame');
+            iframe.style.width = '100%';
+        });
+
+        document.getElementById('mobilePreview').addEventListener('click', () => {
+            const iframe = document.getElementById('previewFrame');
+            iframe.style.width = '375px';
+            iframe.style.margin = '0 auto';
+        });
+
+        // Character counter functionality
+        function initCharacterCounter(inputSelector, counterSelector, maxLength) {
+            const input = document.querySelector(inputSelector);
+            const counter = document.querySelector(counterSelector);
+            
+            input.addEventListener('input', () => {
+                const length = input.value.length;
+                counter.textContent = `${length}/${maxLength}`;
+                if (length > maxLength) {
+                    counter.classList.add('text-red-600');
+                } else {
+                    counter.classList.remove('text-red-600');
+                }
+            });
+        }
+
+        initCharacterCounter('[name="aboutUs"]', '#aboutUsCounter', 300);
+        initCharacterCounter('[name="metaTitle"]', '#metaTitleCounter', 60);
+        initCharacterCounter('[name="metaDescription"]', '#metaDescriptionCounter', 160);
+
+        // Opening hours functionality
+        document.querySelectorAll('[data-day]').forEach(button => {
+            button.addEventListener('click', () => {
+                button.classList.toggle('bg-primary-600');
+                button.classList.toggle('text-white');
+            });
+        });
+    </script>
+</body>
+</html> 
