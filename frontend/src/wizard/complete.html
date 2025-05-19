@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website erfolgreich erstellt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @keyframes scale {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-scale {
+            animation: scale 0.5s ease-out forwards;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="max-w-2xl w-full mx-4">
+        <!-- Success Message -->
+        <div class="bg-white rounded-lg shadow-lg p-8 text-center mb-8">
+            <div class="mb-8 animate-scale">
+                <div class="w-20 h-20 bg-green-100 rounded-full mx-auto flex items-center justify-center">
+                    <i class="fas fa-check text-4xl text-green-500"></i>
+                </div>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-4 animate-slide-up" style="animation-delay: 0.2s">
+                Glückwunsch!
+            </h1>
+            <p class="text-gray-600 mb-8 animate-slide-up" style="animation-delay: 0.3s">
+                Ihre Website wurde erfolgreich erstellt und ist jetzt online verfügbar.
+            </p>
+
+            <!-- Website Details -->
+            <div class="bg-gray-50 rounded-lg p-6 mb-8 text-left animate-slide-up" style="animation-delay: 0.4s">
+                <h3 class="text-lg font-semibold mb-4">Ihre Website-Details</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600">Website-URL:</span>
+                        <div class="flex items-center">
+                            <a href="#" class="text-blue-600 hover:text-blue-700 mr-2" id="websiteUrl">
+                                https://ihre-domain.de
+                            </a>
+                            <button onclick="copyToClipboard('websiteUrl')" class="text-gray-400 hover:text-gray-600">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600">Admin-Bereich:</span>
+                        <div class="flex items-center">
+                            <a href="#" class="text-blue-600 hover:text-blue-700 mr-2" id="adminUrl">
+                                https://ihre-domain.de/admin
+                            </a>
+                            <button onclick="copyToClipboard('adminUrl')" class="text-gray-400 hover:text-gray-600">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="space-y-4 text-left mb-8 animate-slide-up" style="animation-delay: 0.5s">
+                <h3 class="text-lg font-semibold mb-4">Nächste Schritte</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex-shrink-0 flex items-center justify-center">
+                        <span class="text-blue-600 font-semibold">1</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">Website testen</h4>
+                        <p class="text-gray-600">Überprüfen Sie Ihre neue Website und stellen Sie sicher, dass alle Inhalte korrekt angezeigt werden.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex-shrink-0 flex items-center justify-center">
+                        <span class="text-blue-600 font-semibold">2</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">Inhalte anpassen</h4>
+                        <p class="text-gray-600">Nutzen Sie den Admin-Bereich, um Ihre Inhalte zu bearbeiten und zu aktualisieren.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex-shrink-0 flex items-center justify-center">
+                        <span class="text-blue-600 font-semibold">3</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">Domain einrichten</h4>
+                        <p class="text-gray-600">Richten Sie Ihre eigene Domain ein oder nutzen Sie unsere kostenlose Subdomain.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-slide-up" style="animation-delay: 0.6s">
+                <a href="#" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                    <i class="fas fa-globe mr-2"></i>
+                    Website besuchen
+                </a>
+                <a href="#" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition-colors flex items-center justify-center">
+                    <i class="fas fa-cog mr-2"></i>
+                    Admin-Bereich
+                </a>
+            </div>
+        </div>
+
+        <!-- Support Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 animate-slide-up" style="animation-delay: 0.7s">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="font-semibold">Benötigen Sie Hilfe?</h3>
+                    <p class="text-gray-600">Unser Support-Team steht Ihnen zur Verfügung</p>
+                </div>
+                <a href="#" class="text-blue-600 hover:text-blue-700 flex items-center">
+                    <span class="mr-2">Support kontaktieren</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent.trim();
+            navigator.clipboard.writeText(text).then(() => {
+                // Visuelles Feedback
+                const icon = element.nextElementSibling.querySelector('i');
+                icon.classList.remove('far', 'fa-copy');
+                icon.classList.add('fas', 'fa-check');
+                setTimeout(() => {
+                    icon.classList.remove('fas', 'fa-check');
+                    icon.classList.add('far', 'fa-copy');
+                }, 2000);
+            });
+        }
+
+        // Automatisch die Website-Details aus dem LocalStorage laden
+        document.addEventListener('DOMContentLoaded', () => {
+            const companyInfo = JSON.parse(localStorage.getItem('companyInfo') || '{}');
+            const companyName = companyInfo.name || 'ihre-domain';
+            const sanitizedName = companyName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            
+            const websiteUrl = `https://${sanitizedName}.domain.de`;
+            const adminUrl = `${websiteUrl}/admin`;
+            
+            document.getElementById('websiteUrl').textContent = websiteUrl;
+            document.getElementById('websiteUrl').href = websiteUrl;
+            document.getElementById('adminUrl').textContent = adminUrl;
+            document.getElementById('adminUrl').href = adminUrl;
+        });
+    </script>
+</body>
+</html> 

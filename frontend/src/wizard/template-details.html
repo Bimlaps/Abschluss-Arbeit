@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: #EBF5FF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3B82F6;
+        }
+        
+        .preview-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .device-frame {
+            border: 12px solid #2D3748;
+            border-radius: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .preview-nav {
+            background: #2D3748;
+            padding: 8px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+        
+        .preview-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Template Details Modal -->
+    <div id="templateModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <!-- Modal Header -->
+            <div class="border-b px-6 py-4 flex items-center justify-between sticky top-0 bg-white">
+                <h2 class="text-2xl font-bold text-gray-800" id="modalTitle">Template Name</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Preview Section -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Vorschau</h3>
+                        <!-- Desktop Preview -->
+                        <div class="preview-container mb-6">
+                            <div class="device-frame">
+                                <div class="preview-nav flex items-center">
+                                    <div class="preview-dot bg-red-500"></div>
+                                    <div class="preview-dot bg-yellow-500"></div>
+                                    <div class="preview-dot bg-green-500"></div>
+                                </div>
+                                <img id="previewImage" src="" alt="Template Preview" class="w-full">
+                            </div>
+                        </div>
+                        
+                        <!-- Device Toggle -->
+                        <div class="flex justify-center space-x-4 mb-6">
+                            <button class="device-toggle active px-4 py-2 rounded-full border transition-colors" data-device="desktop">
+                                <i class="fas fa-desktop mr-2"></i>Desktop
+                            </button>
+                            <button class="device-toggle px-4 py-2 rounded-full border transition-colors" data-device="tablet">
+                                <i class="fas fa-tablet-alt mr-2"></i>Tablet
+                            </button>
+                            <button class="device-toggle px-4 py-2 rounded-full border transition-colors" data-device="mobile">
+                                <i class="fas fa-mobile-alt mr-2"></i>Mobile
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Details Section -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Features</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" id="featuresList">
+                            <!-- Features werden dynamisch eingefügt -->
+                        </div>
+
+                        <h3 class="text-lg font-semibold mb-4">Beschreibung</h3>
+                        <p class="text-gray-600 mb-6" id="templateDescription">
+                            <!-- Beschreibung wird dynamisch eingefügt -->
+                        </p>
+
+                        <h3 class="text-lg font-semibold mb-4">Empfohlen für</h3>
+                        <ul class="list-disc list-inside text-gray-600 mb-6" id="recommendedFor">
+                            <!-- Empfehlungen werden dynamisch eingefügt -->
+                        </ul>
+
+                        <div class="flex justify-end">
+                            <button onclick="selectAndCloseModal()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                Dieses Template wählen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const templateDetails = {
+            'business-modern': {
+                name: 'Modern Business',
+                description: 'Ein modernes, professionelles Template für Unternehmen jeder Größe. Perfekt geeignet für Firmen, die einen starken Online-Auftritt suchen.',
+                features: [
+                    { icon: 'fa-layer-group', name: 'Responsive Design' },
+                    { icon: 'fa-envelope', name: 'Kontaktformular' },
+                    { icon: 'fa-users', name: 'Team-Sektion' },
+                    { icon: 'fa-chart-line', name: 'Services' },
+                    { icon: 'fa-star', name: 'Testimonials' },
+                    { icon: 'fa-image', name: 'Galerie' }
+                ],
+                recommendedFor: [
+                    'Startups und Tech-Unternehmen',
+                    'Dienstleistungsunternehmen',
+                    'Kreativagenturen',
+                    'Beratungsunternehmen'
+                ],
+                previews: {
+                    desktop: '/images/templates/business-modern.jpg',
+                    tablet: '/images/templates/business-modern-tablet.jpg',
+                    mobile: '/images/templates/business-modern-mobile.jpg'
+                }
+            },
+            'business-classic': {
+                name: 'Classic Business',
+                description: 'Ein zeitloses, elegantes Template für etablierte Unternehmen. Ideal für Firmen, die Wert auf Tradition und Professionalität legen.',
+                features: [
+                    { icon: 'fa-layer-group', name: 'Responsive Design' },
+                    { icon: 'fa-envelope', name: 'Kontaktformular' },
+                    { icon: 'fa-users', name: 'Team-Sektion' },
+                    { icon: 'fa-briefcase', name: 'Referenzen' },
+                    { icon: 'fa-handshake', name: 'Partnerschaften' },
+                    { icon: 'fa-newspaper', name: 'News-Bereich' }
+                ],
+                recommendedFor: [
+                    'Etablierte Unternehmen',
+                    'Anwaltskanzleien',
+                    'Finanzdienstleister',
+                    'Traditionelle Handwerksbetriebe'
+                ],
+                previews: {
+                    desktop: '/images/templates/business-classic.jpg',
+                    tablet: '/images/templates/business-classic-tablet.jpg',
+                    mobile: '/images/templates/business-classic-mobile.jpg'
+                }
+            },
+            // Weitere Templates hier...
+        };
+
+        let currentTemplate = null;
+
+        function showModal(templateId) {
+            currentTemplate = templateId;
+            const template = templateDetails[templateId];
+            
+            // Titel setzen
+            document.getElementById('modalTitle').textContent = template.name;
+            
+            // Beschreibung setzen
+            document.getElementById('templateDescription').textContent = template.description;
+            
+            // Features laden
+            const featuresList = document.getElementById('featuresList');
+            featuresList.innerHTML = template.features.map(feature => `
+                <div class="flex items-center space-x-3">
+                    <div class="feature-icon">
+                        <i class="fas ${feature.icon}"></i>
+                    </div>
+                    <span class="text-gray-700">${feature.name}</span>
+                </div>
+            `).join('');
+            
+            // Empfehlungen laden
+            const recommendedList = document.getElementById('recommendedFor');
+            recommendedList.innerHTML = template.recommendedFor.map(item => `
+                <li>${item}</li>
+            `).join('');
+            
+            // Preview Bild setzen
+            document.getElementById('previewImage').src = template.previews.desktop;
+            
+            // Modal anzeigen
+            document.getElementById('templateModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('templateModal').classList.add('hidden');
+        }
+
+        function selectAndCloseModal() {
+            if (currentTemplate) {
+                localStorage.setItem('selectedTemplate', currentTemplate);
+                window.location.href = 'layout-selection.html';
+            }
+        }
+
+        // Device Preview Toggle
+        document.querySelectorAll('.device-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                // Aktiven Status aktualisieren
+                document.querySelectorAll('.device-toggle').forEach(btn => {
+                    btn.classList.remove('active', 'bg-blue-600', 'text-white');
+                });
+                button.classList.add('active', 'bg-blue-600', 'text-white');
+
+                // Preview aktualisieren
+                const device = button.dataset.device;
+                const template = templateDetails[currentTemplate];
+                document.getElementById('previewImage').src = template.previews[device];
+            });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('templateModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('templateModal')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html> 

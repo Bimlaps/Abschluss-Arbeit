@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Layout Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-white shadow">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h1 class="text-3xl font-bold text-gray-800">Mustermann Handwerk</h1>
+                    <p class="text-gray-600">Tradition seit 1995</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="tel:+49123456789" class="flex items-center text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-phone mr-2"></i>
+                        <span>+49 123 456789</span>
+                    </a>
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors">
+                        Kontakt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-800 text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center space-x-6 py-4">
+                <a href="#" class="hover:text-blue-400 transition-colors">Home</a>
+                <a href="#" class="hover:text-blue-400 transition-colors">Über uns</a>
+                <a href="#" class="hover:text-blue-400 transition-colors">Leistungen</a>
+                <a href="#" class="hover:text-blue-400 transition-colors">Referenzen</a>
+                <a href="#" class="hover:text-blue-400 transition-colors">Kontakt</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Welcome Section -->
+        <section class="py-12 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Willkommen bei Mustermann Handwerk</h2>
+                    <p class="text-gray-600 mb-8">Ihr zuverlässiger Partner für hochwertige Handwerksarbeiten in der Region. Wir bieten Ihnen jahrelange Erfahrung und erstklassige Qualität.</p>
+                    <div class="grid grid-cols-3 gap-8">
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-blue-600 mb-2">25+</div>
+                            <div class="text-gray-600">Jahre Erfahrung</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-blue-600 mb-2">1000+</div>
+                            <div class="text-gray-600">Zufriedene Kunden</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-blue-600 mb-2">100%</div>
+                            <div class="text-gray-600">Qualitätsgarantie</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html> 

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farbpalette Konfigurieren</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen py-12">
+    <div class="container mx-auto px-4">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">Konfigurieren Sie Ihre Farbpalette</h1>
+            <p class="text-gray-600">Schritt 4 von 5</p>
+            <div class="w-full max-w-xl mx-auto bg-gray-200 rounded-full h-2 mt-4">
+                <div class="bg-blue-600 h-2 rounded-full" style="width: 80%"></div>
+            </div>
+        </div>
+
+        <!-- Color Palette Configuration -->
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+            <!-- Primary Color -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold mb-4">Primärfarbe</h3>
+                <div class="flex items-center space-x-4">
+                    <input type="color" id="primaryColor" class="w-12 h-12 rounded cursor-pointer" value="#2563EB">
+                    <div class="flex-1">
+                        <div class="grid grid-cols-5 gap-2">
+                            <div class="h-8 rounded bg-blue-100"></div>
+                            <div class="h-8 rounded bg-blue-300"></div>
+                            <div class="h-8 rounded bg-blue-500"></div>
+                            <div class="h-8 rounded bg-blue-700"></div>
+                            <div class="h-8 rounded bg-blue-900"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secondary Color -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold mb-4">Sekundärfarbe</h3>
+                <div class="flex items-center space-x-4">
+                    <input type="color" id="secondaryColor" class="w-12 h-12 rounded cursor-pointer" value="#10B981">
+                    <div class="flex-1">
+                        <div class="grid grid-cols-5 gap-2">
+                            <div class="h-8 rounded bg-green-100"></div>
+                            <div class="h-8 rounded bg-green-300"></div>
+                            <div class="h-8 rounded bg-green-500"></div>
+                            <div class="h-8 rounded bg-green-700"></div>
+                            <div class="h-8 rounded bg-green-900"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accent Color -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold mb-4">Akzentfarbe</h3>
+                <div class="flex items-center space-x-4">
+                    <input type="color" id="accentColor" class="w-12 h-12 rounded cursor-pointer" value="#F59E0B">
+                    <div class="flex-1">
+                        <div class="grid grid-cols-5 gap-2">
+                            <div class="h-8 rounded bg-yellow-100"></div>
+                            <div class="h-8 rounded bg-yellow-300"></div>
+                            <div class="h-8 rounded bg-yellow-500"></div>
+                            <div class="h-8 rounded bg-yellow-700"></div>
+                            <div class="h-8 rounded bg-yellow-900"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview -->
+            <div class="border rounded-lg p-6 mb-8">
+                <h3 class="text-lg font-semibold mb-4">Vorschau</h3>
+                <div class="space-y-4">
+                    <!-- Header Preview -->
+                    <div class="h-16 rounded-lg" id="previewHeader"></div>
+                    <!-- Content Preview -->
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="h-24 rounded-lg" id="previewCard1"></div>
+                        <div class="h-24 rounded-lg" id="previewCard2"></div>
+                        <div class="h-24 rounded-lg" id="previewCard3"></div>
+                    </div>
+                    <!-- Button Preview -->
+                    <div class="flex space-x-4">
+                        <button class="px-4 py-2 rounded" id="previewButton1">Button 1</button>
+                        <button class="px-4 py-2 rounded" id="previewButton2">Button 2</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preset Palettes -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold mb-4">Vordefinierte Paletten</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button class="p-4 rounded-lg border hover:shadow-md transition-shadow" onclick="applyPreset('modern')">
+                        <div class="flex space-x-2 mb-2">
+                            <div class="w-8 h-8 rounded-full bg-blue-600"></div>
+                            <div class="w-8 h-8 rounded-full bg-gray-800"></div>
+                            <div class="w-8 h-8 rounded-full bg-indigo-500"></div>
+                        </div>
+                        <span class="text-sm">Modern</span>
+                    </button>
+                    <button class="p-4 rounded-lg border hover:shadow-md transition-shadow" onclick="applyPreset('classic')">
+                        <div class="flex space-x-2 mb-2">
+                            <div class="w-8 h-8 rounded-full bg-gray-800"></div>
+                            <div class="w-8 h-8 rounded-full bg-red-700"></div>
+                            <div class="w-8 h-8 rounded-full bg-yellow-600"></div>
+                        </div>
+                        <span class="text-sm">Klassisch</span>
+                    </button>
+                    <button class="p-4 rounded-lg border hover:shadow-md transition-shadow" onclick="applyPreset('nature')">
+                        <div class="flex space-x-2 mb-2">
+                            <div class="w-8 h-8 rounded-full bg-green-600"></div>
+                            <div class="w-8 h-8 rounded-full bg-brown-500"></div>
+                            <div class="w-8 h-8 rounded-full bg-yellow-500"></div>
+                        </div>
+                        <span class="text-sm">Natur</span>
+                    </button>
+                    <button class="p-4 rounded-lg border hover:shadow-md transition-shadow" onclick="applyPreset('bold')">
+                        <div class="flex space-x-2 mb-2">
+                            <div class="w-8 h-8 rounded-full bg-purple-600"></div>
+                            <div class="w-8 h-8 rounded-full bg-pink-500"></div>
+                            <div class="w-8 h-8 rounded-full bg-yellow-400"></div>
+                        </div>
+                        <span class="text-sm">Bold</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between max-w-4xl mx-auto mt-8">
+            <button onclick="history.back()" class="px-6 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors">
+                Zurück
+            </button>
+            <button onclick="saveAndContinue()" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                Weiter
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Farbpaletten-Presets
+        const presets = {
+            modern: {
+                primary: '#2563EB',
+                secondary: '#1F2937',
+                accent: '#6366F1'
+            },
+            classic: {
+                primary: '#1F2937',
+                secondary: '#B91C1C',
+                accent: '#D97706'
+            },
+            nature: {
+                primary: '#059669',
+                secondary: '#92400E',
+                accent: '#F59E0B'
+            },
+            bold: {
+                primary: '#7C3AED',
+                secondary: '#EC4899',
+                accent: '#FBBF24'
+            }
+        };
+
+        // Event Listener für Farbänderungen
+        document.querySelectorAll('input[type="color"]').forEach(input => {
+            input.addEventListener('input', updatePreview);
+        });
+
+        function applyPreset(presetName) {
+            const colors = presets[presetName];
+            document.getElementById('primaryColor').value = colors.primary;
+            document.getElementById('secondaryColor').value = colors.secondary;
+            document.getElementById('accentColor').value = colors.accent;
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const primary = document.getElementById('primaryColor').value;
+            const secondary = document.getElementById('secondaryColor').value;
+            const accent = document.getElementById('accentColor').value;
+
+            // Update Preview Elements
+            document.getElementById('previewHeader').style.backgroundColor = primary;
+            document.getElementById('previewCard1').style.backgroundColor = secondary;
+            document.getElementById('previewCard2').style.backgroundColor = secondary;
+            document.getElementById('previewCard3').style.backgroundColor = secondary;
+            document.getElementById('previewButton1').style.backgroundColor = primary;
+            document.getElementById('previewButton2').style.backgroundColor = accent;
+        }
+
+        function saveAndContinue() {
+            // Speichern der Farbpalette
+            const colorPalette = {
+                primary: document.getElementById('primaryColor').value,
+                secondary: document.getElementById('secondaryColor').value,
+                accent: document.getElementById('accentColor').value
+            };
+            localStorage.setItem('colorPalette', JSON.stringify(colorPalette));
+            
+            // Weiterleitung zum nächsten Schritt
+            window.location.href = 'company-info.html';
+        }
+
+        // Initial Preview Update
+        updatePreview();
+    </script>
+</body>
+</html> 

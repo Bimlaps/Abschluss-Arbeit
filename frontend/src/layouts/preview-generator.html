@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Preview Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .preview-frame {
+            width: 600px;
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #e2e8f0;
+            margin: 20px;
+        }
+        .preview-frame > div {
+            transform: scale(0.5);
+            transform-origin: top left;
+            width: 1200px;
+            height: 800px;
+        }
+    </style>
+</head>
+<body class="p-8">
+    <h1 class="text-2xl font-bold mb-8">Layout Preview Generator</h1>
+    
+    <!-- Modern Layout Preview -->
+    <div class="preview-frame" id="modern-preview">
+        <div>
+            <!-- Navigation -->
+            <nav class="bg-white shadow-lg">
+                <div class="container mx-auto px-6 py-4">
+                    <div class="flex justify-between items-center">
+                        <div class="text-xl font-bold text-gray-800">ModernCraft</div>
+                        <div class="flex space-x-8">
+                            <a href="#" class="text-gray-600">Home</a>
+                            <a href="#" class="text-gray-600">Services</a>
+                            <a href="#" class="text-gray-600">Portfolio</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="relative h-[400px]">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800"></div>
+                <div class="relative container mx-auto px-6 h-full flex items-center">
+                    <div class="w-2/3 text-white">
+                        <h1 class="text-4xl font-bold mb-4">Moderne Handwerkskunst</h1>
+                        <p class="text-xl">Tradition trifft Innovation</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="py-12 bg-white">
+                <div class="container mx-auto px-6">
+                    <div class="grid grid-cols-3 gap-8">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4">
+                                <i class="fas fa-tools text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold">Feature 1</h3>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4">
+                                <i class="fas fa-clock text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold">Feature 2</h3>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4">
+                                <i class="fas fa-star text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold">Feature 3</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Classic Layout Preview -->
+    <div class="preview-frame" id="classic-preview">
+        <div>
+            <!-- Header -->
+            <header class="bg-white shadow py-6">
+                <div class="container mx-auto px-8">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-3xl font-bold">Mustermann</h1>
+                            <p class="text-gray-600">Tradition seit 1995</p>
+                        </div>
+                        <nav class="flex space-x-6">
+                            <a href="#" class="text-gray-600">Home</a>
+                            <a href="#" class="text-gray-600">Über uns</a>
+                            <a href="#" class="text-gray-600">Kontakt</a>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Welcome Section -->
+            <section class="py-16 bg-gray-100">
+                <div class="container mx-auto px-8 text-center">
+                    <h2 class="text-3xl font-bold mb-8">Willkommen</h2>
+                    <div class="grid grid-cols-3 gap-8">
+                        <div class="bg-white p-8 rounded shadow">
+                            <div class="text-4xl font-bold text-blue-600">25+</div>
+                            <div>Jahre Erfahrung</div>
+                        </div>
+                        <div class="bg-white p-8 rounded shadow">
+                            <div class="text-4xl font-bold text-blue-600">1000+</div>
+                            <div>Kunden</div>
+                        </div>
+                        <div class="bg-white p-8 rounded shadow">
+                            <div class="text-4xl font-bold text-blue-600">100%</div>
+                            <div>Qualität</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Dynamic Layout Preview -->
+    <div class="preview-frame" id="dynamic-preview">
+        <div>
+            <!-- Floating Nav -->
+            <nav class="bg-white rounded-full shadow-lg px-6 py-3 w-fit mx-auto mt-4">
+                <div class="flex space-x-8">
+                    <a href="#" class="text-gray-600 flex flex-col items-center">
+                        <i class="fas fa-home text-lg"></i>
+                        <span class="text-xs">Home</span>
+                    </a>
+                    <a href="#" class="text-gray-600 flex flex-col items-center">
+                        <i class="fas fa-tools text-lg"></i>
+                        <span class="text-xs">Services</span>
+                    </a>
+                    <a href="#" class="text-gray-600 flex flex-col items-center">
+                        <i class="fas fa-envelope text-lg"></i>
+                        <span class="text-xs">Kontakt</span>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Hero -->
+            <section class="h-[400px] bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
+                <div class="text-center text-white">
+                    <h1 class="text-5xl font-bold mb-4">Handwerkskunst</h1>
+                    <p class="text-xl">Innovative Lösungen</p>
+                </div>
+            </section>
+
+            <!-- Services -->
+            <section class="py-12">
+                <div class="container mx-auto px-8">
+                    <div class="grid grid-cols-3 gap-8">
+                        <div class="bg-white p-8 rounded-lg shadow-lg">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4"></div>
+                            <h3 class="text-xl font-bold text-center">Service 1</h3>
+                        </div>
+                        <div class="bg-white p-8 rounded-lg shadow-lg">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4"></div>
+                            <h3 class="text-xl font-bold text-center">Service 2</h3>
+                        </div>
+                        <div class="bg-white p-8 rounded-lg shadow-lg">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4"></div>
+                            <h3 class="text-xl font-bold text-center">Service 3</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Hier könnte später Code für die automatische Generierung der Vorschaubilder hinzugefügt werden
+        // z.B. mit html2canvas oder einem ähnlichen Tool
+    </script>
+</body>
+</html> 

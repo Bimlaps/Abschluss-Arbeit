@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Auswahl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen py-12">
+    <div class="container mx-auto px-4">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">Wählen Sie Ihr Layout</h1>
+            <p class="text-gray-600">Schritt 2 von 5</p>
+            <div class="w-full max-w-xl mx-auto bg-gray-200 rounded-full h-2 mt-4">
+                <div class="bg-blue-600 h-2 rounded-full" style="width: 40%"></div>
+            </div>
+        </div>
+
+        <!-- Layout Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <!-- Modern Layout -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div class="relative aspect-video">
+                    <img src="modern-preview.jpg" alt="Modern Layout" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
+                        <div class="p-4 text-white">
+                            <h3 class="font-bold text-lg">Modern</h3>
+                            <p class="text-sm opacity-90">Gradient Design mit Icons</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Gradient Hero-Section</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Feature Cards mit Icons</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Moderne Navigation</li>
+                    </ul>
+                    <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors">
+                        Auswählen
+                    </button>
+                </div>
+            </div>
+
+            <!-- Classic Layout -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div class="relative aspect-video">
+                    <img src="classic-preview.jpg" alt="Classic Layout" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
+                        <div class="p-4 text-white">
+                            <h3 class="font-bold text-lg">Klassisch</h3>
+                            <p class="text-sm opacity-90">Traditionelles Design</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Klassischer Header</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Statistik-Boxen</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Traditionelle Navigation</li>
+                    </ul>
+                    <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors">
+                        Auswählen
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Layout -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div class="relative aspect-video">
+                    <img src="dynamic-preview.jpg" alt="Dynamic Layout" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
+                        <div class="p-4 text-white">
+                            <h3 class="font-bold text-lg">Dynamisch</h3>
+                            <p class="text-sm opacity-90">Interaktives Design</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Floating Navigation</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Animierte Elemente</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Interaktive Features</li>
+                    </ul>
+                    <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors">
+                        Auswählen
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Modal (Hidden by default) -->
+        <div id="previewModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
+            <div class="bg-white w-full max-w-4xl rounded-lg overflow-hidden">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 class="text-xl font-bold">Layout Vorschau</h3>
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <!-- Device Preview Tabs -->
+                    <div class="flex space-x-4 mb-4">
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded">Desktop</button>
+                        <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Tablet</button>
+                        <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Mobile</button>
+                    </div>
+                    <!-- Preview Frame -->
+                    <div class="bg-gray-100 p-4 rounded">
+                        <iframe src="" class="w-full h-[600px] border rounded"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hier kommt später die JavaScript-Logik für die Vorschau und Auswahl
+        document.addEventListener('DOMContentLoaded', function() {
+            // Layout-Auswahl speichern
+            const saveLayoutChoice = (layout) => {
+                localStorage.setItem('selectedLayout', layout);
+            };
+
+            // Modal-Funktionalität
+            const showPreview = (layout) => {
+                const modal = document.getElementById('previewModal');
+                modal.classList.remove('hidden');
+                // Hier später: iframe src entsprechend dem Layout setzen
+            };
+        });
+    </script>
+</body>
+</html> 

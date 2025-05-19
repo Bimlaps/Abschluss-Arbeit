@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Schema Auswahl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen py-12">
+    <div class="container mx-auto px-4">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">Wählen Sie Ihr Design-Schema</h1>
+            <p class="text-gray-600">Schritt 3 von 5</p>
+            <div class="w-full max-w-xl mx-auto bg-gray-200 rounded-full h-2 mt-4">
+                <div class="bg-blue-600 h-2 rounded-full" style="width: 60%"></div>
+            </div>
+        </div>
+
+        <!-- Design Schema Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <!-- Minimalistisch -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+                <div class="p-6 border-b">
+                    <h3 class="text-xl font-bold mb-2">Minimalistisch</h3>
+                    <p class="text-gray-600">Klares, reduziertes Design mit viel Weißraum</p>
+                </div>
+                <div class="p-4">
+                    <div class="space-y-4">
+                        <div class="h-8 bg-gray-100 rounded"></div>
+                        <div class="h-24 bg-gray-50 rounded"></div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="h-12 bg-gray-100 rounded"></div>
+                            <div class="h-12 bg-gray-100 rounded"></div>
+                            <div class="h-12 bg-gray-100 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Elegant -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+                <div class="p-6 border-b">
+                    <h3 class="text-xl font-bold mb-2">Elegant</h3>
+                    <p class="text-gray-600">Stilvolles Design mit feinen Details</p>
+                </div>
+                <div class="p-4">
+                    <div class="space-y-4">
+                        <div class="h-8 bg-gray-100 rounded-full"></div>
+                        <div class="h-24 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg"></div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="h-12 bg-gray-100 rounded-lg shadow-sm"></div>
+                            <div class="h-12 bg-gray-100 rounded-lg shadow-sm"></div>
+                            <div class="h-12 bg-gray-100 rounded-lg shadow-sm"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bold -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+                <div class="p-6 border-b">
+                    <h3 class="text-xl font-bold mb-2">Bold</h3>
+                    <p class="text-gray-600">Kraftvolles Design mit starken Kontrasten</p>
+                </div>
+                <div class="p-4">
+                    <div class="space-y-4">
+                        <div class="h-8 bg-gray-900 rounded"></div>
+                        <div class="h-24 bg-gradient-to-r from-gray-800 to-gray-900 rounded"></div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="h-12 bg-gray-800 rounded"></div>
+                            <div class="h-12 bg-gray-800 rounded"></div>
+                            <div class="h-12 bg-gray-800 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between max-w-6xl mx-auto mt-8">
+            <button onclick="history.back()" class="px-6 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors">
+                Zurück
+            </button>
+            <button onclick="saveAndContinue()" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                Weiter
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function saveAndContinue() {
+            // Speichern der Auswahl im localStorage
+            const selectedSchema = document.querySelector('.selected')?.dataset.schema || 'minimalistisch';
+            localStorage.setItem('designSchema', selectedSchema);
+            
+            // Weiterleitung zum nächsten Schritt
+            window.location.href = 'color-palette.html';
+        }
+
+        // Event Listener für die Auswahl
+        document.querySelectorAll('.cursor-pointer').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.cursor-pointer').forEach(c => c.classList.remove('ring-2', 'ring-blue-500', 'selected'));
+                card.classList.add('ring-2', 'ring-blue-500', 'selected');
+            });
+        });
+    </script>
+</body>
+</html> 

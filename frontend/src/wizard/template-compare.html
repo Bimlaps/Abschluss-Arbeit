@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Vergleich</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .comparison-card {
+            transition: all 0.3s ease;
+        }
+        .comparison-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .feature-check {
+            color: #10B981;
+        }
+        .feature-missing {
+            color: #EF4444;
+        }
+        .preview-frame {
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">Template Vergleich</h1>
+            <p class="text-gray-600">Vergleichen Sie bis zu 3 Templates Seite an Seite</p>
+        </div>
+
+        <!-- Template Auswahl -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="comparison-card bg-white rounded-lg p-4 border">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold">Template 1</h3>
+                    <select id="template1" class="border rounded px-3 py-2" onchange="updateComparison()">
+                        <option value="">Template wählen...</option>
+                        <option value="business-modern">Modern Business</option>
+                        <option value="business-classic">Classic Business</option>
+                        <option value="portfolio-creative">Creative Portfolio</option>
+                        <option value="portfolio-minimal">Minimal Portfolio</option>
+                        <option value="blog-magazine">Magazine Blog</option>
+                        <option value="blog-personal">Personal Blog</option>
+                    </select>
+                </div>
+                <div id="preview1" class="preview-frame h-48 bg-gray-100 flex items-center justify-center">
+                    <span class="text-gray-400">Template auswählen</span>
+                </div>
+            </div>
+
+            <div class="comparison-card bg-white rounded-lg p-4 border">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold">Template 2</h3>
+                    <select id="template2" class="border rounded px-3 py-2" onchange="updateComparison()">
+                        <option value="">Template wählen...</option>
+                        <option value="business-modern">Modern Business</option>
+                        <option value="business-classic">Classic Business</option>
+                        <option value="portfolio-creative">Creative Portfolio</option>
+                        <option value="portfolio-minimal">Minimal Portfolio</option>
+                        <option value="blog-magazine">Magazine Blog</option>
+                        <option value="blog-personal">Personal Blog</option>
+                    </select>
+                </div>
+                <div id="preview2" class="preview-frame h-48 bg-gray-100 flex items-center justify-center">
+                    <span class="text-gray-400">Template auswählen</span>
+                </div>
+            </div>
+
+            <div class="comparison-card bg-white rounded-lg p-4 border">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold">Template 3</h3>
+                    <select id="template3" class="border rounded px-3 py-2" onchange="updateComparison()">
+                        <option value="">Template wählen...</option>
+                        <option value="business-modern">Modern Business</option>
+                        <option value="business-classic">Classic Business</option>
+                        <option value="portfolio-creative">Creative Portfolio</option>
+                        <option value="portfolio-minimal">Minimal Portfolio</option>
+                        <option value="blog-magazine">Magazine Blog</option>
+                        <option value="blog-personal">Personal Blog</option>
+                    </select>
+                </div>
+                <div id="preview3" class="preview-frame h-48 bg-gray-100 flex items-center justify-center">
+                    <span class="text-gray-400">Template auswählen</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Matrix -->
+        <div class="bg-white rounded-lg p-6 mb-8 border">
+            <h2 class="text-xl font-bold mb-6">Feature Matrix</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full" id="featureMatrix">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="text-left py-3 px-4">Feature</th>
+                            <th class="text-center py-3 px-4">Template 1</th>
+                            <th class="text-center py-3 px-4">Template 2</th>
+                            <th class="text-center py-3 px-4">Template 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Wird dynamisch gefüllt -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Vor- und Nachteile -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="prosConsContainer">
+            <!-- Wird dynamisch gefüllt -->
+        </div>
+
+        <!-- Empfehlungen -->
+        <div class="bg-white rounded-lg p-6 border">
+            <h2 class="text-xl font-bold mb-6">Empfehlungen</h2>
+            <div id="recommendations" class="space-y-4">
+                <!-- Wird dynamisch gefüllt -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const templateData = {
+            'business-modern': {
+                name: 'Modern Business',
+                preview: '/images/templates/business-modern.jpg',
+                features: {
+                    'Responsive Design': true,
+                    'Kontaktformular': true,
+                    'Team-Sektion': true,
+                    'Services': true,
+                    'Testimonials': true,
+                    'Galerie': true,
+                    'Blog': false,
+                    'Newsletter': false,
+                    'Social Media': true,
+                    'SEO-Optimiert': true
+                },
+                pros: [
+                    'Moderne, klare Designsprache',
+                    'Optimiert für Conversion',
+                    'Umfangreiche Funktionen',
+                    'Schnelle Ladezeiten'
+                ],
+                cons: [
+                    'Weniger traditionell',
+                    'Komplexere Verwaltung',
+                    'Mehr Pflegeaufwand'
+                ],
+                bestFor: [
+                    'Startups',
+                    'Tech-Unternehmen',
+                    'Digitale Agenturen'
+                ]
+            },
+            'business-classic': {
+                name: 'Classic Business',
+                preview: '/images/templates/business-classic.jpg',
+                features: {
+                    'Responsive Design': true,
+                    'Kontaktformular': true,
+                    'Team-Sektion': true,
+                    'Services': true,
+                    'Testimonials': false,
+                    'Galerie': false,
+                    'Blog': true,
+                    'Newsletter': true,
+                    'Social Media': true,
+                    'SEO-Optimiert': true
+                },
+                pros: [
+                    'Zeitloses Design',
+                    'Bewährte Struktur',
+                    'Einfache Verwaltung',
+                    'Hohe Seriosität'
+                ],
+                cons: [
+                    'Weniger modern',
+                    'Begrenzte Animationen',
+                    'Standardisiertes Layout'
+                ],
+                bestFor: [
+                    'Etablierte Unternehmen',
+                    'Anwaltskanzleien',
+                    'Finanzdienstleister'
+                ]
+            },
+            // Weitere Templates...
+        };
+
+        function updateComparison() {
+            updatePreviews();
+            updateFeatureMatrix();
+            updateProsCons();
+            updateRecommendations();
+        }
+
+        function updatePreviews() {
+            for (let i = 1; i <= 3; i++) {
+                const templateId = document.getElementById(`template${i}`).value;
+                const previewEl = document.getElementById(`preview${i}`);
+                
+                if (templateId && templateData[templateId]) {
+                    previewEl.innerHTML = `<img src="${templateData[templateId].preview}" alt="${templateData[templateId].name}" class="w-full h-full object-cover">`;
+                } else {
+                    previewEl.innerHTML = '<span class="text-gray-400">Template auswählen</span>';
+                }
+            }
+        }
+
+        function updateFeatureMatrix() {
+            const tbody = document.querySelector('#featureMatrix tbody');
+            tbody.innerHTML = '';
+
+            // Alle Features sammeln
+            const allFeatures = new Set();
+            for (let i = 1; i <= 3; i++) {
+                const templateId = document.getElementById(`template${i}`).value;
+                if (templateId && templateData[templateId]) {
+                    Object.keys(templateData[templateId].features).forEach(feature => allFeatures.add(feature));
+                }
+            }
+
+            // Feature-Zeilen erstellen
+            allFeatures.forEach(feature => {
+                const row = document.createElement('tr');
+                row.classList.add('border-b');
+                
+                // Feature-Name
+                const nameCell = document.createElement('td');
+                nameCell.classList.add('py-3', 'px-4');
+                nameCell.textContent = feature;
+                row.appendChild(nameCell);
+
+                // Feature-Status für jedes Template
+                for (let i = 1; i <= 3; i++) {
+                    const templateId = document.getElementById(`template${i}`).value;
+                    const cell = document.createElement('td');
+                    cell.classList.add('text-center', 'py-3', 'px-4');
+
+                    if (templateId && templateData[templateId]) {
+                        const hasFeature = templateData[templateId].features[feature];
+                        cell.innerHTML = hasFeature ? 
+                            '<i class="fas fa-check feature-check"></i>' : 
+                            '<i class="fas fa-times feature-missing"></i>';
+                    } else {
+                        cell.innerHTML = '-';
+                    }
+                    
+                    row.appendChild(cell);
+                }
+
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateProsCons() {
+            const container = document.getElementById('prosConsContainer');
+            container.innerHTML = '';
+
+            for (let i = 1; i <= 3; i++) {
+                const templateId = document.getElementById(`template${i}`).value;
+                if (!templateId || !templateData[templateId]) {
+                    container.innerHTML += `
+                        <div class="bg-white rounded-lg p-6 border">
+                            <h3 class="font-semibold mb-4">Template ${i}</h3>
+                            <p class="text-gray-400">Kein Template ausgewählt</p>
+                        </div>
+                    `;
+                    continue;
+                }
+
+                const template = templateData[templateId];
+                container.innerHTML += `
+                    <div class="bg-white rounded-lg p-6 border">
+                        <h3 class="font-semibold mb-4">${template.name}</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="text-green-600 font-medium mb-2">Vorteile</h4>
+                                <ul class="space-y-2">
+                                    ${template.pros.map(pro => `
+                                        <li class="flex items-center">
+                                            <i class="fas fa-plus-circle text-green-500 mr-2"></i>
+                                            ${pro}
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-red-600 font-medium mb-2">Nachteile</h4>
+                                <ul class="space-y-2">
+                                    ${template.cons.map(con => `
+                                        <li class="flex items-center">
+                                            <i class="fas fa-minus-circle text-red-500 mr-2"></i>
+                                            ${con}
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function updateRecommendations() {
+            const container = document.getElementById('recommendations');
+            container.innerHTML = '';
+
+            const selectedTemplates = [];
+            for (let i = 1; i <= 3; i++) {
+                const templateId = document.getElementById(`template${i}`).value;
+                if (templateId && templateData[templateId]) {
+                    selectedTemplates.push(templateData[templateId]);
+                }
+            }
+
+            if (selectedTemplates.length === 0) {
+                container.innerHTML = '<p class="text-gray-400">Wählen Sie Templates zum Vergleichen aus</p>';
+                return;
+            }
+
+            // Gemeinsame Zielgruppen finden
+            const commonIndustries = selectedTemplates.reduce((acc, template) => {
+                if (acc === null) return template.bestFor;
+                return acc.filter(industry => template.bestFor.includes(industry));
+            }, null);
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="p-4 bg-blue-50 rounded-lg">
+                        <h4 class="font-medium text-blue-800 mb-2">Beste Wahl für:</h4>
+                        <ul class="list-disc list-inside text-blue-600">
+                            ${commonIndustries.map(industry => `<li>${industry}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-medium mb-2">Empfehlung:</h4>
+                        <p class="text-gray-600">
+                            ${getRecommendationText(selectedTemplates)}
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getRecommendationText(templates) {
+            if (templates.length === 1) {
+                return `${templates[0].name} ist eine gute Wahl für Ihre Branche. Vergleichen Sie es mit anderen Templates, um die beste Entscheidung zu treffen.`;
+            }
+
+            const features = templates.map(t => 
+                Object.entries(t.features).filter(([, has]) => has).length
+            );
+            const mostFeatures = Math.max(...features);
+            const bestTemplate = templates[features.indexOf(mostFeatures)];
+
+            return `Basierend auf den Features und Ihrer Branche empfehlen wir ${bestTemplate.name}. 
+                    Es bietet die umfangreichste Funktionalität und passt am besten zu Ihren Anforderungen.`;
+        }
+
+        // Initial update
+        updateComparison();
+    </script>
+</body>
+</html> 

@@ -1,0 +1,58 @@
+.share-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.share-button-container {
+    position: relative;
+    padding: 8px 0;
+}
+
+.preview-share-buttons {
+    margin-top: 2rem;
+}
+
+.share-button {
+    position: relative;
+    z-index: 1;
+}
+
+.share-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5) !important;
+}
+
+.tooltip {
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 5px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@media (max-width: 640px) {
+    .share-buttons {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .share-button {
+        width: 36px !important;
+        height: 36px !important;
+        margin: 0 4px !important;
+    }
+    
+    .tooltip {
+        display: none; /* Tooltips auf mobilen Geräten ausblenden */
+    }
+} 

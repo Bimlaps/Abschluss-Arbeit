@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Layout Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- Floating Navigation -->
+    <nav class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white rounded-full shadow-lg px-6 py-3 z-50">
+        <div class="flex space-x-8">
+            <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors flex flex-col items-center">
+                <i class="fas fa-home text-lg"></i>
+                <span class="text-xs mt-1">Home</span>
+            </a>
+            <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors flex flex-col items-center">
+                <i class="fas fa-tools text-lg"></i>
+                <span class="text-xs mt-1">Services</span>
+            </a>
+            <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors flex flex-col items-center">
+                <i class="fas fa-images text-lg"></i>
+                <span class="text-xs mt-1">Galerie</span>
+            </a>
+            <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors flex flex-col items-center">
+                <i class="fas fa-envelope text-lg"></i>
+                <span class="text-xs mt-1">Kontakt</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Parallax -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-90"></div>
+        <div class="relative z-10 text-center text-white px-4">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
+                Handwerkskunst neu definiert
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">
+                Innovative Lösungen mit traditioneller Qualität
+            </p>
+            <button class="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transform hover:scale-105 transition-all duration-300">
+                Projekt starten
+            </button>
+        </div>
+    </section>
+
+    <!-- Interactive Services Section -->
+    <section class="py-20 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">Unsere Leistungen</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-hammer text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-2">Renovierung</h3>
+                    <p class="text-gray-600 text-center">Professionelle Renovierungsarbeiten für Ihr Zuhause</p>
+                </div>
+                <!-- Weitere Service-Karten hier -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Action Button -->
+    <button class="fixed bottom-8 right-8 bg-blue-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transform hover:scale-110 transition-all duration-300">
+        <i class="fas fa-phone text-2xl"></i>
+    </button>
+
+    <style>
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</body>
+</html> 

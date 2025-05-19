@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>247Vitrine - Layout Auswahl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between h-16">
+                    <div class="flex">
+                        <div class="flex-shrink-0 flex items-center">
+                            <a href="/" class="flex items-center">
+                                <img class="h-8 w-auto" src="/logo.png" alt="247Vitrine">
+                                <span class="ml-2 text-xl font-semibold">247Vitrine</span>
+                            </a>
+                        </div>
+                        <div class="hidden md:flex md:ml-6 md:space-x-4 items-center">
+                            <a href="/dashboard" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">Dashboard</a>
+                            <a href="/builder" class="text-blue-600 px-3 py-2 rounded-md">Website Builder</a>
+                            <a href="/preview" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">Vorschau</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-700" title="Aktuelle Seite">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span class="breadcrumb-text">Layout Auswahl</span>
+                        </span>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700" 
+                                title="Speichert den aktuellen Fortschritt">
+                            Speichern
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <!-- Wizard Steps with Labels -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <div class="relative">
+                            <div class="h-1 bg-blue-600 rounded w-2/5"></div>
+                            <div class="absolute -top-8 left-0 w-full">
+                                <div class="flex justify-between">
+                                    <div class="text-center" title="Branche wurde ausgewählt">
+                                        <span class="w-6 h-6 bg-green-500 rounded-full text-white flex items-center justify-center text-sm font-semibold">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                        <span class="block text-sm mt-1">Branche</span>
+                                    </div>
+                                    <div class="text-center" title="Wählen Sie ein Layout für Ihre Website">
+                                        <span class="w-6 h-6 bg-blue-600 rounded-full text-white flex items-center justify-center text-sm font-semibold">2</span>
+                                        <span class="block text-sm mt-1">Layout</span>
+                                    </div>
+                                    <div class="text-center" title="Design-Schema auswählen">
+                                        <span class="w-6 h-6 bg-gray-300 rounded-full text-gray-600 flex items-center justify-center text-sm font-semibold">3</span>
+                                        <span class="block text-sm mt-1">Design</span>
+                                    </div>
+                                    <div class="text-center" title="Farbpalette festlegen">
+                                        <span class="w-6 h-6 bg-gray-300 rounded-full text-gray-600 flex items-center justify-center text-sm font-semibold">4</span>
+                                        <span class="block text-sm mt-1">Farben</span>
+                                    </div>
+                                    <div class="text-center" title="Unternehmensinformationen eingeben">
+                                        <span class="w-6 h-6 bg-gray-300 rounded-full text-gray-600 flex items-center justify-center text-sm font-semibold">5</span>
+                                        <span class="block text-sm mt-1">Infos</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layout Selection -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-2xl font-bold mb-4">Wählen Sie Ihr Layout</h2>
+                <p class="text-gray-600 mb-6">Wählen Sie ein Layout, das am besten zu Ihrem Unternehmen passt. Sie können das Design später noch anpassen.</p>
+                
+                <!-- Layout Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Modern Layout -->
+                    <div class="layout-card group cursor-pointer">
+                        <div class="relative overflow-hidden rounded-lg border-2 border-transparent hover:border-blue-500 transition-all duration-300">
+                            <img src="/layouts/modern.png" alt="Modern Layout" class="w-full h-48 object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                                <button class="opacity-0 group-hover:opacity-100 bg-blue-600 text-white px-4 py-2 rounded-md transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                    Vorschau
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h3 class="text-lg font-semibold">Modern & Clean</h3>
+                            <p class="text-gray-600 text-sm">Klares, modernes Design mit Fokus auf Ihre Dienstleistungen</p>
+                        </div>
+                    </div>
+
+                    <!-- Classic Layout -->
+                    <div class="layout-card group cursor-pointer">
+                        <div class="relative overflow-hidden rounded-lg border-2 border-transparent hover:border-blue-500 transition-all duration-300">
+                            <img src="/layouts/classic.png" alt="Classic Layout" class="w-full h-48 object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                                <button class="opacity-0 group-hover:opacity-100 bg-blue-600 text-white px-4 py-2 rounded-md transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                    Vorschau
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h3 class="text-lg font-semibold">Klassisch & Professionell</h3>
+                            <p class="text-gray-600 text-sm">Traditionelles Design mit bewährter Struktur</p>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Layout -->
+                    <div class="layout-card group cursor-pointer">
+                        <div class="relative overflow-hidden rounded-lg border-2 border-transparent hover:border-blue-500 transition-all duration-300">
+                            <img src="/layouts/dynamic.png" alt="Dynamic Layout" class="w-full h-48 object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
+                                <button class="opacity-0 group-hover:opacity-100 bg-blue-600 text-white px-4 py-2 rounded-md transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                    Vorschau
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h3 class="text-lg font-semibold">Dynamisch & Interaktiv</h3>
+                            <p class="text-gray-600 text-sm">Modernes Layout mit interaktiven Elementen</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview Modal (hidden by default) -->
+                <div id="previewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                    <div class="bg-white rounded-lg w-full max-w-4xl mx-4">
+                        <div class="p-4 border-b flex justify-between items-center">
+                            <h3 class="text-xl font-semibold">Layout Vorschau</h3>
+                            <button id="closePreview" class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <div class="bg-gray-100 rounded-lg p-4">
+                                <div class="flex space-x-2 mb-4">
+                                    <button class="preview-device-btn bg-blue-600 text-white px-3 py-1 rounded" data-device="mobile">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </button>
+                                    <button class="preview-device-btn bg-gray-300 text-gray-700 px-3 py-1 rounded" data-device="tablet">
+                                        <i class="fas fa-tablet-alt"></i>
+                                    </button>
+                                    <button class="preview-device-btn bg-gray-300 text-gray-700 px-3 py-1 rounded" data-device="desktop">
+                                        <i class="fas fa-desktop"></i>
+                                    </button>
+                                </div>
+                                <div id="previewFrame" class="border rounded-lg bg-white mx-auto transition-all duration-300" style="width: 375px; height: 667px;">
+                                    <!-- Preview content will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 border-t flex justify-end space-x-4">
+                            <button class="px-4 py-2 border rounded-md hover:bg-gray-50" id="cancelPreview">
+                                Zurück
+                            </button>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" id="selectLayout">
+                                Layout auswählen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="mt-6 flex justify-between">
+                <button class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-400"
+                        title="Zurück zur Branchenauswahl"
+                        onclick="window.location.href='/builder'">
+                    Zurück
+                </button>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        id="nextButton"
+                        disabled
+                        title="Weiter zum Design">
+                    Weiter
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const layoutCards = document.querySelectorAll('.layout-card');
+            const previewModal = document.getElementById('previewModal');
+            const closePreview = document.getElementById('closePreview');
+            const cancelPreview = document.getElementById('cancelPreview');
+            const selectLayout = document.getElementById('selectLayout');
+            const nextButton = document.getElementById('nextButton');
+            const previewFrame = document.getElementById('previewFrame');
+            const previewDeviceButtons = document.querySelectorAll('.preview-device-btn');
+
+            let selectedLayout = null;
+
+            // Layout Card Click Handler
+            layoutCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const layoutName = this.querySelector('h3').textContent;
+                    showPreview(layoutName);
+                });
+            });
+
+            // Preview Modal Controls
+            function showPreview(layoutName) {
+                previewModal.classList.remove('hidden');
+                // Hier würde der Preview-Content geladen werden
+                loadPreviewContent(layoutName);
+            }
+
+            function hidePreview() {
+                previewModal.classList.add('hidden');
+            }
+
+            closePreview.addEventListener('click', hidePreview);
+            cancelPreview.addEventListener('click', hidePreview);
+
+            // Layout Selection
+            selectLayout.addEventListener('click', function() {
+                const layoutName = previewFrame.getAttribute('data-layout');
+                selectedLayout = layoutName;
+                hidePreview();
+                nextButton.disabled = false;
+                
+                // Markiere die ausgewählte Layout-Karte
+                layoutCards.forEach(card => {
+                    const cardTitle = card.querySelector('h3').textContent;
+                    if (cardTitle === layoutName) {
+                        card.querySelector('.border-transparent').classList.add('border-blue-500');
+                    } else {
+                        card.querySelector('.border-transparent').classList.remove('border-blue-500');
+                    }
+                });
+
+                // Speichere die Auswahl
+                localStorage.setItem('selectedLayout', layoutName);
+            });
+
+            // Preview Device Switching
+            previewDeviceButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Entferne aktive Klasse von allen Buttons
+                    previewDeviceButtons.forEach(btn => {
+                        btn.classList.remove('bg-blue-600', 'text-white');
+                        btn.classList.add('bg-gray-300', 'text-gray-700');
+                    });
+
+                    // Aktiviere den geklickten Button
+                    this.classList.remove('bg-gray-300', 'text-gray-700');
+                    this.classList.add('bg-blue-600', 'text-white');
+
+                    // Passe die Vorschaugröße an
+                    const device = this.getAttribute('data-device');
+                    switch(device) {
+                        case 'mobile':
+                            previewFrame.style.width = '375px';
+                            previewFrame.style.height = '667px';
+                            break;
+                        case 'tablet':
+                            previewFrame.style.width = '768px';
+                            previewFrame.style.height = '1024px';
+                            break;
+                        case 'desktop':
+                            previewFrame.style.width = '1440px';
+                            previewFrame.style.height = '900px';
+                            break;
+                    }
+                });
+            });
+
+            // Next Button Handler
+            nextButton.addEventListener('click', function() {
+                if (selectedLayout) {
+                    window.location.href = '/builder/design';
+                }
+            });
+
+            function loadPreviewContent(layoutName) {
+                previewFrame.setAttribute('data-layout', layoutName);
+                // Hier würde der tatsächliche Preview-Content geladen werden
+                // Beispiel:
+                previewFrame.innerHTML = `<div class="p-4">
+                    <h2 class="text-xl font-bold mb-4">Vorschau: ${layoutName}</h2>
+                    <p>Hier wird die Vorschau für das ausgewählte Layout angezeigt.</p>
+                </div>`;
+            }
+        });
+    </script>
+</body>
+</html> 

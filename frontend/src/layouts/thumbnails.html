@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Thumbnails</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .thumbnail-container {
+            width: 600px;
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+        .thumbnail-container > div {
+            transform: scale(0.5);
+            transform-origin: top left;
+        }
+    </style>
+</head>
+<body class="p-8 space-y-8">
+    <!-- Modern Layout Thumbnail -->
+    <div class="thumbnail-container bg-white shadow-lg">
+        <div class="w-[1200px] h-[800px]">
+            <!-- Hero Section -->
+            <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white h-[400px] flex items-center">
+                <div class="container mx-auto px-8 flex items-center justify-between">
+                    <div class="w-1/2">
+                        <h1 class="text-5xl font-bold mb-4">Ihr Handwerksbetrieb</h1>
+                        <p class="text-xl">Professionelle Lösungen</p>
+                    </div>
+                    <div class="w-1/2 bg-gray-200 h-64 rounded-lg"></div>
+                </div>
+            </section>
+            <!-- Features -->
+            <section class="py-16">
+                <div class="container mx-auto px-8">
+                    <div class="grid grid-cols-3 gap-8">
+                        <div class="text-center p-8 bg-white rounded-lg shadow">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4"></div>
+                            <h3 class="text-xl font-bold">Feature 1</h3>
+                        </div>
+                        <div class="text-center p-8 bg-white rounded-lg shadow">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4"></div>
+                            <h3 class="text-xl font-bold">Feature 2</h3>
+                        </div>
+                        <div class="text-center p-8 bg-white rounded-lg shadow">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4"></div>
+                            <h3 class="text-xl font-bold">Feature 3</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Classic Layout Thumbnail -->
+    <div class="thumbnail-container bg-white shadow-lg">
+        <div class="w-[1200px] h-[800px]">
+            <!-- Header -->
+            <header class="bg-white shadow py-6">
+                <div class="container mx-auto px-8 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold">Mustermann</h1>
+                        <p class="text-gray-600">Tradition seit 1995</p>
+                    </div>
+                    <nav class="flex space-x-6">
+                        <a href="#" class="text-gray-600">Home</a>
+                        <a href="#" class="text-gray-600">Über uns</a>
+                        <a href="#" class="text-gray-600">Kontakt</a>
+                    </nav>
+                </div>
+            </header>
+            <!-- Welcome Section -->
+            <section class="py-16 bg-gray-100">
+                <div class="container mx-auto px-8 text-center">
+                    <h2 class="text-3xl font-bold mb-8">Willkommen</h2>
+                    <div class="grid grid-cols-3 gap-8">
+                        <div class="bg-white p-8 rounded shadow">
+                            <div class="text-4xl font-bold text-blue-600">25+</div>
+                            <div>Jahre Erfahrung</div>
+                        </div>
+                        <div class="bg-white p-8 rounded shadow">
+                            <div class="text-4xl font-bold text-blue-600">1000+</div>
+                            <div>Kunden</div>
+                        </div>
+                        <div class="bg-white p-8 rounded shadow">
+                            <div class="text-4xl font-bold text-blue-600">100%</div>
+                            <div>Qualität</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Dynamic Layout Thumbnail -->
+    <div class="thumbnail-container bg-gray-50 shadow-lg">
+        <div class="w-[1200px] h-[800px]">
+            <!-- Floating Nav -->
+            <nav class="bg-white rounded-full shadow-lg px-6 py-3 w-fit mx-auto mt-4">
+                <div class="flex space-x-8">
+                    <a href="#" class="text-gray-600 flex flex-col items-center">
+                        <i class="fas fa-home text-lg"></i>
+                        <span class="text-xs">Home</span>
+                    </a>
+                    <a href="#" class="text-gray-600 flex flex-col items-center">
+                        <i class="fas fa-tools text-lg"></i>
+                        <span class="text-xs">Services</span>
+                    </a>
+                    <a href="#" class="text-gray-600 flex flex-col items-center">
+                        <i class="fas fa-envelope text-lg"></i>
+                        <span class="text-xs">Kontakt</span>
+                    </a>
+                </div>
+            </nav>
+            <!-- Hero -->
+            <section class="h-[400px] bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
+                <div class="text-center text-white">
+                    <h1 class="text-5xl font-bold mb-4">Handwerkskunst</h1>
+                    <p class="text-xl">Innovative Lösungen</p>
+                </div>
+            </section>
+            <!-- Services -->
+            <section class="py-16">
+                <div class="container mx-auto px-8">
+                    <div class="grid grid-cols-3 gap-8">
+                        <div class="bg-white p-8 rounded-lg shadow-lg">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4"></div>
+                            <h3 class="text-xl font-bold text-center">Service 1</h3>
+                        </div>
+                        <div class="bg-white p-8 rounded-lg shadow-lg">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4"></div>
+                            <h3 class="text-xl font-bold text-center">Service 2</h3>
+                        </div>
+                        <div class="bg-white p-8 rounded-lg shadow-lg">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4"></div>
+                            <h3 class="text-xl font-bold text-center">Service 3</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html> 

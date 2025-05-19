@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website wird erstellt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin 3s linear infinite;
+        }
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+        .animate-progress {
+            animation: progress 30s linear forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="max-w-2xl w-full mx-4">
+        <!-- Generation Progress -->
+        <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div class="mb-8">
+                <i class="fas fa-cog text-6xl text-blue-600 animate-spin-slow"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800 mb-4">Ihre Website wird erstellt</h1>
+            <p class="text-gray-600 mb-8">Bitte haben Sie einen Moment Geduld, während wir Ihre Website generieren...</p>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+                <div class="bg-blue-600 h-2 rounded-full animate-progress" id="progressBar"></div>
+            </div>
+
+            <!-- Status Messages -->
+            <div class="space-y-4 text-left">
+                <div class="flex items-center text-green-600">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <span>Layout wird vorbereitet</span>
+                </div>
+                <div class="flex items-center text-green-600">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <span>Design-Schema wird angewendet</span>
+                </div>
+                <div class="flex items-center" id="currentStep">
+                    <i class="fas fa-spinner fa-spin mr-2 text-blue-600"></i>
+                    <span>Inhalte werden eingefügt</span>
+                </div>
+                <div class="flex items-center text-gray-400">
+                    <i class="far fa-circle mr-2"></i>
+                    <span>Optimierung für Suchmaschinen</span>
+                </div>
+                <div class="flex items-center text-gray-400">
+                    <i class="far fa-circle mr-2"></i>
+                    <span>Finale Überprüfung</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancel Option -->
+        <div class="text-center mt-6">
+            <button onclick="cancelGeneration()" class="text-gray-600 hover:text-gray-800 transition-colors">
+                <i class="fas fa-times-circle mr-2"></i>
+                Generation abbrechen
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentStepIndex = 2;
+        const steps = [
+            'Layout wird vorbereitet',
+            'Design-Schema wird angewendet',
+            'Inhalte werden eingefügt',
+            'Optimierung für Suchmaschinen',
+            'Finale Überprüfung'
+        ];
+
+        function updateProgress() {
+            const statusElements = document.querySelectorAll('.flex.items-center');
+            
+            // Update previous step
+            if (currentStepIndex > 0) {
+                const prevElement = statusElements[currentStepIndex - 1];
+                prevElement.classList.add('text-green-600');
+                prevElement.querySelector('i').classList.remove('fa-spinner', 'fa-spin');
+                prevElement.querySelector('i').classList.add('fa-check-circle');
+            }
+
+            // Update current step
+            if (currentStepIndex < steps.length) {
+                const currentElement = statusElements[currentStepIndex];
+                currentElement.classList.remove('text-gray-400');
+                currentElement.classList.add('text-blue-600');
+                currentElement.querySelector('i').classList.remove('far', 'fa-circle');
+                currentElement.querySelector('i').classList.add('fas', 'fa-spinner', 'fa-spin');
+
+                currentStepIndex++;
+                
+                // Schedule next update
+                if (currentStepIndex < steps.length) {
+                    setTimeout(updateProgress, 6000);
+                } else {
+                    // Redirect to final page when complete
+                    setTimeout(() => {
+                        window.location.href = 'complete.html';
+                    }, 3000);
+                }
+            }
+        }
+
+        function cancelGeneration() {
+            if (confirm('Möchten Sie die Generierung wirklich abbrechen?')) {
+                window.location.href = 'layout-selection.html';
+            }
+        }
+
+        // Start progress updates
+        setTimeout(updateProgress, 6000);
+    </script>
+</body>
+</html> 
