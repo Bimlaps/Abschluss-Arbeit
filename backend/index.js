@@ -1697,9 +1697,9 @@ app.post('/api/restore/:timestamp', authenticate, authorize(['admin']), async (r
 });
 
 // SPA Fallback: Alle unbekannten Routen auf index.html umleiten
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'public', 'index.html'));
-// });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
