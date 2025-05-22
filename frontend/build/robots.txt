@@ -1,0 +1,29 @@
+# 247Vitrine Robots.txt
+User-agent: *
+Allow: /
+
+# Verbiete Zugriff auf bestimmte Verzeichnisse
+Disallow: /admin/
+Disallow: /api/
+Disallow: /backend/
+Disallow: /private/
+Disallow: /*?*
+
+# Erlaube Zugriff auf wichtige Dateien
+Allow: /sitemap.xml
+Allow: /sitemaps/
+Allow: /images/
+Allow: /assets/
+Allow: /*.js
+Allow: /*.css
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.ico
+
+# Crawl-delay für bessere Server-Performance
+Crawl-delay: 10
+
+# Sitemap Location
+Sitemap: https://247vitrine.com/sitemap.xml 
