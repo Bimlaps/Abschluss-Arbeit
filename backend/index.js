@@ -29,6 +29,12 @@ dotenv.config();
 
 // Express-App erstellen
 const app = express();
+
+app.use((req, res, next) => {
+  console.log(`Eingehender Request-Pfad: ${req.path}`);
+  next();
+});
+
 const PORT = process.env.PORT || 3001;
 
 // Sicherheits-Middleware
