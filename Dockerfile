@@ -2,6 +2,7 @@
 FROM node:18-alpine as frontend-builder
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
+COPY frontend/postcss.config.js ./
 RUN npm install
 COPY frontend/ ./
 RUN npm run build
