@@ -1,35 +1,29 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
-import Login from './components/Login';
-import Register from './components/Register';
+import Home from './pages/Home';
+import Services from './pages/Services';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Gallery from './pages/Gallery';
 import Dashboard from './components/Dashboard';
+import WebsiteEditor from './components/WebsiteEditor';
 import './App.css';
-
-function Home() {
-  return (
-    <div className="home">
-      <h1>Willkommen bei 247Vitrine</h1>
-      <p>Ihr Website-Builder für Handwerker</p>
-      <div className="cta-buttons">
-        <button onClick={() => window.location.href='/login'}>Anmelden</button>
-        <button onClick={() => window.location.href='/register'}>Registrieren</button>
-      </div>
-    </div>
-  );
-}
 
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="app">
         <Navigation />
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/gallery" element={<Gallery />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/editor" element={<WebsiteEditor />} />
           </Routes>
         </main>
       </div>
